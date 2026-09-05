@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Music theory, by ear — chords, keys, progressions and scales you can hear</title>
+<meta name="description" content="A complete chord and music theory reference with sound. Tap any chord, scale, cadence or progression to hear it, change the key and everything transposes. Chord formulas, circle of fifths, functional harmony, reharmonization, rhythm, melody and ear training.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBFBF9;--ink:#15152A;--ink2:#4C4C63;--line:#DDDDE7;--surf:#EEEEF7;--acc:#4F3CC9;--acc2:#E9E6FA;
+  --major:#B8720E;--minor:#2457C5;--diminished:#C0322E;--augmented:#7A3FD1;--suspended:#12867D;--dominant:#D2521A;--altered:#C42A72;--other:#6B6B7A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:96px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3,.sym,.tile b,.bar .t{font-family:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif}
+a{color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button{font:inherit;color:inherit}
+
+/* sticky bar */
+.bar{position:sticky;top:0;z-index:10;background:rgba(251,251,249,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .row{max-width:920px;margin:0 auto;padding:10px 16px 8px;display:flex;align-items:center;gap:12px}
+.bar .t{font-weight:600;font-size:18px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.keylab{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2);white-space:nowrap}
+select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.stop{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);font-size:12px}
+.stop:hover{border-color:var(--ink);color:var(--ink)}
+.nav{display:flex;gap:18px;overflow-x:auto;padding:0 16px 10px;max-width:920px;margin:0 auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{white-space:nowrap;font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;padding:2px 0}
+.nav a:hover,.nav a:focus-visible{color:var(--acc);border-color:var(--acc)}
+
+/* hero */
+.hero{max-width:920px;margin:0 auto;padding:44px 16px 8px}
+.hero h1{font-size:clamp(36px,6.5vw,60px);line-height:1.02;font-weight:500;letter-spacing:-.015em;margin:0 0 14px;max-width:14ch}
+.hero p{color:var(--ink2);max-width:54ch;margin:0 0 22px;font-size:17px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (min-width:640px){.tiles{grid-template-columns:repeat(6,1fr)}}
+.tile{border:1px solid var(--line);border-top:4px solid var(--fam);border-radius:12px;padding:14px 12px 12px;background:#fff;text-align:left;cursor:pointer;transition:background .15s}
+.tile b{display:block;font-size:28px;font-weight:600;line-height:1;margin-bottom:6px}
+.tile small{display:block;color:var(--ink2);font-size:13px;line-height:1.3}
+.tile.playing{background:var(--acc2);border-color:var(--acc);border-top-color:var(--fam)}
+.hint{font-size:14px;color:var(--ink2);margin:14px 0 0}
+
+/* sections */
+main{max-width:920px;margin:0 auto;padding:8px 16px 60px}
+section.part{padding:40px 0 4px;border-top:1px solid var(--line);margin-top:36px}
+section.part:first-child{border-top:0;margin-top:0;padding-top:24px}
+section.part h2{font-size:clamp(26px,4vw,34px);font-weight:500;margin:0 0 8px;letter-spacing:-.01em}
+section.part .lead{color:var(--ink2);max-width:62ch;margin:0 0 20px}
+h3{font-size:19px;font-weight:600;margin:30px 0 10px}
+p{max-width:70ch}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0 6px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{text-align:left;background:var(--surf);font-weight:600;padding:9px 10px;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{white-space:nowrap}
+td.p{width:38px;padding-right:0}
+.fam{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:-1px;background:var(--fam)}
+.sym{font-weight:600;font-size:16px;white-space:nowrap}
+.f{font-variant-numeric:tabular-nums;color:var(--ink2);white-space:nowrap}
+.notes{color:var(--ink2);white-space:nowrap;font-size:13.5px}
+.play{width:30px;height:30px;border-radius:50%;border:0;background:var(--ink);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-size:11px;padding:0 0 0 2px;vertical-align:middle;flex:none}
+.play:hover,.play:focus-visible{background:var(--acc)}
+.play.playing{background:var(--acc);box-shadow:0 0 0 4px var(--acc2)}
+.play.sm{width:24px;height:24px;font-size:9px}
+.note{background:var(--surf);border-left:4px solid var(--acc);padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;max-width:72ch}
+.note p{margin:6px 0}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
+.tools input{flex:1 1 220px;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;min-width:0}
+.fbtn{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.fbtn .fam{margin:0}
+.fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.lnk{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;font-weight:600}
+.lnk:hover{text-decoration-color:var(--acc);color:var(--acc)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;cursor:pointer;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:15px;white-space:nowrap}
+.chip:hover{border-color:var(--acc);color:var(--acc)}
+.chip.playing{background:var(--acc2);border-color:var(--acc)}
+.chip.cur{background:var(--surf);border-color:var(--acc)}
+ol.steps{padding-left:22px;max-width:70ch}
+ol.steps li{margin:8px 0}
+ul.plain{padding-left:20px;max-width:72ch}
+ul.plain li{margin:8px 0}
+.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn.ghost{background:#fff;color:var(--ink)}
+.btn.playing{background:var(--acc);border-color:var(--acc)}
+.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.inline .btn{display:inline-flex;align-items:center;gap:8px}
+details{margin:14px 0}
+summary{cursor:pointer;font-weight:600;padding:8px 0}
+dl.gl{max-width:72ch}
+dl.gl dt{font-weight:600;margin-top:14px}
+dl.gl dd{margin:2px 0 0;color:var(--ink2)}
+
+/* circle of fifths */
+.circle{display:grid;gap:22px;margin:10px 0}
+@media (min-width:720px){.circle{grid-template-columns:330px 1fr;align-items:start}}
+.circle svg{width:100%;max-width:330px;height:auto;display:block;margin:0 auto}
+.ck{cursor:pointer}
+.ck circle{fill:#fff;stroke:var(--line);stroke-width:1.5}
+.ck text{text-anchor:middle;font-size:13px;font-weight:600;fill:var(--ink);font-family:"Inter",system-ui,sans-serif;pointer-events:none}
+.ck.minor text{font-size:10.5px;fill:var(--ink2);font-weight:500}
+.ck.nb circle{fill:var(--acc2);stroke:var(--acc2)}
+.ck.cur circle{fill:var(--acc);stroke:var(--acc)}
+.ck.cur text{fill:#fff}
+.ck:hover circle{stroke:var(--acc)}
+.c-ring{fill:none;stroke:var(--line)}
+.c-label{text-anchor:middle;font-size:11px;fill:var(--ink2);font-family:"Inter",system-ui,sans-serif}
+
+/* quiz */
+.quiz{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;max-width:560px}
+.qtabs{display:flex;gap:8px;margin-bottom:12px}
+.qtabs button{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);font-size:14px}
+.qtabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.qopts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0 10px}
+.qo{padding:11px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:15px;text-align:left}
+.qo:hover{border-color:var(--ink)}
+.qo.right{border-color:var(--suspended);background:#E5F5F2}
+.qo.wrong{border-color:var(--diminished);background:#FBE9E8}
+.qfeed{min-height:24px;margin:6px 0 0}
+.qscore{color:var(--ink2);font-size:14px;margin:8px 0 0}
+
+footer{max-width:920px;margin:0 auto;padding:30px 16px 60px;color:var(--ink2);font-size:14px;border-top:1px solid var(--line)}
+footer p{margin:6px 0}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="row">
+    <div class="t">Music theory, by ear</div>
+    <label class="keylab">Key <select class="key" id="keysel" aria-label="Choose a key"></select></label>
+    <button class="stop" id="stop" aria-label="Stop sound" title="Stop sound">■</button>
+  </div>
+  <nav class="nav" id="nav" aria-label="Sections"></nav>
+</header>
+
+<section class="hero">
+  <h1>The chord sheet you can hear.</h1>
+  <p>Formulas, keys, progressions, scales and ear training, with a play button on all of it. Change the key at the top and every chord and table on this page transposes with you.</p>
+  <div class="tiles" id="tiles"></div>
+  <p class="hint">Tap a chord to hear it. Sound plays on your device, so turn the ringer on if you are on a phone.</p>
+</section>
+
+<main id="app"></main>
+
+<footer>
+  <p>Free to use for learning. Every sound on this page is generated in your browser, so nothing is downloaded and it works offline once loaded.</p>
+  <p>Built as a single file. View the page source to see the chord data and change anything.</p>
+</footer>
+
+<script>
+/* ===================== Core music data ===================== */
+const $ = (s, r = document) => r.querySelector(s);
+const SHARP = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const FLAT  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+
+// Keys in circle-of-fifths order, starting at C and moving clockwise.
+const KEYS = [
+  {pc:0,  name:'C',     sig:'None',              flats:false},
+  {pc:7,  name:'G',     sig:'1 sharp',           flats:false},
+  {pc:2,  name:'D',     sig:'2 sharps',          flats:false},
+  {pc:9,  name:'A',     sig:'3 sharps',          flats:false},
+  {pc:4,  name:'E',     sig:'4 sharps',          flats:false},
+  {pc:11, name:'B',     sig:'5 sharps',          flats:false},
+  {pc:6,  name:'F♯ / G♭', sig:'6 sharps or 6 flats', flats:false},
+  {pc:1,  name:'D♭',    sig:'5 flats',           flats:true},
+  {pc:8,  name:'A♭',    sig:'4 flats',           flats:true},
+  {pc:3,  name:'E♭',    sig:'3 flats',           flats:true},
+  {pc:10, name:'B♭',    sig:'2 flats',           flats:true},
+  {pc:5,  name:'F',     sig:'1 flat',            flats:true},
+];
+
+const state = { key: KEYS[0], fam: 'all', q: '', keyTable: 'major' };
+
+const pc = n => ((n % 12) + 12) % 12;
+const nn = (n, flats = state.key.flats) => (flats ? FLAT : SHARP)[pc(n)];
+const pretty = s => s.replace(/b(?=[0-9IV])/g, '♭').replace(/#/g, '♯');
+const relMinor = k => nn(k.pc + 9, k.flats) + 'm';
+
+// Chord qualities used for keys, progressions and cadences.
+const Q = {
+  maj:  {sfx:'',     iv:[0,4,7],      label:'major'},
+  min:  {sfx:'m',    iv:[0,3,7],      label:'minor'},
+  dim:  {sfx:'dim',  iv:[0,3,6],      label:'diminished'},
+  aug:  {sfx:'aug',  iv:[0,4,8],      label:'augmented'},
+  dom7: {sfx:'7',    iv:[0,4,7,10],   label:'dominant 7'},
+  maj7: {sfx:'maj7', iv:[0,4,7,11],   label:'major 7'},
+  m7:   {sfx:'m7',   iv:[0,3,7,10],   label:'minor 7'},
+  m7b5: {sfx:'m7b5', iv:[0,3,6,10],   label:'half-diminished'},
+  add9: {sfx:'add9', iv:[0,4,7,14],   label:'add 9'},
+  sus4: {sfx:'sus4', iv:[0,5,7],      label:'sus4'},
+  sus2: {sfx:'sus2', iv:[0,2,7],      label:'sus2'},
+};
+
+// Chord symbol for a scale degree (in semitones above the key root) and quality.
+const csym = (deg, q, flats) => nn(state.key.pc + deg, flats) + pretty(Q[q].sfx);
+
+// Where to put the root on the keyboard so chords sit in a musical register.
+const rootMidi = (p, iv = []) => {
+  let r = 60 + pc(p); if (pc(p) >= 7) r -= 12;
+  if (Math.max(...iv, 0) > 14) r -= 12;
+  return r;
+};
+
+/* ===================== Audio engine (Web Audio, no samples) ===================== */
+const Synth = {
+  ctx: null, master: null, live: [], _t: null,
+  ensure() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AC();
+      this.master = this.ctx.createDynamicsCompressor();
+      this.master.threshold.value = -18; this.master.ratio.value = 6;
+      this.master.connect(this.ctx.destination);
+    }
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    return this.ctx;
+  },
+  f(m) { return 440 * Math.pow(2, (m - 69) / 12); },
+  note(m, t, d, g = 0.16) {
+    const c = this.ctx;
+    const o = c.createOscillator(), o2 = c.createOscillator();
+    const env = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
+    o.type = 'triangle'; o.frequency.value = this.f(m);
+    o2.type = 'sine'; o2.frequency.value = this.f(m + 12); g2.gain.value = 0.18;
+    lp.type = 'lowpass'; lp.frequency.value = 2400;
+    env.gain.setValueAtTime(0.0001, t);
+    env.gain.exponentialRampToValueAtTime(g, t + 0.02);
+    env.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(lp); o2.connect(g2).connect(lp); lp.connect(env).connect(this.master);
+    o.start(t); o2.start(t); o.stop(t + d + 0.05); o2.stop(t + d + 0.05);
+    this.live.push(o, o2);
+  },
+  tick(t, accent) {
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = 'square'; o.frequency.value = accent ? 1600 : 1000;
+    g.gain.setValueAtTime(accent ? 0.16 : 0.07, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.07);
+    this.live.push(o);
+  },
+  stop() {
+    this.live.forEach(o => { try { o.stop(); } catch (e) {} });
+    this.live = [];
+    clearTimeout(this._t);
+    document.querySelectorAll('.playing').forEach(el => el.classList.remove('playing'));
+  },
+  chord(iv, root, t, d) {
+    const g = 0.22 / Math.sqrt(iv.length);
+    iv.forEach(i => this.note(root + i, t, d, g));
+  },
+  // items: [{iv, root, d}] — d is a multiplier of `each` seconds. Returns total seconds.
+  seq(items, each = 1.0, gap = 0.04) {
+    const c = this.ensure(); let t = c.currentTime + 0.03; const t0 = t;
+    items.forEach(it => { const d = (it.d || 1) * each; this.chord(it.iv, it.root, t, d * 0.96); t += d + gap; });
+    return t - t0 + 0.2;
+  },
+  scale(iv, root, step = 0.23) {
+    const c = this.ensure(); const t = c.currentTime + 0.03;
+    const up = [...iv, 12], down = [...up].reverse().slice(1);
+    up.forEach((i, k) => this.note(root + i, t + k * step, step * 1.5, 0.17));
+    const t2 = t + up.length * step + 0.05;
+    down.forEach((i, k) => this.note(root + i, t2 + k * step, step * 1.5, 0.17));
+    return up.length * step + down.length * step + 0.5;
+  },
+  interval(n, root) {
+    const c = this.ensure(); const t = c.currentTime + 0.03;
+    this.note(root, t, 0.7, 0.18); this.note(root + n, t + 0.6, 0.7, 0.18);
+    this.note(root, t + 1.4, 1.3, 0.13); this.note(root + n, t + 1.4, 1.3, 0.13);
+    return 2.9;
+  },
+  meter(accents, step) {
+    const c = this.ensure(); const t = c.currentTime + 0.03; const n = accents.length * 2;
+    for (let k = 0; k < n; k++) this.tick(t + k * step, accents[k % accents.length]);
+    return n * step + 0.1;
+  },
+  // pattern: [[beatOffset, iv, durBeats]] over `beats` beats at `bpm`.
+  pattern(hits, root, beats = 8, bpm = 104) {
+    const c = this.ensure(); const b = 60 / bpm; const t = c.currentTime + 0.03;
+    hits.forEach(([off, iv, dur]) => this.chord(iv, root, t + off * b, dur * b * 0.95));
+    return beats * b + 0.3;
+  },
+};
+
+/* ===================== Play-button registry ===================== */
+let ACTS = [];
+function pb(label, fn, cls = '') {
+  const id = ACTS.push(fn) - 1;
+  return `<button class="play ${cls}" data-a="${id}" aria-label="Play ${label}" title="Play ${label}">▶</button>`;
+}
+function act(fn) { return ACTS.push(fn) - 1; }
+function playChordInKey(deg, q) {
+  const iv = Q[q].iv; return () => Synth.seq([{iv, root: rootMidi(state.key.pc + deg, iv)}], 1.6);
+}
+function playProg(chords, each = 0.95) {
+  // chords: [[deg, q]] in the current key
+  return () => Synth.seq(chords.map(([deg, q, d]) => ({iv: Q[q].iv, root: rootMidi(state.key.pc + deg, Q[q].iv), d})), each);
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b) return;
+  Synth.ensure(); Synth.stop();
+  const d = ACTS[+b.dataset.a]() || 1.5;
+  b.classList.add('playing');
+  Synth._t = setTimeout(() => b.classList.remove('playing'), d * 1000);
+});
+
+/* ===================== Rendering helpers ===================== */
+function table(cols, rows) {
+  return `<div class="tw"><table><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>${
+    rows.map(r => `<tr>${r.map(c => (typeof c === 'object' && c !== null) ? `<td class="${c.cls || ''}">${c.h}</td>` : `<td>${c}</td>`).join('')}</tr>`).join('')
+  }</tbody></table></div>`;
+}
+const P = h => ({h, cls: 'p'});   // play-button cell
+const N = h => ({h, cls: 'n'});   // no-wrap cell
+const famDot = f => `<span class="fam" style="--fam:var(--${f})"></span>`;
+
+const SECTIONS = [];
+function sec(id, nav, title, lead, body) { SECTIONS.push({id, nav, title, lead, body}); }
+
+/* ===================== How to use ===================== */
+sec('how', 'Start here', 'How to use this page', '',
+  () => `
+  <p><strong>New to theory?</strong> Read the chord formulas first, then Parts 1 to 4 in order. Each part builds on the last: which chords exist, which ones live together in a key, how to put them in order, why they pull the way they do, and which scale fits over which chord.</p>
+  <p><strong>Already know the basics?</strong> Use the search box in the chord section, the key selector at the top, and the section links to jump straight to what you need. Parts 5 to 11 are reference material you dip into, not a course.</p>
+  <p><strong>Either way, use your ears.</strong> Every ▶ plays the real sound. Words like "bright" or "unstable" only make sense once you have heard the chord next to its neighbours, so play the major triad, then the minor, then the diminished, and listen for the difference.</p>
+  <div class="note"><p><strong>How the formulas work.</strong> Root note = 0. Count half-steps upward (every key, black and white, counts as one step). A formula is the same for every chord of that type no matter which note you start on, which is why this page can transpose everything when you change the key. Numbers 12 and higher are more than an octave above the root: the same note as (number − 12), just voiced higher up.</p></div>`);
+
+/* ===================== Chord formulas ===================== */
+const FAM = {major:'Major', minor:'Minor', diminished:'Diminished', augmented:'Augmented', suspended:'Suspended', dominant:'Dominant', altered:'Altered dominant', other:'Other'};
+// [name, symbol suffix (null = none), intervals, family, built from, sound]
+const CHORD_GROUPS = [
+  {name:'Triads (3 notes)', built:false, rows:[
+    ['Major','',[0,4,7],'major','','Bright, happy, fully resolved'],
+    ['Minor','m',[0,3,7],'minor','','Darker, sadder, more emotional'],
+    ['Diminished','dim',[0,3,6],'diminished','','Tense, unstable, unresolved'],
+    ['Augmented','aug',[0,4,8],'augmented','','Floating, dreamlike, ambiguous'],
+    ['Sus2','sus2',[0,2,7],'suspended','','Open, airy, neither happy nor sad'],
+    ['Sus4','sus4',[0,5,7],'suspended','','Open, suspended, wants to resolve'],
+  ]},
+  {name:'Seventh chords (4 notes)', built:true, rows:[
+    ['Dominant 7 ("7")','7',[0,4,7,10],'dominant','Major triad + flat 7th','Bluesy, gritty, wants to resolve'],
+    ['Major 7','maj7',[0,4,7,11],'major','Major triad + natural 7th','Lush, dreamy, jazzy-bright'],
+    ['Minor 7','m7',[0,3,7,10],'minor','Minor triad + flat 7th','Mellow, smooth, moody'],
+    ['Minor-major 7','mMaj7',[0,3,7,11],'minor','Minor triad + natural 7th','Eerie, cinematic, unsettled'],
+    ['Diminished 7','dim7',[0,3,6,9],'diminished','Dim triad + double-flat 7th','Very tense, symmetrical, spooky'],
+    ['Half-diminished','m7b5',[0,3,6,10],'diminished','Dim triad + flat 7th','Dark, unresolved, jazzy tension'],
+    ['Augmented 7','7#5',[0,4,8,10],'augmented','Aug triad + flat 7th','Unsettled, exotic, floating'],
+    ['Suspended 7','7sus4',[0,5,7,10],'suspended','Sus4 triad + flat 7th','Open, funky, almost-resolved'],
+  ]},
+  {name:'6th chords and add chords', built:true, rows:[
+    ['Major 6','6',[0,4,7,9],'major','Major triad + 6th (no 7th)','Warm, nostalgic, retro-bright'],
+    ['Minor 6','m6',[0,3,7,9],'minor','Minor triad + 6th','Bittersweet, jazzy-dark'],
+    ['6/9','6/9',[0,4,7,9,14],'major','Major 6 + 9th','Lush, floaty, dreamy pop sound'],
+    ['Add9','add9',[0,4,7,14],'major','Major triad + 9th (no 7th)','Bright with extra sparkle, no tension'],
+    ['Minor add9','madd9',[0,3,7,14],'minor','Minor triad + 9th (no 7th)','Soft, wistful, gently colorful'],
+  ]},
+  {name:'Extended chords (9, 11, 13)', built:true, rows:[
+    ['Dominant 9','9',[0,4,7,10,14],'dominant','Dominant 7 + 9th','Funky, bluesy, richer than plain 7'],
+    ['Major 9','maj9',[0,4,7,11,14],'major','Major 7 + 9th','Lush, sophisticated, dreamy'],
+    ['Minor 9','m9',[0,3,7,10,14],'minor','Minor 7 + 9th','Smooth, moody, jazzy-soft'],
+    ['Dominant 11','11',[0,4,7,10,14,17],'dominant','Dominant 9 + 11th','Thick, ambiguous, needs careful voicing'],
+    ['Minor 11','m11',[0,3,7,10,14,17],'minor','Minor 9 + 11th','Spacious, moody, atmospheric'],
+    ['Dominant 13 (full)','13',[0,4,7,10,14,17,21],'dominant','Dominant 11 + 13th','Full, lush, jazzy and complex'],
+  ]},
+  {name:'Practical voicings for extended chords', built:true, intro:'Nobody plays all 7 notes of a 13th chord with 10 fingers and a bass note to hold. The 5th and 11th are usually dropped: they add little color and can clash with the 3rd.', rows:[
+    ['Dominant 9 (practical)','9',[0,4,10,14],'dominant','Root, 3rd, 7th, 9th','Same bluesy richness, cleaner voicing'],
+    ['Dominant 13 (practical)','13',[0,4,10,14,21],'dominant','Root, 3rd, 7th, 9th, 13th','Full jazzy color without mud'],
+  ]},
+  {name:'Altered dominant 7ths', built:false, rows:[
+    ['7♭9','7b9',[0,4,7,10,13],'altered','','Tense, jazzy resolution'],
+    ['7♯9 ("Hendrix chord")','7#9',[0,4,7,10,15],'altered','','Bluesy, gritty, major/minor clash'],
+    ['7♯11','7#11',[0,4,7,10,18],'altered','','Bright, lifted dominant'],
+    ['7♭13','7b13',[0,4,7,10,20],'altered','','Dark, moody dominant'],
+  ]},
+  {name:'Other useful chords', built:true, rows:[
+    ['Power chord (5)','5',[0,7],'other','Root + 5th only (no 3rd)','Raw, neutral, heavy: neither major nor minor'],
+  ]},
+  {name:'More altered and exotic chords', built:true, more:true, rows:[
+    ['Maj7♯11','maj7#11',[0,4,7,11,18],'major','Major 7 + raised 11th','Bright, floaty, modern jazz and film-score (lydian sound)'],
+    ['7♭5','7b5',[0,4,6,10],'altered','Dominant 7 with flattened 5th','Bluesy but off-kilter'],
+  ]},
+  {name:'More add and 6th chords', built:true, more:true, rows:[
+    ['Add11','add11',[0,4,7,17],'major','Major triad + 11th (no 7th)','Bright with a floaty top note'],
+    ['Add13','add13',[0,4,7,21],'major','Major triad + 13th (no 7th)','Open, colorful, no tension'],
+    ['Minor 6/9','m6/9',[0,3,7,9,14],'minor','Minor 6 + 9th','Jazzy, bittersweet, common ending chord'],
+  ]},
+  {name:'More sus chords', built:true, more:true, rows:[
+    ['9sus4','9sus4',[0,5,7,10,14],'suspended','Sus4 + flat 7th + 9th','Gospel and R&B; an "almost a chord" sound'],
+    ['13sus4','13sus4',[0,5,7,10,14,21],'suspended','9sus4 + 13th','Bigger, jazzier version of 9sus4'],
+    ['Sus2/4 combined','sus2/4',[0,2,5,7],'suspended','Sus2 + sus4 together','Very open, ambient, no 3rd at all'],
+  ]},
+  {name:'Quartal and quintal chords', built:true, more:true, intro:'Built from stacked 4ths or 5ths instead of stacked 3rds, so they are structurally different from everything else on this page.', rows:[
+    ['Quartal triad',null,[0,5,10],'other','Stacked 4ths instead of 3rds','Modern, ambiguous: the "So What" chord sound'],
+    ['Quintal triad',null,[0,7,14],'other','Stacked 5ths instead of 3rds','Open, spacious, folk and ambient feel'],
+  ]},
+  {name:'Exotic chords, for reference only', built:true, rare:true, intro:'You will almost never need these. They are here so the reference is complete, not because they should be in your everyday vocabulary.', rows:[
+    ['Maj7♯5 (aug maj7)','maj7#5',[0,4,8,11],'augmented','Augmented triad + natural 7th','Shimmering, unresolved'],
+    ['m7♯5','m7#5',[0,3,8,10],'minor','Minor triad with raised 5th + flat 7th','Rare, murky, unsettled'],
+    ['Diminished major 7','dim/maj7',[0,3,6,11],'diminished','Diminished triad + natural 7th','Very rare, spooky, cinematic'],
+    ['Cluster (chromatic)',null,[0,1,2],'other','Adjacent or near-adjacent tones','Dissonant, textural, effect-like. Not tonal or functional'],
+  ]},
+];
+
+function chordRow(r, built) {
+  const [name, sfx, iv, fam, from, sound] = r;
+  const root = state.key.pc;
+  const sym = sfx === null ? '—' : nn(root) + pretty(sfx);
+  const notes = iv.map(i => nn(root + i)).join(' ');
+  const play = pb(`${name} on ${nn(root)}`, () => Synth.seq([{iv, root: rootMidi(root, iv)}], 1.8));
+  const cells = [
+    N(`${famDot(fam)}${name}`),
+    N(`<span class="sym">${sym}</span>`),
+    N(`<span class="f">${iv.join(', ')}</span>`),
+    N(`<span class="notes">${notes}</span>`),
+  ];
+  if (built) cells.push(from);
+  cells.push(sound, P(play));
+  return cells;
+}
+function matches(r) {
+  if (state.fam !== 'all' && r[3] !== state.fam) return false;
+  if (!state.q) return true;
+  const q = state.q.toLowerCase();
+  const sym = r[1] === null ? '' : (nn(state.key.pc) + pretty(r[1]));
+  return [r[0], r[1] || '', sym, r[4], r[5], FAM[r[3]]].join(' ').toLowerCase().includes(q);
+}
+function renderChordList() {
+  const out = [];
+  let shown = 0;
+  const groupHTML = g => {
+    const rows = g.rows.filter(matches); if (!rows.length) return '';
+    shown += rows.length;
+    const cols = ['Chord', 'Symbol', 'Formula', `Notes in ${nn(state.key.pc)}`];
+    if (g.built) cols.push('Built from');
+    cols.push('Sound', '');
+    return `<h3>${g.name}</h3>${g.intro ? `<p>${g.intro}</p>` : ''}${table(cols, rows.map(r => chordRow(r, g.built)))}`;
+  };
+  const core = CHORD_GROUPS.filter(g => !g.more && !g.rare).map(groupHTML).join('');
+  const more = CHORD_GROUPS.filter(g => g.more).map(groupHTML).join('');
+  const rare = CHORD_GROUPS.filter(g => g.rare).map(groupHTML).join('');
+  out.push(core);
+  if (more) out.push(`<details ${state.q || state.fam !== 'all' ? 'open' : ''}><summary>Further chord types: less common, worth knowing once the basics are automatic</summary>${more}</details>`);
+  if (rare) out.push(`<details ${state.q || state.fam !== 'all' ? 'open' : ''}><summary>Exotic chords, for reference only</summary>${rare}</details>`);
+  if (!shown) out.push(`<p>No chords match "${state.q}". Try a chord name like "sus4", a symbol like "m7", or a feeling like "dreamy".</p>`);
+  return out.join('');
+}
+
+sec('chords', 'Chords', 'Chord formulas', 'Every chord you are likely to meet, as a formula in half-steps and as real notes in the current key. The colored dot is the chord family: amber major, blue minor, red diminished, purple augmented, teal suspended, orange dominant, pink altered dominant, gray other.',
+  () => `
+  <div class="tools">
+    <input id="csearch" type="search" placeholder="Search chords: sus4, m7, dreamy, Hendrix…" value="${state.q.replace(/"/g, '&quot;')}" aria-label="Search chords">
+    <button class="fbtn ${state.fam === 'all' ? 'on' : ''}" data-fam="all">All</button>
+    ${Object.keys(FAM).map(f => `<button class="fbtn ${state.fam === f ? 'on' : ''}" data-fam="${f}">${famDot(f)}${FAM[f]}</button>`).join('')}
+  </div>
+  <div id="chordlist">${renderChordList()}</div>
+
+  <h3>Slash chords and inversions</h3>
+  <p>Not a new formula: the same chord tones, with a different note placed in the bass. Written as Chord/Bass note.</p>
+  ${(() => { const r = state.key.pc, R = nn(r); const tri = [0,4,7];
+    const inv = (bass, label, sound, name) => [N(name), N(`<span class="sym">${label}</span>`), sound, P(pb(label, () => Synth.seq([{iv: bass === null ? tri : [bass, ...tri], root: rootMidi(r, tri)}], 1.8)))];
+    return table(['Concept', `Example (in ${R})`, 'Sound', ''], [
+      inv(null, R, 'Most grounded, most stable', 'Root position'),
+      inv(-8, `${R}/${nn(r+4)}`, 'Smoother bass movement, softer landing', '1st inversion'),
+      inv(-5, `${R}/${nn(r+7)}`, 'Less stable, good as a passing chord', '2nd inversion'),
+      inv(-10, `${R}/${nn(r+2)}`, 'Creates tension, common for stepwise pop basslines', 'Non-chord bass note (slash)'),
+    ]); })()}
+
+  <h3>Things worth knowing</h3>
+  <ul class="plain">
+    <li>Diminished chords technically use flattened spellings. The F diminished triad is F–A♭–C♭ (C♭ is the same key as B), and the dim7 chord adds a double-flat 7th (F dim7 = F–A♭–C♭–E♭♭, where E♭♭ is the same key as D), because diminished chords stack in even minor-3rd steps. On the keyboard these are the same keys; the spelling only matters for notated sheet music.</li>
+    <li>A plain "7" almost always means dominant 7th (C7, F7): the bluesy, unresolved sound. "maj7" and "m7" are always written out explicitly.</li>
+    <li>Sus chords have no 3rd, so they are neither major nor minor. That open, unresolved quality is a big part of a spacious, atmospheric guitar-style sound.</li>
+    <li>Altered dominants (7♭9, 7♯9, 7♯11, 7♭13) are mostly used as passing or transition chords. They create tension that resolves into a simpler chord right after.</li>
+  </ul>`);
+
+/* ===================== Part 1 — Keys ===================== */
+const MAJ = {deg:[0,2,4,5,7,9,11], q:['maj','min','min','maj','maj','min','dim'], num:['I','ii','iii','IV','V','vi','vii°'],
+  feel:['Home, the tonic','Gentle, transitional','Softer, rarely a landing point','Lift, subdominant motion','Strong pull back to 1','Relative minor, melancholic','Unstable, leads strongly back to 1']};
+const MIN = {deg:[0,2,3,5,7,8,10], q:['min','dim','maj','min','min','maj','maj'], num:['i','ii°','III','iv','v','VI','VII'],
+  feel:['Home, the tonic','Unstable, rarely lands','Relative major brightness','Predominant, moody','Weak pull home (see the note below)','Lift, borrowed-major color','Common substitute dominant']};
+
+function keyChord(rootPc, deg, q, flats) {
+  const iv = Q[q].iv; const label = nn(rootPc + deg, flats) + pretty(Q[q].sfx);
+  const id = act(() => Synth.seq([{iv, root: rootMidi(rootPc + deg, iv)}], 1.6));
+  return `<button class="chip" data-a="${id}" aria-label="Play ${label}">${label}</button>`;
+}
+
+function circleSVG() {
+  const cx = 160, cy = 160; let s = `<svg viewBox="0 0 320 320" role="img" aria-label="Circle of fifths. Click a key to select it.">`;
+  s += `<circle cx="${cx}" cy="${cy}" r="152" class="c-ring"/><circle cx="${cx}" cy="${cy}" r="100" class="c-ring"/><circle cx="${cx}" cy="${cy}" r="52" class="c-ring"/>`;
+  const ci = KEYS.findIndex(k => k.pc === state.key.pc);
+  KEYS.forEach((k, i) => {
+    const a = (i * 30 - 90) * Math.PI / 180;
+    const x = cx + Math.cos(a) * 126, y = cy + Math.sin(a) * 126;
+    const xm = cx + Math.cos(a) * 76, ym = cy + Math.sin(a) * 76;
+    const cur = i === ci, nb = i === (ci + 1) % 12 || i === (ci + 11) % 12;
+    const cls = cur ? 'cur' : nb ? 'nb' : '';
+    const maj = k.name.replace(' / ', '/');
+    const rel = k.pc === 6 ? 'D♯m' : relMinor(k);
+    s += `<g class="ck ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="Select key of ${k.name}"><circle cx="${x}" cy="${y}" r="21"/><text x="${x}" y="${y + 4.5}" font-size="${maj.length > 3 ? 10 : 13}">${maj}</text></g>`;
+    s += `<g class="ck minor ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="Select key of ${rel}"><circle cx="${xm}" cy="${ym}" r="16"/><text x="${xm}" y="${ym + 3.5}">${rel}</text></g>`;
+  });
+  s += `<text x="${cx}" y="${cy - 2}" class="c-label">circle of</text><text x="${cx}" y="${cy + 12}" class="c-label">fifths</text></svg>`;
+  return s;
+}
+
+sec('keys', 'Keys', 'Part 1: Keys, which chords belong together', 'The formulas above build any chord. This part tells you which chords naturally live together in a key, so progressions sound coherent.',
+  () => { const k = state.key, R = nn(k.pc), rel = k.pc + 9, relName = k.pc === 6 ? 'D♯m / E♭m' : relMinor(k);
+    return `
+  <div class="circle">
+    ${circleSVG()}
+    <div>
+      ${table(['Major', 'Sharps/flats', 'Relative minor'], KEYS.map((x, i) => [
+        N(`<button class="lnk" data-k="${i}">${x.name}</button>`), x.sig, N(x.pc === 6 ? 'D♯m / E♭m' : relMinor(x))]))}
+    </div>
+  </div>
+  <p><strong>Reading the wheel:</strong> outer ring = major keys, inner ring = their relative minor. Clockwise adds one sharp per step; counter-clockwise adds one flat. Neighboring keys (shaded) share almost all their notes, so their chords mix well. Click any key to make the whole page use it.</p>
+
+  <h3>Chords that live in a key (Nashville numbers)</h3>
+  <p>Every major key contains these seven chords, built on each scale step. Numbering them instead of naming them means a progression transposes to any key instantly. This is the shorthand session musicians use.</p>
+  ${table(['Number', 'Chord quality', `Example (in ${R})`, 'Feel / use'], MAJ.deg.map((d, i) => [
+    `${i + 1}`, `${Q[MAJ.q[i]].label[0].toUpperCase() + Q[MAJ.q[i]].label.slice(1)} (${MAJ.num[i]})`, N(keyChord(k.pc, d, MAJ.q[i], k.flats)), MAJ.feel[i]]))}
+
+  <h3>Chords in a minor key</h3>
+  <p>This is the natural minor key's chord set, shown for ${relName}, the relative minor of ${R}. Compare it to the major table: the pattern of major, minor and diminished shifts around, giving minor keys a different harmonic personality.</p>
+  ${table(['Number', 'Chord quality', `Example (in ${relName})`, 'Feel / use'], MIN.deg.map((d, i) => [
+    MIN.num[i], Q[MIN.q[i]].label[0].toUpperCase() + Q[MIN.q[i]].label.slice(1), N(keyChord(rel, d, MIN.q[i], k.flats)), MIN.feel[i]]))}
+
+  <div class="note">
+    <p><strong>The harmonic minor fix.</strong> Natural minor's v chord is minor, which gives it a weak pull back to i, nothing like the strong V-to-I pull in a major key. Harmonic minor (Part 4) raises the 7th scale degree by one half-step, which turns v into V (major) and VII into vii° (diminished), and both now pull strongly back to the tonic. That is the entire reason harmonic minor exists: borrow one note to fix the weak cadence while everything else stays natural minor.</p>
+    <div class="inline">
+      <button class="btn ghost" data-a="${act(() => Synth.seq([{iv:Q.min.iv, root: rootMidi(rel + 7, Q.min.iv)}, {iv:Q.min.iv, root: rootMidi(rel, Q.min.iv), d:1.6}], 1.0))}">▶ Natural minor: ${nn(rel + 7)}m to ${nn(rel)}m</button>
+      <button class="btn ghost" data-a="${act(() => Synth.seq([{iv:Q.dom7.iv, root: rootMidi(rel + 7, Q.dom7.iv)}, {iv:Q.min.iv, root: rootMidi(rel, Q.min.iv), d:1.6}], 1.0))}">▶ Harmonic minor: ${nn(rel + 7)}7 to ${nn(rel)}m</button>
+    </div>
+  </div>
+
+  <h3>Every key, every chord</h3>
+  <p>The seven chords of each key, all twelve keys, so you never have to derive them from the wheel. Tap a chord to hear it.</p>
+  <div class="tools">
+    <button class="fbtn ${state.keyTable === 'major' ? 'on' : ''}" data-kt="major">Major keys</button>
+    <button class="fbtn ${state.keyTable === 'minor' ? 'on' : ''}" data-kt="minor">Natural minor keys</button>
+  </div>
+  ${state.keyTable === 'major'
+    ? table(['Key', ...MAJ.num], KEYS.map(x => [N(`<strong>${x.name}</strong>`), ...MAJ.deg.map((d, i) => N(keyChord(x.pc, d, MAJ.q[i], x.flats)))]))
+    : table(['Key', ...MIN.num], KEYS.map(x => [N(`<strong>${x.pc === 6 ? 'D♯m / E♭m' : relMinor(x)}</strong>`), ...MIN.deg.map((d, i) => N(keyChord(x.pc + 9, d, MIN.q[i], x.flats)))]))}
+  <p class="hint">Spelling note: F♯ major's seventh chord is properly written E♯dim (same key as F), and G♭ major's fourth is C♭ (same key as B). This table uses the key names you will see on a keyboard.</p>`; });
+
+/* ===================== Part 2 — Progressions ===================== */
+const PROGS = [
+  ['Pop / four chord', 'I – V – vi – IV', [[0,'maj'],[7,'maj'],[9,'min'],[5,'maj']], 'Uplifting, everywhere in pop'],
+  ['50s progression', 'I – vi – IV – V', [[0,'maj'],[9,'min'],[5,'maj'],[7,'maj']], 'Doo-wop, nostalgic'],
+  ['Jazz cadence', 'ii – V – I', [[2,'m7'],[7,'dom7'],[0,'maj7',1.6]], 'Smooth, strongest resolution in jazz'],
+  ['12-bar blues', 'I I I I – IV IV I I – V IV I I', [[0,'dom7'],[0,'dom7'],[0,'dom7'],[0,'dom7'],[5,'dom7'],[5,'dom7'],[0,'dom7'],[0,'dom7'],[7,'dom7'],[5,'dom7'],[0,'dom7'],[0,'dom7']], 'Cyclical, bluesy backbone'],
+  ['Rock / blues backbone', 'I – IV – V', [[0,'maj'],[5,'maj'],[7,'maj']], 'Simple, driving, three-chord classic'],
+];
+const progLabel = ch => ch.map(([d, q]) => csym(d, q)).join(' – ');
+
+sec('progressions', 'Progressions', 'Part 2: Progressions, putting chords in order', 'Progressions are written in Roman numerals (the Nashville numbers from Part 1), so every one of these works in any key. The middle column shows them in the key you have selected.',
+  () => `
+  <h3>Common progressions</h3>
+  ${table(['Progression', 'Numerals', `In ${nn(state.key.pc)}`, 'Feel', ''], PROGS.map(([n, num, ch, feel]) => [
+    N(n), N(num), N(`<span class="sym">${n === '12-bar blues' ? `${csym(0,'dom7')} – ${csym(5,'dom7')} – ${csym(7,'dom7')} pattern` : progLabel(ch)}</span>`), feel,
+    P(pb(n, playProg(ch, n === '12-bar blues' ? 0.62 : 0.95)))]))}
+
+  <h3>Where each chord type fits in a progression</h3>
+  <p>A chord's function (where it pulls) matters more than its exact color. Swap any chord below into the right slot of a progression from the table above and it will work.</p>
+  ${table(['Chord type', 'Where it usually sits', 'Effect'], [
+    [N('Major triad'), 'I, IV, V: home, lift, return', 'The backbone: stability and motion'],
+    [N('Minor triad'), 'ii, iii, vi', 'Softens and adds emotion between the pillars'],
+    [N('Dominant 7'), 'On V, right before returning to I', 'Maximum pull home; the turnaround chord'],
+    [N('Major 7'), 'On I or IV as a resting chord', 'Relaxed landing that does not demand motion'],
+    [N('Minor 7'), 'On ii (in ii–V–I) or vi', 'Smooth, jazzy stepping stone'],
+    [N('Sus4 / sus2'), 'Just before the same-root major (Gsus4 → G)', 'Delays and sweetens the resolution'],
+    [N('Dominant 9 / 13'), 'Same spot as dominant 7 (on V)', 'Same pull home, richer color'],
+    [N('Altered dominant'), 'On V at the peak moment of tension', 'Extra drama right before resolving'],
+    [N('Diminished 7'), 'Passing chord between chords a whole step apart, or a half-step below the target', 'Chromatic glue: slides voices smoothly'],
+    [N('Half-diminished'), 'On ii in minor keys (ii–V–i)', 'The dark jazz set-up chord'],
+    [N('Augmented'), 'Passing between I and vi, or ending a phrase', 'Raises tension one half-step at a time'],
+    [N('6th / add9'), 'Anywhere a plain major or minor sits', 'Color swap: same function, more sparkle'],
+    [N('Power chord'), 'Anywhere in rock riffs', 'Function-neutral, driving'],
+    [N('Slash chord / inversion'), 'Between chords, to make the bass walk in steps', 'Smooth, connected bassline'],
+  ])}`);
+
+/* ===================== Part 3 — Functional harmony ===================== */
+sec('function', 'Function', 'Part 3: Functional harmony and cadences', 'The framework behind Parts 1 and 2: every chord in a key belongs to one of three functions, and cadences are just how those functions punctuate a phrase.',
+  () => `
+  <h3>The three functions</h3>
+  ${table(['Function', 'Chords (major key)', 'Role'], [
+    [N('Tonic'), 'I, vi, iii', 'Home base: stable, resolved, where you start and end'],
+    [N('Predominant'), 'ii, IV', 'Sets up motion, "getting ready to move" toward the dominant'],
+    [N('Dominant'), 'V, vii°', 'Maximum pull, wants to resolve back to tonic'],
+  ])}
+
+  <h3>Typical function movement</h3>
+  <p>Nearly every progression on this page is really just a path through these three functions, in some order. The chord-placement table in Part 2 is the same idea from a different angle.</p>
+  ${table(['Typical order', `Example (in ${nn(state.key.pc)})`, ''], [
+    ['Tonic → Predominant → Dominant → Tonic', N(`<span class="sym">${progLabel([[0,'maj'],[5,'maj'],[7,'maj'],[0,'maj']])}</span>`), P(pb('tonic, predominant, dominant, tonic', playProg([[0,'maj'],[5,'maj'],[7,'maj'],[0,'maj',1.6]])))],
+    ['Tonic → Dominant → Tonic (shortcut)', N(`<span class="sym">${progLabel([[0,'maj'],[7,'maj'],[0,'maj']])}</span>`), P(pb('tonic, dominant, tonic', playProg([[0,'maj'],[7,'maj'],[0,'maj',1.6]])))],
+    ['Tonic → Predominant → Tonic (no dominant)', N(`<span class="sym">${progLabel([[0,'maj'],[5,'maj'],[0,'maj']])}</span>`), P(pb('tonic, predominant, tonic', playProg([[0,'maj'],[5,'maj'],[0,'maj',1.6]])))],
+  ])}
+
+  <h3>Cadence types, the punctuation marks of a progression</h3>
+  ${table(['Cadence', 'Movement', 'Effect', ''], [
+    [N('Authentic (perfect)'), 'V to I', 'The strongest resolution, sounds like "the end"', P(pb('authentic cadence', playProg([[0,'maj'],[5,'maj'],[7,'dom7'],[0,'maj',1.8]])))],
+    [N('Plagal'), 'IV to I', 'The "Amen" cadence: softer, church-like resolution', P(pb('plagal cadence', playProg([[0,'maj'],[5,'maj'],[0,'maj',1.8]])))],
+    [N('Half'), 'Any chord to V', 'A pause, not a resolution. Sounds like a question', P(pb('half cadence', playProg([[0,'maj'],[5,'maj'],[7,'maj',1.8]])))],
+    [N('Deceptive'), 'V to vi (or any chord besides I)', 'A surprise: sets up an ending, then dodges it', P(pb('deceptive cadence', playProg([[0,'maj'],[5,'maj'],[7,'dom7'],[9,'min',1.8]])))],
+  ])}`);
+
+/* ===================== Part 4 — Scales ===================== */
+const SCALES = [
+  ['Major (Ionian)', [0,2,4,5,7,9,11], 'Bright, resolved: the default "happy" sound'],
+  ['Natural minor (Aeolian)', [0,2,3,5,7,8,10], 'Dark, sad: the default minor sound'],
+  ['Harmonic minor', [0,2,3,5,7,8,11], 'Natural minor with an exotic, tense pull to the root'],
+  ['Melodic minor (ascending)', [0,2,3,5,7,9,11], 'Smoother minor, common in jazz improvisation'],
+  ['Dorian', [0,2,3,5,7,9,10], 'Minor but brighter: a raised 6th lifts the mood'],
+  ['Phrygian', [0,1,3,5,7,8,10], 'Dark, exotic, Spanish and flamenco flavor'],
+  ['Lydian', [0,2,4,6,7,9,11], 'Major but dreamier: a raised 4th gives a floating quality'],
+  ['Mixolydian', [0,2,4,5,7,9,10], 'Major but bluesy: a lowered 7th, the classic dominant scale'],
+  ['Locrian', [0,1,3,5,6,8,10], 'Very unstable, rarely used as a "home" sound'],
+];
+const PENTA = [
+  ['Major pentatonic', [0,2,4,7,9], 'Bright, open. No half-steps, so it is very hard to hit a "wrong" note'],
+  ['Minor pentatonic', [0,3,5,7,10], 'The rock and blues soloing scale: dark, gritty, safe over minor and dominant chords'],
+  ['Blues scale', [0,3,5,6,7,10], 'Minor pentatonic plus a flat 5 "blue note": the classic blues and rock guitar sound'],
+];
+const scaleRow = ([n, iv, sound]) => [N(n), N(`<span class="f">${iv.join(', ')}</span>`), N(`<span class="notes">${iv.map(i => nn(state.key.pc + i)).join(' ')}</span>`), sound, P(pb(`${n} on ${nn(state.key.pc)}`, () => Synth.scale(iv, rootMidi(state.key.pc))))];
+
+sec('scales', 'Scales', 'Part 4: Scales and chord-scale relationships', 'Every scale you are likely to need, formula-first like the chords, plus which one to reach for over which chord. Each plays up and back down from the current key.',
+  () => `
+  <h3>Scales reference</h3>
+  ${table(['Scale', 'Formula', `Notes in ${nn(state.key.pc)}`, 'Sound', ''], SCALES.map(scaleRow))}
+
+  <h3>Pentatonic and blues scales</h3>
+  <p>These are almost certainly scales you already know from guitar (minor pentatonic box shapes). Same notes, same sound, just laid out in a straight line instead of across frets.</p>
+  ${table(['Scale', 'Formula', `Notes in ${nn(state.key.pc)}`, 'Sound', ''], PENTA.map(scaleRow))}
+
+  <h3>Chord-scale relationships</h3>
+  ${table(['Chord type', 'Scale to use', 'Why'], [
+    [N('Major (I)'), 'Major scale (Ionian)', 'The straightforward, at-home choice'],
+    [N('Major, as IV'), 'Lydian', 'The raised 4th matches the "floating" IV-chord color'],
+    [N('Major 7'), 'Major scale or Lydian', 'Either works; Lydian is brighter and more modern'],
+    [N('Minor (i)'), 'Natural minor (Aeolian)', 'The straightforward minor choice'],
+    [N('Minor, vamping or groove'), 'Dorian', 'Brighter than natural minor; the default jazz and funk minor sound'],
+    [N('Minor 7'), 'Dorian', 'The standard scale for a minor 7 chord in jazz'],
+    [N('Dominant 7 (V)'), 'Mixolydian', 'The classic dominant scale, matches the chord\'s flat 7th'],
+    [N('Altered dominant 7'), 'Altered scale', 'Matches the chord\'s built-in tensions (♭9, ♯9, ♯11, ♭13)'],
+    [N('Half-diminished (m7♭5)'), 'Locrian', 'Matches the chord\'s own built-in tritone'],
+    [N('Diminished 7'), 'Whole-half diminished scale', 'Symmetrical scale for a symmetrical chord'],
+  ])}`);
+
+/* ===================== Part 5 — Color and reharmonization ===================== */
+sec('color', 'Color', 'Part 5: Color and reharmonization', 'Ways to make a plain progression sound more interesting without changing its underlying function: borrowing chords, adding pull, and swapping chords for richer relatives.',
+  () => { const R = nn(state.key.pc); return `
+  <h3>Borrowed chords (modal interchange)</h3>
+  <p>Pulling a chord from the parallel minor or major key for extra color without leaving the key entirely. Each example plays I, then the borrowed chord, then I again so you can hear the color against home.</p>
+  ${table(['Chord', 'Numeral', `Example (in ${R} major)`, 'Effect', ''], [
+    [N('Minor iv'), 'iv', N(`<span class="sym">${csym(5,'min')}</span>`), 'Bittersweet, melancholic lift', P(pb('minor iv', playProg([[0,'maj'],[5,'min'],[0,'maj',1.6]])))],
+    [N('Flat seven'), '♭VII', N(`<span class="sym">${csym(10,'maj')}</span>`), 'Rock, anthemic, borrowed Mixolydian color', P(pb('flat seven', playProg([[0,'maj'],[10,'maj'],[0,'maj',1.6]])))],
+    [N('Flat six'), '♭VI', N(`<span class="sym">${csym(8,'maj')}</span>`), 'Dramatic, cinematic lift', P(pb('flat six', playProg([[0,'maj'],[8,'maj'],[0,'maj',1.6]])))],
+    [N('Flat three'), '♭III', N(`<span class="sym">${csym(3,'maj')}</span>`), 'Epic, borrowed from the parallel minor', P(pb('flat three', playProg([[0,'maj'],[3,'maj'],[0,'maj',1.6]])))],
+  ])}
+
+  <h3>Secondary dominants</h3>
+  <p>A dominant 7 chord borrowed from outside the key to strongly pull toward a specific chord coming up next. A reliable way to add motion to a static progression.</p>
+  ${table(['Chord', 'Function', `Example (in ${R})`, 'Effect', ''], [
+    [N('V/V'), 'Dominant of the dominant', N(`<span class="sym">${csym(2,'dom7')} resolves to ${csym(7,'maj')}</span>`), 'Strong pull toward V', P(pb('V of V', playProg([[0,'maj'],[2,'dom7'],[7,'maj',1.6]])))],
+    [N('V/vi'), 'Dominant of vi', N(`<span class="sym">${csym(4,'dom7')} resolves to ${csym(9,'min')}</span>`), 'Adds drama before the relative minor', P(pb('V of vi', playProg([[0,'maj'],[4,'dom7'],[9,'min',1.6]])))],
+    [N('V/ii'), 'Dominant of ii', N(`<span class="sym">${csym(9,'dom7')} resolves to ${csym(2,'min')}</span>`), 'Common jazz and pop pivot move', P(pb('V of ii', playProg([[0,'maj'],[9,'dom7'],[2,'min',1.6]])))],
+    [N('V/IV'), 'Dominant of IV', N(`<span class="sym">${csym(0,'dom7')} resolves to ${csym(5,'maj')}</span>`), 'Classic blues turnaround motion', P(pb('V of IV', playProg([[0,'maj'],[0,'dom7'],[5,'maj',1.6]])))],
+  ])}
+
+  <h3>Simple substitution rules</h3>
+  ${table(['Original chord', 'Try instead', 'Why it works'], [
+    [N('Any I'), 'Imaj7', 'Same function, richer color'],
+    [N('Any V'), 'V7, V9, or V13', 'Adds pull without changing the function'],
+    [N('Any ii'), 'ii7', 'Smoother, jazzier version of the same role'],
+    [N('Any V'), 'Tritone sub (♭II7)', 'Shares the same 3rd/7th tension notes; bass moves by step instead of a leap'],
+    [N('Static chord held 2+ bars'), 'Insert a secondary dominant before the next chord', 'Adds motion without leaving the key'],
+    [N('Any vi'), 'Borrowed ♭VI', 'Same "away from home" role, darker and more dramatic'],
+  ])}
+
+  <div class="note">
+    <p><strong>Tritone substitution, worked example.</strong> Take a ii–V–I in C: Dm7 – G7 – C. G7's defining notes are its 3rd and 7th (B and F). D♭7, the chord a tritone away from G7, has F and C♭ (the same key as B) as its own 3rd and 7th, just swapped. Substitute it in: Dm7 – D♭7 – C. The bass now falls by a half-step (D♭ to C) into the resolution instead of jumping a fifth (G to C): smoother, jazzier, and it still resolves correctly.</p>
+    <div class="inline">
+      <button class="btn ghost" data-a="${act(playProg([[2,'m7'],[7,'dom7'],[0,'maj7',1.8]]))}">▶ Original: ${csym(2,'m7')} – ${csym(7,'dom7')} – ${csym(0,'maj7')}</button>
+      <button class="btn ghost" data-a="${act(playProg([[2,'m7'],[1,'dom7'],[0,'maj7',1.8]]))}">▶ Tritone sub: ${csym(2,'m7')} – ${csym(1,'dom7')} – ${csym(0,'maj7')}</button>
+    </div>
+  </div>`; });
+
+/* ===================== Part 6 — Atmospheric ===================== */
+function playAtmos() {
+  const c = Synth.ensure(); const t = c.currentTime + 0.03, bar = 1.5;
+  Synth.note(40, t, bar * 5, 0.15);                       // low E pedal under the first three chords
+  Synth.chord([52,55,59,64], 0, t, bar * 2 * 0.98);        // Em, 2 bars
+  Synth.chord([48,52,55,62], 0, t + bar * 2, bar * 2 * 0.98); // Cadd9, 2 bars
+  Synth.chord([55,59,62,67], 0, t + bar * 4, bar * 0.98);   // G, 1 bar
+  Synth.chord([50,55,57,62], 0, t + bar * 5, bar * 0.5 * 0.98); // Dsus4
+  Synth.chord([50,54,57,62], 0, t + bar * 5.5, bar * 1.2);  // D
+  return bar * 6.7 + 0.3;
+}
+sec('atmosphere', 'Atmosphere', 'Part 6: Atmospheric chord choices', 'The slow, spacious, Floyd and Gilmour-style sound is not a different set of chords. It is different choices about which chords you use and how long you hold them.',
+  () => `
+  <h3>Building an atmospheric sound</h3>
+  ${table(['Element', 'How to use it', 'Effect'], [
+    [N('Pedal tone'), 'Hold the same bass note under 2 to 4 changing chords above it', 'Drifting, unresolved: a hallmark of slow atmospheric rock'],
+    [N('Suspended chords'), 'Let a sus2 or sus4 sit before resolving, or do not resolve it at all', 'Open, spacious, never fully settled'],
+    [N('Add9 / 6th chords'), 'Use instead of plain triads', 'Softens the chord without adding real tension: lush and dreamy'],
+    [N('Slow harmonic rhythm'), 'Hold each chord for 2 to 4+ bars instead of changing every bar', 'Spacious, meditative, gives each chord room to breathe'],
+    [N('Modal borrowing (♭VII, ♭VI)'), 'Substitute for the expected diatonic chord', 'Cinematic, unresolved lift'],
+    [N('Wide voicings'), 'Spread your two hands far apart instead of close together', 'Open, "big sky" sound'],
+  ])}
+  <div class="note">
+    <p><strong>Try it yourself (in Em).</strong> Em (hold 2 bars) → Cadd9 (2 bars) → G (1 bar) → Dsus4 resolving to D (1 bar), with the low E held as a pedal tone under the first three chords. Slow it right down. The space between chords matters as much as the chords themselves.</p>
+    <div class="inline"><button class="btn ghost" data-a="${act(playAtmos)}">▶ Em – Cadd9 – G – Dsus4 – D, with the E pedal</button></div>
+  </div>`);
+
+/* ===================== Part 7 — Key and structure ===================== */
+sec('structure', 'Structure', 'Part 7: Key and structure', 'How to change key mid-song, how songs are structured beyond a chord list, and how to move a progression into a new key on the fly.',
+  () => `
+  <h3>Modulation techniques</h3>
+  ${table(['Technique', 'How it works', 'Effect'], [
+    [N('Pivot chord'), 'Find a chord shared by both the old and new key and use it as a bridge', 'Smoothest, least noticeable modulation'],
+    [N('Direct / abrupt'), 'Start playing in the new key with no preparation', 'Dramatic, sudden lift: the classic key-change chorus'],
+    [N('Sequential'), 'Repeat a short phrase, shifted up (usually a step)', 'Builds energy, common in pop bridges'],
+  ])}
+  <h3>Song form reference</h3>
+  ${table(['Form', 'Structure', 'Common in'], [
+    [N('Verse / chorus'), 'Verse – Chorus – Verse – Chorus – Bridge – Chorus', 'Most pop and rock songs'],
+    [N('12-bar blues'), 'I I I I – IV IV I I – V IV I I (see Part 2)', 'Blues, rock and roll'],
+    [N('32-bar AABA'), 'Two A sections, a contrasting B (the "bridge" or "middle eight"), then A again', 'Jazz standards, much pre-1960s pop'],
+    [N('Through-composed'), 'No repeated sections: the music keeps evolving', 'Progressive and art rock, film scoring'],
+  ])}
+  <h3>Dynamics and arrangement</h3>
+  ${table(['Element', 'How to use it', 'Effect'], [
+    [N('Pre-chorus'), 'A short transitional section between verse and chorus that builds tension', 'Makes the chorus hit harder by contrast'],
+    [N('Build and release'), 'Gradually add instruments and intensity across a whole song, then drop back down', 'A satisfying long-form arc, not just within one chord (see Part 6)'],
+    [N('Space (strategic silence)'), 'Deliberately remove instruments, or drop to just one voice, for a moment', 'One of the most effective dynamic tools: contrast makes the return feel bigger'],
+    [N('Intro / outro'), 'How a song opens and closes: cold open, instrumental intro, fade-out, hard stop', 'Sets the mood before lyrics start, and provides closure'],
+  ])}
+  <h3>Hooks</h3>
+  ${table(['Hook type', 'What it is', 'Example concept'], [
+    [N('Melodic hook'), 'A short, catchy melodic phrase that repeats', 'The part you hum without meaning to'],
+    [N('Lyrical hook'), 'A repeated, memorable lyric line', 'Often the song title itself'],
+    [N('Rhythmic hook'), 'A repeated rhythmic figure, even without pitch', 'The cash-register and riff pattern in Pink Floyd\'s "Money"'],
+  ])}
+  <h3>Transposing a progression</h3>
+  <ol class="steps">
+    <li>Write out the numerals of the original progression (for example I – V – vi – IV).</li>
+    <li>Pick the new root note.</li>
+    <li>Rebuild each chord from that new root using the same numerals.</li>
+    <li>Check the key signature table in Part 1 to see which notes will automatically be sharp or flat in the new key.</li>
+  </ol>
+  <p>Or use the key selector at the top of this page: Part 2 shows every progression in whichever key you choose.</p>`);
+
+/* ===================== Part 8 — Rhythm and time ===================== */
+const METERS = [
+  ['4/4', 'Straight, four steady beats', 'The default for pop, rock, blues, most music', [1,0,0,0], 0.5],
+  ['3/4', 'Waltz, one-two-three lilt', 'Waltzes, some ballads', [1,0,0], 0.5],
+  ['6/8', 'Compound, flowing two big beats', 'Ballads, some blues-adjacent shuffle feels', [1,0,0,1,0,0], 0.25],
+  ['5/4', 'Asymmetric, off-balance', 'Jazz ("Take Five"), some prog rock', [1,0,0,1,0], 0.5],
+  ['7/4', 'Lopsided, tense, uneven', 'Prog rock, famously "Money" by Pink Floyd', [1,0,0,0,1,0,0], 0.5],
+  ['7/8', 'Fast uneven subdivision', 'Prog and math rock, Balkan-influenced music', [1,0,1,0,1,0,0], 0.22],
+];
+const TRI = [0,4,7];
+const COMP = [
+  ['Block chords', 'Play all notes of the chord together, right on the beat', 'Simple, steady, easy starting point', [0,1,2,3,4,5,6,7].map(b => [b, TRI, 0.9])],
+  ['Broken / arpeggiated', 'Play the chord\'s notes one at a time in sequence', 'Flowing, gentle, good under a melody', Array.from({length:16}, (_, k) => [k * 0.5, [[0,4,7,12][k % 4]], 0.7])],
+  ['Alberti bass', 'Low note, high note, middle note, high note (repeat)', 'Classical, moving without being busy', Array.from({length:16}, (_, k) => [k * 0.5, [[0,7,4,7][k % 4]], 0.55])],
+  ['Boom-chuck', 'Root note on beats 1 and 3, full chord on 2 and 4', 'Country and folk, driving and grounded', [0,4].flatMap(b => [[b, [-12], 0.9], [b + 1, TRI, 0.5], [b + 2, [-5], 0.9], [b + 3, TRI, 0.5]])],
+  ['Bossa nova comping', 'Chord stabs placed just off the beat', 'Latin, laid-back groove', [[0,[-12],1.8],[2,[-5],1.8],[4,[-12],1.8],[6,[-5],1.8], ...[0,1.5,3,4,5.5,7].map(b => [b, TRI, 0.6])]],
+  ['Four-on-the-floor', 'A steady chord or note on every quarter note', 'Dance and pop momentum', [0,1,2,3,4,5,6,7].map(b => [b, TRI, 0.45])],
+];
+sec('rhythm', 'Rhythm', 'Part 8: Rhythm and time', 'Everything so far has been about which notes to play. This part is about when to play them. Time signatures play two bars of click with the accented beats louder; comping patterns play two bars on the current key\'s major chord.',
+  () => `
+  <h3>Time signature reference</h3>
+  ${table(['Signature', 'Feel', 'Common in', ''], METERS.map(([s, feel, common, acc, step]) => [N(`<span class="sym">${s}</span>`), feel, common, P(pb(`${s} click`, () => Synth.meter(acc, step)))]))}
+  <h3>Left-hand comping patterns</h3>
+  ${table(['Pattern', 'How it works', 'Feel', ''], COMP.map(([n, how, feel, hits]) => [N(n), how, feel, P(pb(n, () => Synth.pattern(hits, rootMidi(state.key.pc))))]))}
+  <h3>Suggested tempo ranges</h3>
+  ${table(['Style', 'BPM range'], [
+    [N('Ballad'), '60 to 80'],
+    [N('Mid-tempo pop / rock'), '90 to 120'],
+    [N('Uptempo rock / dance'), '120 to 140'],
+    [N('Fast / energetic (punk, uptempo funk)'), '150+'],
+    [N('Swing / jazz'), '100 to 140 (feels faster because of swung eighth notes)'],
+  ])}`);
+
+/* ===================== Part 9 — Melody, bass and voicing ===================== */
+function playLine(pairs, step = 0.42) {
+  const c = Synth.ensure(); const t = c.currentTime + 0.03; const r = rootMidi(state.key.pc);
+  pairs.forEach(([m, h], k) => { Synth.note(r + m + 12, t + k * step, step * 1.4, 0.16); if (h !== null) Synth.note(r + h + 12, t + k * step, step * 1.4, 0.11); });
+  return pairs.length * step + 0.5;
+}
+const MEL = [0,2,4,5,7];
+sec('melody', 'Melody', 'Part 9: Melody, bass and voicing', 'The notes that connect chord tones into a melody, what the left hand can do beyond holding roots, and how many independent lines are happening at once.',
+  () => `
+  <h3>Non-chord tones</h3>
+  ${table(['Type', 'What it is', 'Effect'], [
+    [N('Passing tone'), 'A note that steps between two chord tones, on a weak beat', 'Smooths a leap into a walk'],
+    [N('Neighbor tone'), 'A note that steps away from a chord tone and immediately back', 'A small decorative wobble'],
+    [N('Suspension'), 'A note held over from the previous chord that resolves down by step', 'A brief clash before it resolves'],
+    [N('Appoggiatura'), 'A note approached by leap, then resolved by step', 'An expressive "leaning" emphasis'],
+  ])}
+  <h3>Melodic contour tips</h3>
+  <p>Keep melodies mostly stepwise, using leaps sparingly, and follow any big leap with a step in the opposite direction to balance it out. Repetition (of a note, rhythm, or short phrase) is what makes a melody memorable; vary it slightly the second time rather than repeating it exactly.</p>
+  <h3>Harmonizing a melody</h3>
+  <p>For each melody note, find the note a 3rd (or 6th) away that is diatonic to the current chord or key. The exact interval (major or minor 3rd) shifts automatically as you move through the scale, and that is what keeps the harmony sounding natural rather than mechanically transposed. Each example plays a five-note scale fragment with the harmony line added.</p>
+  ${table(['Approach', 'How it sounds', 'When to use', ''], [
+    [N('3rd above'), 'Sweet, consonant, blends fully', 'The default choice for most harmony lines', P(pb('melody with a 3rd above', () => playLine([...MEL.map(m => [m, null]), ...MEL.map((m, i) => [m, [4,5,7,9,11][i]])])))],
+    [N('3rd below'), 'Same consonance, sits lower and warmer', 'When the harmony should sit underneath rather than above', P(pb('melody with a 3rd below', () => playLine([...MEL.map(m => [m, null]), ...MEL.map((m, i) => [m, [-3,-1,0,2,4][i]])])))],
+    [N('6th (a 3rd inverted)'), 'Same notes as a 3rd, wider spacing', 'More separation between voices, still very consonant', P(pb('melody with a 6th', () => playLine([...MEL.map(m => [m, null]), ...MEL.map((m, i) => [m, [9,11,12,14,16][i]])])))],
+    [N('Parallel motion'), 'Harmony moves the same direction as the melody, same interval throughout', 'Simplest, safest approach: the default', ''],
+    [N('Contrary motion'), 'Harmony moves the opposite direction to the melody', 'More interesting, avoids a "glued together" feel', ''],
+  ])}
+  <h3>Bass approaches</h3>
+  ${table(['Approach', 'How it works', 'Feel'], [
+    [N('Root only'), 'Just play the root note of each chord', 'Simple, grounded'],
+    [N('Root + fifth'), 'Alternate between the root and the fifth', 'Fuller, still simple'],
+    [N('Walking bass'), 'Step through passing notes between chord roots, often one per beat', 'Smooth, forward-moving, jazz and blues staple'],
+    [N('Pedal tone'), 'Hold one bass note under changing chords above it (see Part 6)', 'Drifting, atmospheric'],
+  ])}
+  <h3>Texture types</h3>
+  ${table(['Texture', 'Description', 'Example'], [
+    [N('Monophonic'), 'A single melodic line, no harmony underneath', 'A solo, unaccompanied melody'],
+    [N('Homophonic'), 'One main melody with supporting harmony or chords underneath', 'Most pop and rock songs: melody plus chords'],
+    [N('Polyphonic'), 'Two or more independent melodic lines happening at once', 'Bach fugues, some prog-rock counterpoint'],
+  ])}
+  <h3>Voicing and voice-leading tips</h3>
+  <div class="note">
+    <p><strong>Voice leading.</strong> When moving from one chord to the next, pick the inversion that keeps your hand closest to where it already is, rather than jumping to root position every time. Guitar chord shapes are fixed, but piano rewards minimal hand movement between chords.</p>
+    <p><strong>Rootless / shell voicings.</strong> Left hand plays just the 3rd and 7th of a chord, dropping the root entirely (since a bassist, or your other hand, is already covering it). The standard jazz-comping shortcut that makes big extended chords actually playable with five fingers.</p>
+  </div>`);
+
+/* ===================== Part 10 — Notation glossary ===================== */
+sec('notation', 'Notation', 'Part 10: Notation glossary', 'How chord symbols and rhythm actually look on a lead sheet, at a glance.',
+  () => `
+  <h3>Chord symbols, reading a lead sheet</h3>
+  ${table(['Symbol', 'Meaning'], [
+    [N('maj7, M7, or Δ'), 'Major 7th'],
+    [N('m7, min7, or −7'), 'Minor 7th'],
+    [N('° or dim'), 'Diminished'],
+    [N('ø or m7♭5'), 'Half-diminished'],
+    [N('+ or aug'), 'Augmented'],
+    [N('sus'), 'Suspended (no 3rd present)'],
+    [N('C/G'), 'Slash chord: play the chord on the left, with the note on the right in the bass'],
+    [N('add'), 'Add a color tone without also adding the 7th'],
+    [N('alt'), 'Altered dominant: use whichever alterations fit the moment'],
+    [N('(♭9), (♯11)'), 'An optional color tone layered onto the base chord'],
+    [N('N.C.'), 'No chord: a rest from harmony entirely'],
+  ])}
+  <h3>Rhythmic notation</h3>
+  ${table(['Symbol / term', 'Meaning'], [
+    [N('Whole note'), '4 beats (in 4/4)'],
+    [N('Half note'), '2 beats'],
+    [N('Quarter note'), '1 beat'],
+    [N('Eighth note'), 'Half a beat (two per beat)'],
+    [N('Dotted note'), 'Adds half again of the note\'s value (dotted quarter = 1.5 beats)'],
+    [N('Tie'), 'Joins two notes into one continuous sound across their combined length'],
+    [N('Syncopation'), 'Accenting a normally weak beat or off-beat, pushing against the expected pulse'],
+  ])}`);
+
+/* ===================== Key terms ===================== */
+const TERMS = [
+  ['Semitone (half-step)', 'The smallest distance between two keys on the instrument, and the unit every formula on this page counts in. Two semitones make a whole step.'],
+  ['Interval', 'The distance between two notes, measured in semitones. Part 11 lists them with songs that start on each one.'],
+  ['Root', 'The note a chord is built from and named after. In every formula the root is 0.'],
+  ['Scale degree', 'A note\'s position in a scale, numbered 1 to 7 up from the root. Chords built on each degree get the Roman numerals in Part 1.'],
+  ['Tonic', 'The home note or chord of a key: degree 1, the I chord, the place everything resolves back to.'],
+  ['Diatonic', 'Built only from the seven notes of the current key. The chords in Part 1\'s tables are all diatonic.'],
+  ['Chromatic', 'Using notes from outside the key, up to the full set of twelve. Borrowed chords and secondary dominants (Part 5) are chromatic.'],
+  ['Enharmonic', 'Two names for the same key on the instrument: C♯ and D♭, or C♭ and B. Which name is correct depends on the key you are in.'],
+  ['Tension and resolution', 'The feeling that a chord wants to move somewhere (tension) and then arrives (resolution). Dominant to tonic is the classic case.'],
+  ['Consonance and dissonance', 'Consonant intervals sound settled on their own; dissonant ones clash and want to move. Music uses both: dissonance is what makes resolution feel like anything.'],
+  ['Tritone', 'The six-semitone interval, the most unstable one there is. It sits inside every dominant 7th chord and is the reason V pulls so hard to I.'],
+  ['Cadence', 'A chord movement that ends a phrase, like punctuation in a sentence. Part 3 lists the four kinds.'],
+  ['Voicing', 'Which octave and order the notes of a chord are played in. Same chord, different voicing, very different sound.'],
+  ['Inversion', 'A chord with a note other than its root in the bass, written as a slash chord (C/E).'],
+  ['Voice leading', 'Moving each note the shortest possible distance into the next chord, so the change sounds smooth rather than jumpy.'],
+  ['Mode', 'A scale built from the notes of a major scale but starting from a different degree. Dorian, Lydian and Mixolydian (Part 4) are the ones you will use most.'],
+  ['Relative and parallel keys', 'Relative keys share the same notes but have different homes (C major and A minor). Parallel keys share the same root but different quality (C major and C minor).'],
+  ['Modulation', 'Changing key partway through a piece. Part 7 covers how.'],
+  ['Pedal tone', 'A bass note held while the chords above it change. The core of the atmospheric sound in Part 6.'],
+  ['Harmonic rhythm', 'How often the chords change. Fast harmonic rhythm feels busy; slow harmonic rhythm feels spacious.'],
+  ['Comping', 'Playing chords in rhythm behind a melody or a soloist. Part 8 lists common patterns.'],
+  ['Vamp', 'A short progression (often just one or two chords) repeated as a bed for a solo or melody.'],
+  ['Turnaround', 'The last bar or two of a form that lead back to the start, usually landing on V so the top of the form feels like arriving home.'],
+  ['Chord tone and non-chord tone', 'Notes that belong to the chord currently sounding, versus decorative notes (passing, neighbor, suspension) that move around them. Part 9 covers the second kind.'],
+];
+sec('terms', 'Key terms', 'Key terms', 'The vocabulary the rest of this page uses. If a word in another section is unfamiliar, it is probably here.',
+  () => `<dl class="gl">${TERMS.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`);
+
+/* ===================== Part 11 — Ear training ===================== */
+const INTERVALS = [
+  [1, 'Minor 2nd', '"Jaws" theme'], [2, 'Major 2nd', '"Happy Birthday" (first two notes)'], [3, 'Minor 3rd', '"Smoke on the Water" riff (Deep Purple)'],
+  [4, 'Major 3rd', '"Kumbaya" (first two notes)'], [5, 'Perfect 4th', '"Amazing Grace" (first two notes)'], [6, 'Tritone', 'Black Sabbath\'s "Black Sabbath" riff'],
+  [7, 'Perfect 5th', '"Star Wars" (Main Title) opening leap'], [8, 'Minor 6th', '"Love Story" theme'], [9, 'Major 6th', '"My Bonnie Lies Over the Ocean"'],
+  [10, 'Minor 7th', '"Somewhere" (West Side Story)'], [11, 'Major 7th', 'A bright, straining leap just shy of the octave. Practice it against the octave below'], [12, 'Octave', '"Somewhere Over the Rainbow" opening'],
+];
+const QCH = [['Major', [0,4,7]], ['Minor', [0,3,7]], ['Diminished', [0,3,6]], ['Augmented', [0,4,8]], ['Sus4', [0,5,7]], ['Dominant 7', [0,4,7,10]], ['Major 7', [0,4,7,11]], ['Minor 7', [0,3,7,10]]];
+const quiz = {mode: 'interval', ans: null, opts: [], asked: 0, right: 0, done: false, root: 60};
+function qNew() {
+  const pool = quiz.mode === 'interval' ? INTERVALS.map(i => ({label: i[1], n: i[0]})) : QCH.map(c => ({label: c[0], iv: c[1]}));
+  const i = Math.floor(Math.random() * pool.length); quiz.ans = pool[i];
+  const others = pool.filter((_, k) => k !== i).sort(() => Math.random() - 0.5).slice(0, 3);
+  quiz.opts = [quiz.ans, ...others].sort(() => Math.random() - 0.5);
+  quiz.root = 55 + Math.floor(Math.random() * 12); quiz.done = false;
+  qRender(); qPlay();
+}
+function qPlay() {
+  if (!quiz.ans) { qNew(); return; }
+  Synth.ensure(); Synth.stop();
+  const b = $('#qplay'); if (b) b.classList.add('playing');
+  const d = quiz.mode === 'interval' ? Synth.interval(quiz.ans.n, quiz.root) : Synth.seq([{iv: quiz.ans.iv, root: quiz.root}], 1.8);
+  Synth._t = setTimeout(() => b && b.classList.remove('playing'), d * 1000);
+}
+function qAnswer(label) {
+  if (!quiz.ans || quiz.done) return;
+  quiz.done = true; quiz.asked++;
+  const ok = label === quiz.ans.label; if (ok) quiz.right++;
+  const desc = quiz.mode === 'interval' ? `${quiz.ans.label} (${quiz.ans.n} semitone${quiz.ans.n === 1 ? "" : "s"})` : `${quiz.ans.label} (${quiz.ans.iv.join(', ')})`;
+  $('#qfeed').innerHTML = ok ? `<strong>Yes.</strong> That was a ${desc}.` : `<strong>Not quite.</strong> It was a ${desc}. Play it again and listen for the quality, then try a new question.`;
+  document.querySelectorAll('.qo').forEach(b => { if (b.dataset.q === quiz.ans.label) b.classList.add('right'); else if (b.dataset.q === label) b.classList.add('wrong'); });
+  qRender(true);
+}
+function qRender(keepOpts) {
+  const el = $('#qopts'); if (!el) return;
+  document.querySelectorAll('.qtab').forEach(b => b.classList.toggle('on', b.dataset.qm === quiz.mode));
+  if (!keepOpts) {
+    el.innerHTML = quiz.opts.map(o => `<button class="qo" data-q="${o.label}">${o.label}</button>`).join('');
+    $('#qfeed').innerHTML = '';
+  }
+  $('#qscore').textContent = quiz.asked ? `Score: ${quiz.right} of ${quiz.asked}` : 'Score: no questions yet';
+  $('#qprompt').textContent = quiz.mode === 'interval'
+    ? 'Two notes play one after the other, then together. Which interval is it?'
+    : 'One chord plays. What quality is it?';
+}
+
+sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and progressions by ear, anchored to songs you already know, plus a quiz and a step-by-step method that pulls the whole page together.',
+  () => `
+  <h3>Interval reference (ascending, from any root)</h3>
+  ${table(['Interval', 'Semitones', 'Song anchor', ''], INTERVALS.map(([n, name, song]) => [N(name), `${n}`, song, P(pb(name, () => Synth.interval(n, rootMidi(state.key.pc))))]))}
+
+  <h3>Quiz yourself</h3>
+  <div class="quiz">
+    <div class="qtabs"><button class="qtab on" data-qm="interval">Intervals</button><button class="qtab" data-qm="chord">Chord quality</button></div>
+    <p id="qprompt"></p>
+    <div class="inline"><button class="btn" id="qplay">▶ Play</button><button class="btn ghost" id="qnext">New question</button></div>
+    <div class="qopts" id="qopts"></div>
+    <p class="qfeed" id="qfeed"></p>
+    <p class="qscore" id="qscore"></p>
+  </div>
+
+  <h3>Progressions you already know, in the wild</h3>
+  <p>Floyd's slower, atmospheric material ("Breathe", "Time", and similar) tends to drift away from these tidy progressions into slower modal shifts and pedal tones instead. See Part 6.</p>
+  ${table(['Progression', 'Where you will hear it'], [
+    [N('I – V – vi – IV'), 'The whole basis of the comedy song "4 Chords" by Axis of Awesome. Once you know it, you will hear it everywhere in pop'],
+    [N('I – vi – IV – V (50s progression)'), '"Stand By Me" (Ben E. King) is the textbook example'],
+    [N('ii – V – I'), 'The backbone of most jazz standards, for example "Autumn Leaves"'],
+    [N('12-bar blues'), 'The foundation under most blues and blues-rock, from Muddy Waters to Clapton'],
+    [N('I – IV – V'), 'Classic three-chord rock and punk anthems'],
+  ])}
+
+  <h3>How to work out a song by ear</h3>
+  <ol class="steps">
+    <li><strong>Find the key.</strong> Hum the bass note that feels most "home", then check it against the circle of fifths (Part 1).</li>
+    <li><strong>Find the bass notes.</strong> Usually the easiest thing to pick out, and they outline the chord roots.</li>
+    <li><strong>Match chord quality by ear.</strong> Bright (major) or dark (minor)? Use the quiz above to sharpen this, and the cadence sound cues in Parts 3 and 4.</li>
+    <li><strong>Convert to Nashville numbers.</strong> Work out each chord's number in the key (Part 1) so you can transpose or compare.</li>
+    <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
+  </ol>`);
+
+/* ===================== Render and wire up ===================== */
+const TILES = [['Major','',[0,4,7],'major','bright, resolved'],['Minor','m',[0,3,7],'minor','darker, emotional'],['Diminished','dim',[0,3,6],'diminished','tense, unstable'],['Augmented','aug',[0,4,8],'augmented','floating, dreamlike'],['Sus2','sus2',[0,2,7],'suspended','open, airy'],['Sus4','sus4',[0,5,7],'suspended','wants to resolve']];
+function renderTiles() {
+  const r = state.key.pc;
+  $('#tiles').innerHTML = TILES.map(([n, s, iv, f, d]) =>
+    `<button class="tile" style="--fam:var(--${f})" data-a="${act(() => Synth.seq([{iv, root: rootMidi(r, iv)}], 1.8))}" aria-label="Play ${nn(r)} ${n}"><b>${nn(r) + s}</b><small>${n}: ${d}</small></button>`).join('');
+}
+function renderAll() {
+  ACTS = [];
+  renderTiles();
+  $('#app').innerHTML = SECTIONS.map(s => `<section class="part" id="${s.id}"><h2>${s.title}</h2>${s.lead ? `<p class="lead">${s.lead}</p>` : ''}${s.body()}</section>`).join('');
+  qRender();
+}
+function setKey(i) { state.key = KEYS[i]; $('#keysel').value = i; renderAll(); }
+
+$('#nav').innerHTML = SECTIONS.map(s => `<a href="#${s.id}">${s.nav}</a>`).join('');
+$('#keysel').innerHTML = KEYS.map((k, i) => `<option value="${i}">${k.name}</option>`).join('');
+$('#keysel').addEventListener('change', e => setKey(+e.target.value));
+$('#stop').addEventListener('click', () => Synth.stop());
+
+document.addEventListener('click', e => {
+  const k = e.target.closest('[data-k]'); if (k) { setKey(+k.dataset.k); return; }
+  const f = e.target.closest('[data-fam]');
+  if (f) { state.fam = f.dataset.fam; document.querySelectorAll('[data-fam]').forEach(b => b.classList.toggle('on', b.dataset.fam === state.fam)); $('#chordlist').innerHTML = renderChordList(); return; }
+  const kt = e.target.closest('[data-kt]'); if (kt) { state.keyTable = kt.dataset.kt; renderAll(); document.getElementById('keys').querySelector('[data-kt]').scrollIntoView({block: 'nearest'}); return; }
+  const qm = e.target.closest('[data-qm]'); if (qm) { quiz.mode = qm.dataset.qm; quiz.ans = null; quiz.opts = []; quiz.done = false; qRender(); return; }
+  if (e.target.closest('#qplay')) { qPlay(); return; }
+  if (e.target.closest('#qnext')) { qNew(); return; }
+  const qo = e.target.closest('.qo'); if (qo) { qAnswer(qo.dataset.q); return; }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'csearch') { state.q = e.target.value.trim(); $('#chordlist').innerHTML = renderChordList(); }
+});
+
+renderAll();
+</script>
+</body>
+</html>
