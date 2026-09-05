@@ -3,33 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17140F">
 <title>Music theory, by ear — chords, keys, progressions and scales you can hear</title>
 <meta name="description" content="A complete chord and music theory reference with sound. Tap any chord, scale, cadence or progression to hear it, change the key and everything transposes. Chord formulas, circle of fifths, functional harmony, reharmonization, rhythm, melody and ear training.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FBFBF9;--ink:#15152A;--ink2:#4C4C63;--line:#DDDDE7;--surf:#EEEEF7;--acc:#4F3CC9;--acc2:#E9E6FA;
-  --major:#B8720E;--minor:#2457C5;--diminished:#C0322E;--augmented:#7A3FD1;--suspended:#12867D;--dominant:#D2521A;--altered:#C42A72;--other:#6B6B7A;
+  --bg:#17140F;--panel:#221D15;--surf:#26201A;--line:#3A3226;--line2:#4A3F31;
+  --ink:#F0E6D2;--ink2:#B3A78E;--acc:#D99A3D;--acc2:#3B2E17;
+  --major:#E3A23C;--minor:#6C9CE8;--diminished:#D97060;--augmented:#A98BE8;--suspended:#4FBBA6;--dominant:#E58A4F;--altered:#E07AA8;--other:#8C8578;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:96px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:96px;background:var(--bg)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 h1,h2,h3,.sym,.tile b,.bar .t{font-family:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif}
 a{color:var(--acc)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 button{font:inherit;color:inherit}
+::selection{background:var(--acc);color:var(--bg)}
 
 /* sticky bar */
-.bar{position:sticky;top:0;z-index:10;background:rgba(251,251,249,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{position:sticky;top:0;z-index:10;background:rgba(23,20,15,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .bar .row{max-width:920px;margin:0 auto;padding:10px 16px 8px;display:flex;align-items:center;gap:12px}
 .bar .t{font-weight:600;font-size:18px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .keylab{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2);white-space:nowrap}
-select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
-.stop{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);font-size:12px}
-.stop:hover{border-color:var(--ink);color:var(--ink)}
+select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)}
+.stop{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink2);font-size:12px}
+.stop:hover{border-color:var(--acc);color:var(--acc)}
 .nav{display:flex;gap:18px;overflow-x:auto;padding:0 16px 10px;max-width:920px;margin:0 auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
 .nav a{white-space:nowrap;font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;padding:2px 0}
@@ -37,13 +40,15 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 
 /* hero */
 .hero{max-width:920px;margin:0 auto;padding:44px 16px 8px}
-.hero h1{font-size:clamp(36px,6.5vw,60px);line-height:1.02;font-weight:500;letter-spacing:-.015em;margin:0 0 14px;max-width:14ch}
+.hero h1{font-size:clamp(36px,6.5vw,60px);line-height:1.02;font-weight:600;letter-spacing:-.015em;margin:0 0 14px;max-width:14ch}
 .hero p{color:var(--ink2);max-width:54ch;margin:0 0 22px;font-size:17px}
+.prism{display:block;width:100%;max-width:640px;height:auto;margin:6px 0 26px}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 @media (min-width:640px){.tiles{grid-template-columns:repeat(6,1fr)}}
-.tile{border:1px solid var(--line);border-top:4px solid var(--fam);border-radius:12px;padding:14px 12px 12px;background:#fff;text-align:left;cursor:pointer;transition:background .15s}
+.tile{border:1px solid var(--line);border-top:4px solid var(--fam);border-radius:12px;padding:14px 12px 12px;background:var(--panel);text-align:left;cursor:pointer;transition:background .15s}
 .tile b{display:block;font-size:28px;font-weight:600;line-height:1;margin-bottom:6px}
 .tile small{display:block;color:var(--ink2);font-size:13px;line-height:1.3}
+.tile:hover{border-color:var(--line2);border-top-color:var(--fam)}
 .tile.playing{background:var(--acc2);border-color:var(--acc);border-top-color:var(--fam)}
 .hint{font-size:14px;color:var(--ink2);margin:14px 0 0}
 
@@ -57,7 +62,7 @@ h3{font-size:19px;font-weight:600;margin:30px 0 10px}
 p{max-width:70ch}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0 6px}
 table{border-collapse:collapse;width:100%;font-size:14.5px}
-th{text-align:left;background:var(--surf);font-weight:600;padding:9px 10px;white-space:nowrap}
+th{text-align:left;background:var(--surf);font-weight:600;padding:9px 10px;white-space:nowrap;color:var(--ink)}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 td.n{white-space:nowrap}
 td.p{width:38px;padding-right:0}
@@ -65,34 +70,38 @@ td.p{width:38px;padding-right:0}
 .sym{font-weight:600;font-size:16px;white-space:nowrap}
 .f{font-variant-numeric:tabular-nums;color:var(--ink2);white-space:nowrap}
 .notes{color:var(--ink2);white-space:nowrap;font-size:13.5px}
-.play{width:30px;height:30px;border-radius:50%;border:0;background:var(--ink);color:#fff;cursor:pointer;display:inline-grid;place-items:center;font-size:11px;padding:0 0 0 2px;vertical-align:middle;flex:none}
-.play:hover,.play:focus-visible{background:var(--acc)}
-.play.playing{background:var(--acc);box-shadow:0 0 0 4px var(--acc2)}
+.play{width:30px;height:30px;border-radius:50%;border:1px solid var(--line2);background:var(--panel);color:var(--ink);cursor:pointer;display:inline-grid;place-items:center;font-size:11px;padding:0 0 0 2px;vertical-align:middle;flex:none}
+.play:hover,.play:focus-visible{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.play.playing{background:var(--acc);border-color:var(--acc);color:var(--bg);box-shadow:0 0 0 4px var(--acc2)}
 .play.sm{width:24px;height:24px;font-size:9px}
 .note{background:var(--surf);border-left:4px solid var(--acc);padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;max-width:72ch}
 .note p{margin:6px 0}
 .tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}
-.tools input{flex:1 1 220px;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;min-width:0}
-.fbtn{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.tools input{flex:1 1 220px;font:inherit;padding:9px 12px;border:1px solid var(--line2);border-radius:10px;background:var(--panel);color:var(--ink);min-width:0}
+.tools input::placeholder{color:var(--ink2)}
+.fbtn{font-size:13px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
 .fbtn .fam{margin:0}
-.fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.lnk{background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;font-weight:600}
+.fbtn:hover{border-color:var(--acc);color:var(--ink)}
+.fbtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.lnk{background:none;border:0;padding:0;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px;font-weight:600}
 .lnk:hover{text-decoration-color:var(--acc);color:var(--acc)}
-.chip{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;cursor:pointer;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:15px;white-space:nowrap}
+.chip{border:1px solid var(--line2);background:var(--panel);color:var(--ink);border-radius:8px;padding:5px 9px;cursor:pointer;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:15px;white-space:nowrap}
 .chip:hover{border-color:var(--acc);color:var(--acc)}
-.chip.playing{background:var(--acc2);border-color:var(--acc)}
+.chip.playing{background:var(--acc2);border-color:var(--acc);color:var(--ink)}
 .chip.cur{background:var(--surf);border-color:var(--acc)}
 ol.steps{padding-left:22px;max-width:70ch}
 ol.steps li{margin:8px 0}
 ul.plain{padding-left:20px;max-width:72ch}
 ul.plain li{margin:8px 0}
-.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
-.btn.ghost{background:#fff;color:var(--ink)}
-.btn.playing{background:var(--acc);border-color:var(--acc)}
+.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer}
+.btn.ghost{background:var(--panel);color:var(--ink);border-color:var(--line2)}
+.btn.ghost:hover{border-color:var(--acc)}
+.btn.playing{background:var(--acc);border-color:var(--acc);color:var(--bg)}
 .inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
 .inline .btn{display:inline-flex;align-items:center;gap:8px}
 details{margin:14px 0}
-summary{cursor:pointer;font-weight:600;padding:8px 0}
+summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--ink)}
+summary:hover{color:var(--acc)}
 dl.gl{max-width:72ch}
 dl.gl dt{font-weight:600;margin-top:14px}
 dl.gl dd{margin:2px 0 0;color:var(--ink2)}
@@ -102,31 +111,64 @@ dl.gl dd{margin:2px 0 0;color:var(--ink2)}
 @media (min-width:720px){.circle{grid-template-columns:330px 1fr;align-items:start}}
 .circle svg{width:100%;max-width:330px;height:auto;display:block;margin:0 auto}
 .ck{cursor:pointer}
-.ck circle{fill:#fff;stroke:var(--line);stroke-width:1.5}
-.ck text{text-anchor:middle;font-size:13px;font-weight:600;fill:var(--ink);font-family:"Inter",system-ui,sans-serif;pointer-events:none}
+.ck circle{fill:var(--panel);stroke:var(--line2);stroke-width:1.5}
+.ck text{text-anchor:middle;font-size:13px;font-weight:600;fill:var(--ink);font-family:"Archivo",system-ui,sans-serif;pointer-events:none}
 .ck.minor text{font-size:10.5px;fill:var(--ink2);font-weight:500}
 .ck.nb circle{fill:var(--acc2);stroke:var(--acc2)}
 .ck.cur circle{fill:var(--acc);stroke:var(--acc)}
-.ck.cur text{fill:#fff}
+.ck.cur text{fill:var(--bg)}
 .ck:hover circle{stroke:var(--acc)}
 .c-ring{fill:none;stroke:var(--line)}
-.c-label{text-anchor:middle;font-size:11px;fill:var(--ink2);font-family:"Inter",system-ui,sans-serif}
+.c-label{text-anchor:middle;font-size:11px;fill:var(--ink2);font-family:"Archivo",system-ui,sans-serif}
 
 /* quiz */
-.quiz{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;max-width:560px}
+.quiz{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--panel);max-width:560px}
 .qtabs{display:flex;gap:8px;margin-bottom:12px}
-.qtabs button{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--ink2);font-size:14px}
-.qtabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.qtabs button{padding:6px 12px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink2);font-size:14px}
+.qtabs button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .qopts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0 10px}
-.qo{padding:11px 10px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:15px;text-align:left}
-.qo:hover{border-color:var(--ink)}
-.qo.right{border-color:var(--suspended);background:#E5F5F2}
-.qo.wrong{border-color:var(--diminished);background:#FBE9E8}
+.qo{padding:11px 10px;border-radius:10px;border:1px solid var(--line2);background:var(--bg);color:var(--ink);cursor:pointer;font-size:15px;text-align:left}
+.qo:hover{border-color:var(--acc)}
+.qo.right{border-color:var(--suspended);background:rgba(79,187,166,.16)}
+.qo.wrong{border-color:var(--diminished);background:rgba(217,112,96,.16)}
 .qfeed{min-height:24px;margin:6px 0 0}
 .qscore{color:var(--ink2);font-size:14px;margin:8px 0 0}
 
 footer{max-width:920px;margin:0 auto;padding:30px 16px 60px;color:var(--ink2);font-size:14px;border-top:1px solid var(--line)}
 footer p{margin:6px 0}
+
+/* voice picker, builder, piano dock */
+.lt{display:inline}
+@media (max-width:560px){.lt{display:none}.bar .row{gap:8px}}
+.bpal,.bseq{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.bseq{min-height:52px;padding:10px;border:1px dashed var(--line2);border-radius:10px;align-items:center}
+.bchip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);cursor:pointer;color:var(--ink);line-height:1.15}
+.bchip small{font-size:11px;color:var(--ink2)}
+.bchip:hover{border-color:var(--acc)}
+.bchip.playing{background:var(--acc2);border-color:var(--acc)}
+.bseq .bchip:hover{border-color:var(--diminished)}
+.bempty{color:var(--ink2);font-size:14px}
+.bnum{font-family:"Fraunces",Georgia,serif;font-size:18px;color:var(--ink);min-height:24px;margin:4px 0 8px}
+.bopt{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink2)}
+.bopt input[type=range]{width:120px;accent-color:var(--acc)}
+.bopt input[type=checkbox]{accent-color:var(--acc);width:16px;height:16px}
+body.has-dock{padding-bottom:126px}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:9;background:rgba(23,20,15,.97);border-top:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.dock[hidden]{display:none}
+.dockbar{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:6px 16px 5px;font-size:13px;color:var(--ink2)}
+.kbinfo{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kbinfo b{color:var(--ink);font-family:"Fraunces",Georgia,serif;font-size:15px;font-weight:600}
+.kb{padding:0 16px 8px}
+.kbin{position:relative;height:64px;max-width:920px;margin:0 auto}
+.kbin .k{position:absolute;top:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.kbin .wk{height:100%;background:var(--ink);border:1px solid var(--bg);border-radius:0 0 4px 4px;z-index:1}
+.kbin .bk{height:60%;background:var(--bg);border:1px solid var(--line2);border-radius:0 0 3px 3px;z-index:2}
+.kbin .wk span{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:10px;color:var(--bg);pointer-events:none}
+.kbin .k.on{background:var(--acc)}
+.kbin .k.sel{background:var(--suspended)}
+.kbin .bk.on,.kbin .bk.sel{border-color:var(--acc)}
+.dockshow{position:fixed;right:14px;bottom:14px;z-index:9;padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);cursor:pointer;font-size:13px}
+.dockshow[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -134,7 +176,8 @@ footer p{margin:6px 0}
 <header class="bar">
   <div class="row">
     <div class="t">Music theory, by ear</div>
-    <label class="keylab">Key <select class="key" id="keysel" aria-label="Choose a key"></select></label>
+    <label class="keylab"><span class="lt">Key</span><select class="key" id="keysel" aria-label="Choose a key"></select></label>
+    <label class="keylab"><span class="lt">Voice</span><select class="key" id="voicesel" aria-label="Choose an instrument voice"></select></label>
     <button class="stop" id="stop" aria-label="Stop sound" title="Stop sound">■</button>
   </div>
   <nav class="nav" id="nav" aria-label="Sections"></nav>
@@ -143,8 +186,18 @@ footer p{margin:6px 0}
 <section class="hero">
   <h1>The chord sheet you can hear.</h1>
   <p>Formulas, keys, progressions, scales and ear training, with a play button on all of it. Change the key at the top and every chord and table on this page transposes with you.</p>
+  <svg class="prism" viewBox="0 0 640 190" role="img" aria-label="A beam of sound entering a prism and splitting into six coloured rays, one per chord family">
+    <line x1="30" y1="95" x2="300" y2="95" stroke="var(--ink)" stroke-width="2" opacity="0.55"/>
+    <polygon points="300,42 300,148 380,95" fill="rgba(240,230,210,0.07)" stroke="var(--ink)" stroke-width="1" opacity="0.7"/>
+    <line x1="380" y1="95" x2="600" y2="24" stroke="var(--major)" stroke-width="3"/><circle cx="600" cy="24" r="5" fill="var(--major)"/>
+    <line x1="380" y1="95" x2="605" y2="55" stroke="var(--dominant)" stroke-width="3"/><circle cx="605" cy="55" r="5" fill="var(--dominant)"/>
+    <line x1="380" y1="95" x2="610" y2="88" stroke="var(--minor)" stroke-width="3"/><circle cx="610" cy="88" r="5" fill="var(--minor)"/>
+    <line x1="380" y1="95" x2="610" y2="102" stroke="var(--suspended)" stroke-width="3"/><circle cx="610" cy="102" r="5" fill="var(--suspended)"/>
+    <line x1="380" y1="95" x2="605" y2="135" stroke="var(--augmented)" stroke-width="3"/><circle cx="605" cy="135" r="5" fill="var(--augmented)"/>
+    <line x1="380" y1="95" x2="600" y2="166" stroke="var(--diminished)" stroke-width="3"/><circle cx="600" cy="166" r="5" fill="var(--diminished)"/>
+  </svg>
   <div class="tiles" id="tiles"></div>
-  <p class="hint">Tap a chord to hear it. Sound plays on your device, so turn the ringer on if you are on a phone.</p>
+  <p class="hint">Tap a chord to hear it, and watch the keyboard at the bottom light up. Change the instrument with the voice picker at the top. Sound plays on your device, so turn the ringer on if you are on a phone.</p>
 </section>
 
 <main id="app"></main>
@@ -153,6 +206,16 @@ footer p{margin:6px 0}
   <p>Free to use for learning. Every sound on this page is generated in your browser, so nothing is downloaded and it works offline once loaded.</p>
   <p>Built as a single file. View the page source to see the chord data and change anything.</p>
 </footer>
+
+<div class="dock" id="dock">
+  <div class="dockbar">
+    <span class="kbinfo" id="kbinfo">Tap keys to name a chord</span>
+    <button class="fbtn" id="kbclear">Clear</button>
+    <button class="fbtn" id="kbhide">Hide</button>
+  </div>
+  <div class="kb"><div class="kbin" id="kbin" aria-label="Piano keyboard"></div></div>
+</div>
+<button class="dockshow" id="dockshow" hidden>Keyboard</button>
 
 <script>
 /* ===================== Core music data ===================== */
@@ -176,7 +239,16 @@ const KEYS = [
   {pc:5,  name:'F',     sig:'1 flat',            flats:true},
 ];
 
-const state = { key: KEYS[0], fam: 'all', q: '', keyTable: 'major' };
+const state = { key: KEYS[0], fam: 'all', q: '', keyTable: 'major', voice: 'keys' };
+
+// Instrument voices. parts: [oscillator type, semitone offset, gain, detune cents]
+const VOICES = {
+  keys:  {label:'Soft keys', parts:[['triangle',0,1],['sine',12,0.18]], lp:2400, a:0.02, env:'std', gain:1},
+  piano: {label:'Piano',     parts:[['triangle',0,1],['sine',12,0.35],['square',0,0.06]], lp:3200, a:0.006, env:'decay', gain:1},
+  organ: {label:'Organ',     parts:[['sine',0,1],['sine',12,0.5],['sine',19,0.25],['sine',24,0.15]], lp:5000, a:0.01, env:'hold', rel:0.06, gain:0.85},
+  pad:   {label:'Pad',       parts:[['sawtooth',0,1,-6],['sawtooth',0,1,6],['triangle',12,0.3]], lp:1000, a:0.3, env:'hold', rel:0.5, gain:0.5},
+  pluck: {label:'Pluck',     parts:[['triangle',0,1],['sine',12,0.2],['sawtooth',0,0.12]], lp:2600, a:0.003, env:'pluck', gain:1.1},
+};
 
 const pc = n => ((n % 12) + 12) % 12;
 const nn = (n, flats = state.key.flats) => (flats ? FLAT : SHARP)[pc(n)];
@@ -210,7 +282,7 @@ const rootMidi = (p, iv = []) => {
 
 /* ===================== Audio engine (Web Audio, no samples) ===================== */
 const Synth = {
-  ctx: null, master: null, live: [], _t: null,
+  ctx: null, master: null, live: [], _t: null, vt: [], hooks: [], mute: false,
   ensure() {
     if (!this.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -224,18 +296,29 @@ const Synth = {
   },
   f(m) { return 440 * Math.pow(2, (m - 69) / 12); },
   note(m, t, d, g = 0.16) {
-    const c = this.ctx;
-    const o = c.createOscillator(), o2 = c.createOscillator();
-    const env = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
-    o.type = 'triangle'; o.frequency.value = this.f(m);
-    o2.type = 'sine'; o2.frequency.value = this.f(m + 12); g2.gain.value = 0.18;
-    lp.type = 'lowpass'; lp.frequency.value = 2400;
+    const c = this.ctx, v = VOICES[state.voice] || VOICES.keys;
+    const env = c.createGain(), lp = c.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = v.lp;
+    const oscs = [];
+    v.parts.forEach(([type, semis, gain, det]) => {
+      const o = c.createOscillator(); o.type = type; o.frequency.value = this.f(m + semis); if (det) o.detune.value = det;
+      const og = c.createGain(); og.gain.value = gain; o.connect(og).connect(lp); oscs.push(o);
+    });
+    const gg = g * v.gain, a = Math.min(v.a, d * 0.4);
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.exponentialRampToValueAtTime(g, t + 0.02);
-    env.gain.exponentialRampToValueAtTime(0.0001, t + d);
-    o.connect(lp); o2.connect(g2).connect(lp); lp.connect(env).connect(this.master);
-    o.start(t); o2.start(t); o.stop(t + d + 0.05); o2.stop(t + d + 0.05);
-    this.live.push(o, o2);
+    env.gain.exponentialRampToValueAtTime(gg, t + a);
+    if (v.env === 'decay') { env.gain.exponentialRampToValueAtTime(gg * 0.3, t + a + Math.min(0.7, d * 0.5)); env.gain.exponentialRampToValueAtTime(0.0001, t + d); }
+    else if (v.env === 'hold') { const rel = Math.max(0.02, Math.min(v.rel, d - a - 0.02)); env.gain.setValueAtTime(gg, t + d - rel); env.gain.exponentialRampToValueAtTime(0.0001, t + d); }
+    else if (v.env === 'pluck') { env.gain.exponentialRampToValueAtTime(0.0001, t + Math.min(d, 1.1)); }
+    else { env.gain.exponentialRampToValueAtTime(0.0001, t + d); }
+    lp.connect(env).connect(this.master);
+    oscs.forEach(o => { o.start(t); o.stop(t + d + 0.05); });
+    this.live.push(...oscs);
+    if (!this.mute) this.light(m, t, d);
+  },
+  light(m, t, d) {
+    const delay = Math.max(0, t - this.ctx.currentTime) * 1000;
+    this.vt.push(setTimeout(() => kbLight(m, true), delay), setTimeout(() => kbLight(m, false), delay + d * 1000));
   },
   tick(t, accent) {
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
@@ -249,6 +332,8 @@ const Synth = {
     this.live.forEach(o => { try { o.stop(); } catch (e) {} });
     this.live = [];
     clearTimeout(this._t);
+    this.vt.forEach(clearTimeout); this.vt = []; kbClearLit();
+    this.hooks.forEach(h => h());
     document.querySelectorAll('.playing').forEach(el => el.classList.remove('playing'));
   },
   chord(iv, root, t, d) {
@@ -567,6 +652,8 @@ sec('progressions', 'Progressions', 'Part 2: Progressions, putting chords in ord
   ${table(['Progression', 'Numerals', `In ${nn(state.key.pc)}`, 'Feel', ''], PROGS.map(([n, num, ch, feel]) => [
     N(n), N(num), N(`<span class="sym">${n === '12-bar blues' ? `${csym(0,'dom7')} – ${csym(5,'dom7')} – ${csym(7,'dom7')} pattern` : progLabel(ch)}</span>`), feel,
     P(pb(n, playProg(ch, n === '12-bar blues' ? 0.62 : 0.95)))]))}
+
+  <div id="bwrap">${builderHTML()}</div>
 
   <h3>Where each chord type fits in a progression</h3>
   <p>A chord's function (where it pulls) matters more than its exact color. Swap any chord below into the right slot of a progression from the table above and it will work.</p>
@@ -917,7 +1004,9 @@ function qPlay() {
   if (!quiz.ans) { qNew(); return; }
   Synth.ensure(); Synth.stop();
   const b = $('#qplay'); if (b) b.classList.add('playing');
+  Synth.mute = true;
   const d = quiz.mode === 'interval' ? Synth.interval(quiz.ans.n, quiz.root) : Synth.seq([{iv: quiz.ans.iv, root: quiz.root}], 1.8);
+  Synth.mute = false;
   Synth._t = setTimeout(() => b && b.classList.remove('playing'), d * 1000);
 }
 function qAnswer(label) {
@@ -976,6 +1065,99 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
   </ol>`);
 
+/* ===================== Progression builder ===================== */
+const build = {seq: [], bpm: 100, loop: true, playing: false, timers: []};
+const PALETTE = [[0,'maj'],[2,'min'],[4,'min'],[5,'maj'],[7,'maj'],[9,'min'],[11,'dim'],[7,'dom7'],[2,'m7'],[0,'maj7'],[5,'min'],[10,'maj'],[8,'maj']];
+function numeral(deg, q) {
+  const base = {0:'I',1:'♭II',2:'II',3:'♭III',4:'III',5:'IV',6:'♯IV',7:'V',8:'♭VI',9:'VI',10:'♭VII',11:'VII'}[pc(deg)];
+  let n = ['min','m7','dim','m7b5'].includes(q) ? base.toLowerCase() : base;
+  if (q === 'dim' || q === 'm7b5') n += '°';
+  if (q === 'dom7' || q === 'm7') n += '7';
+  if (q === 'maj7') n += 'maj7';
+  return n;
+}
+function builderHTML() {
+  const chip = ([d, q], i, attr) => `<button class="bchip" ${attr}="${i}" aria-label="${csym(d, q)}"><span class="sym">${csym(d, q)}</span><small>${numeral(d, q)}</small></button>`;
+  return `<h3 id="builder">Build your own</h3>
+  <p>Tap chords to add them to the sequence, tap a chord in the sequence to remove it. It transposes with the key selector, so you can hear the same progression anywhere.</p>
+  <div class="bpal">${PALETTE.map((c, i) => chip(c, i, 'data-badd')).join('')}</div>
+  <div class="bseq" id="bseq">${build.seq.length ? build.seq.map((c, i) => chip(c, i, 'data-bdel')).join('') : '<span class="bempty">Nothing here yet. Tap a chord above, or load a preset below.</span>'}</div>
+  <p class="bnum">${build.seq.map(([d, q]) => numeral(d, q)).join(' – ')}</p>
+  <div class="inline">
+    <button class="btn ${build.playing ? 'playing' : ''}" id="bplay">▶ Play</button>
+    <button class="btn ghost" id="bstop">Stop</button>
+    <button class="btn ghost" id="bclear">Clear</button>
+    <label class="bopt"><input type="checkbox" id="bloop" ${build.loop ? 'checked' : ''}> Loop</label>
+    <label class="bopt">Tempo <input type="range" id="btempo" min="60" max="160" step="2" value="${build.bpm}"> <span id="btempov">${build.bpm}</span> bpm</label>
+  </div>
+  <div class="tools"><span class="hint" style="margin:0">Presets:</span>${PROGS.map((p, i) => `<button class="fbtn" data-bpreset="${i}">${p[0]}</button>`).join('')}</div>`;
+}
+function buildRender() { const w = $('#bwrap'); if (w) w.innerHTML = builderHTML(); }
+function buildStop(quiet) {
+  build.playing = false; build.timers.forEach(clearTimeout); build.timers = [];
+  document.querySelectorAll('#bseq .playing, #bplay.playing').forEach(c => c.classList.remove('playing'));
+  if (!quiet) Synth.stop();
+}
+Synth.hooks.push(() => buildStop(true));
+function buildPass() {
+  const bar = 240 / build.bpm;
+  Synth.seq(build.seq.map(([d, q]) => ({iv: Q[q].iv, root: rootMidi(state.key.pc + d, Q[q].iv)})), bar, 0);
+  build.seq.forEach((_, k) => build.timers.push(setTimeout(() => {
+    document.querySelectorAll('#bseq .bchip').forEach((c, i) => c.classList.toggle('playing', i === k));
+  }, k * bar * 1000)));
+  build.timers.push(setTimeout(() => { if (build.playing && build.loop) buildPass(); else buildStop(); }, build.seq.length * bar * 1000));
+}
+function buildPlay() {
+  if (!build.seq.length) return;
+  Synth.ensure(); Synth.stop(); build.playing = true;
+  const b = $('#bplay'); if (b) b.classList.add('playing');
+  buildPass();
+}
+
+/* ===================== Live keyboard ===================== */
+const KB = {lo: 48, hi: 83, sel: new Set()};
+function renderKB() {
+  KB.hi = window.innerWidth < 640 ? 71 : 83;
+  const el = $('#kbin'); if (!el) return;
+  let wi = 0; const whites = [], blacks = [];
+  for (let m = KB.lo; m <= KB.hi; m++) { if ([1,3,6,8,10].includes(m % 12)) blacks.push([m, wi]); else { whites.push([m, wi]); wi++; } }
+  const w = 100 / wi;
+  el.innerHTML = whites.map(([m, i]) => `<div class="k wk${KB.sel.has(m) ? ' sel' : ''}" data-m="${m}" style="left:${(i * w).toFixed(3)}%;width:${w.toFixed(3)}%">${m % 12 === 0 ? `<span>C${Math.floor(m / 12) - 1}</span>` : ''}</div>`).join('')
+    + blacks.map(([m, i]) => `<div class="k bk${KB.sel.has(m) ? ' sel' : ''}" data-m="${m}" style="left:${(i * w - w * 0.3).toFixed(3)}%;width:${(w * 0.6).toFixed(3)}%"></div>`).join('');
+}
+function kbFold(m) { while (m < KB.lo) m += 12; while (m > KB.hi) m -= 12; return m; }
+function kbLight(m, on) { const k = document.querySelector(`.k[data-m="${kbFold(m)}"]`); if (k) k.classList.toggle('on', on); }
+function kbClearLit() { document.querySelectorAll('.k.on').forEach(k => k.classList.remove('on')); }
+function kbTap(m) {
+  if (KB.sel.has(m)) KB.sel.delete(m); else KB.sel.add(m);
+  const c = Synth.ensure(); Synth.mute = true; Synth.note(m, c.currentTime + 0.01, 0.9, 0.2); Synth.mute = false;
+  renderKB(); kbIdentify();
+}
+function kbIdentify() {
+  const out = $('#kbinfo'); if (!out) return;
+  const notes = [...KB.sel].sort((a, b) => a - b);
+  if (!notes.length) { out.textContent = 'Tap keys to name a chord'; return; }
+  if (notes.length === 1) { out.innerHTML = `<b>${nn(notes[0])}</b> single note`; return; }
+  if (notes.length === 2) {
+    const semis = notes[1] - notes[0], n = ((semis - 1) % 12) + 1, iv = INTERVALS.find(i => i[0] === n);
+    out.innerHTML = `<b>${nn(notes[0])} to ${nn(notes[1])}</b> ${iv ? iv[1] : ''} (${semis} semitones)`; return;
+  }
+  const pcs = [...new Set(notes.map(m => m % 12))], bass = notes[0] % 12, found = [];
+  for (const r of pcs) {
+    const set = new Set(pcs.map(x => (x - r + 12) % 12));
+    for (const g of CHORD_GROUPS) for (const [name, sfx, iv] of g.rows) {
+      if (sfx === null) continue;
+      const s2 = new Set(iv.map(i => i % 12));
+      if (s2.size === set.size && [...s2].every(x => set.has(x)) && !found.some(f => f.root === r && f.sfx === sfx)) found.push({root: r, name, sfx});
+    }
+  }
+  if (!found.length) { out.innerHTML = `<b>${notes.map(nn).join(' ')}</b> no standard chord name`; return; }
+  found.sort((a, b) => (b.root === bass) - (a.root === bass));
+  const f = found[0], slash = f.root !== bass ? '/' + nn(bass) : '';
+  const alt = found.slice(1, 3).map(x => nn(x.root) + pretty(x.sfx));
+  out.innerHTML = `<b>${nn(f.root)}${pretty(f.sfx)}${slash}</b> ${f.name}${alt.length ? ' (also ' + alt.join(', ') + ')' : ''}`;
+}
+
 /* ===================== Render and wire up ===================== */
 const TILES = [['Major','',[0,4,7],'major','bright, resolved'],['Minor','m',[0,3,7],'minor','darker, emotional'],['Diminished','dim',[0,3,6],'diminished','tense, unstable'],['Augmented','aug',[0,4,8],'augmented','floating, dreamlike'],['Sus2','sus2',[0,2,7],'suspended','open, airy'],['Sus4','sus4',[0,5,7],'suspended','wants to resolve']];
 function renderTiles() {
@@ -991,12 +1173,30 @@ function renderAll() {
 }
 function setKey(i) { state.key = KEYS[i]; $('#keysel').value = i; renderAll(); }
 
-$('#nav').innerHTML = SECTIONS.map(s => `<a href="#${s.id}">${s.nav}</a>`).join('');
+$('#nav').innerHTML = SECTIONS.map(s => `<a href="#${s.id}">${s.nav}</a>` + (s.id === 'progressions' ? '<a href="#builder">Builder</a>' : '')).join('');
 $('#keysel').innerHTML = KEYS.map((k, i) => `<option value="${i}">${k.name}</option>`).join('');
 $('#keysel').addEventListener('change', e => setKey(+e.target.value));
 $('#stop').addEventListener('click', () => Synth.stop());
+$('#voicesel').innerHTML = Object.entries(VOICES).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('');
+document.addEventListener('change', e => {
+  if (e.target.id === 'voicesel') state.voice = e.target.value;
+  if (e.target.id === 'bloop') build.loop = e.target.checked;
+});
+document.body.classList.add('has-dock'); renderKB();
+window.addEventListener('resize', () => { clearTimeout(KB._r); KB._r = setTimeout(renderKB, 150); });
+$('#kbclear').addEventListener('click', () => { KB.sel.clear(); renderKB(); kbIdentify(); });
+$('#kbhide').addEventListener('click', () => { $('#dock').hidden = true; $('#dockshow').hidden = false; document.body.classList.remove('has-dock'); });
+$('#dockshow').addEventListener('click', () => { $('#dock').hidden = false; $('#dockshow').hidden = true; document.body.classList.add('has-dock'); renderKB(); });
 
 document.addEventListener('click', e => {
+  const key = e.target.closest('.k[data-m]'); if (key) { kbTap(+key.dataset.m); return; }
+  const ba = e.target.closest('[data-badd]');
+  if (ba) { const c = PALETTE[+ba.dataset.badd]; build.seq.push([c[0], c[1]]); Synth.ensure(); Synth.stop(); Synth.seq([{iv: Q[c[1]].iv, root: rootMidi(state.key.pc + c[0], Q[c[1]].iv)}], 1.2); buildRender(); return; }
+  const bd = e.target.closest('[data-bdel]'); if (bd) { build.seq.splice(+bd.dataset.bdel, 1); buildStop(); buildRender(); return; }
+  const bp = e.target.closest('[data-bpreset]'); if (bp) { build.seq = PROGS[+bp.dataset.bpreset][2].map(([d, q]) => [d, q]); buildStop(); buildRender(); return; }
+  if (e.target.closest('#bplay')) { buildPlay(); return; }
+  if (e.target.closest('#bstop')) { buildStop(); return; }
+  if (e.target.closest('#bclear')) { build.seq = []; buildStop(); buildRender(); return; }
   const k = e.target.closest('[data-k]'); if (k) { setKey(+k.dataset.k); return; }
   const f = e.target.closest('[data-fam]');
   if (f) { state.fam = f.dataset.fam; document.querySelectorAll('[data-fam]').forEach(b => b.classList.toggle('on', b.dataset.fam === state.fam)); $('#chordlist').innerHTML = renderChordList(); return; }
@@ -1010,6 +1210,7 @@ document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
 });
 document.addEventListener('input', e => {
+  if (e.target.id === 'btempo') { build.bpm = +e.target.value; const v = $('#btempov'); if (v) v.textContent = build.bpm; }
   if (e.target.id === 'csearch') { state.q = e.target.value.trim(); $('#chordlist').innerHTML = renderChordList(); }
 });
 
