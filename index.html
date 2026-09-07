@@ -227,18 +227,18 @@ const FLAT  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 
 // Keys in circle-of-fifths order, starting at C and moving clockwise.
 const KEYS = [
-  {pc:0,  name:'C',     sig:'None',              flats:false},
-  {pc:7,  name:'G',     sig:'1 sharp',           flats:false},
-  {pc:2,  name:'D',     sig:'2 sharps',          flats:false},
-  {pc:9,  name:'A',     sig:'3 sharps',          flats:false},
-  {pc:4,  name:'E',     sig:'4 sharps',          flats:false},
-  {pc:11, name:'B',     sig:'5 sharps',          flats:false},
-  {pc:6,  name:'F♯ / G♭', sig:'6 sharps or 6 flats', flats:false},
-  {pc:1,  name:'D♭',    sig:'5 flats',           flats:true},
-  {pc:8,  name:'A♭',    sig:'4 flats',           flats:true},
-  {pc:3,  name:'E♭',    sig:'3 flats',           flats:true},
-  {pc:10, name:'B♭',    sig:'2 flats',           flats:true},
-  {pc:5,  name:'F',     sig:'1 flat',            flats:true},
+  {pc:0,  name:'C',     sig:'None',              flats:false, cam:'8B'},
+  {pc:7,  name:'G',     sig:'1 sharp',           flats:false, cam:'9B'},
+  {pc:2,  name:'D',     sig:'2 sharps',          flats:false, cam:'10B'},
+  {pc:9,  name:'A',     sig:'3 sharps',          flats:false, cam:'11B'},
+  {pc:4,  name:'E',     sig:'4 sharps',          flats:false, cam:'12B'},
+  {pc:11, name:'B',     sig:'5 sharps',          flats:false, cam:'1B'},
+  {pc:6,  name:'F♯ / G♭', sig:'6 sharps or 6 flats', flats:false, cam:'2B'},
+  {pc:1,  name:'D♭',    sig:'5 flats',           flats:true, cam:'3B'},
+  {pc:8,  name:'A♭',    sig:'4 flats',           flats:true, cam:'4B'},
+  {pc:3,  name:'E♭',    sig:'3 flats',           flats:true, cam:'5B'},
+  {pc:10, name:'B♭',    sig:'2 flats',           flats:true, cam:'6B'},
+  {pc:5,  name:'F',     sig:'1 flat',            flats:true, cam:'7B'},
 ];
 
 const state = { key: KEYS[0], fam: 'all', q: '', keyTable: 'major', voice: 'keys' };
@@ -602,8 +602,9 @@ function keyChord(rootPc, deg, q, flats) {
   return `<button class="chip" data-a="${id}" aria-label="Play ${label}">${label}</button>`;
 }
 
-function circleSVG() {
-  const cx = 160, cy = 160; let s = `<svg viewBox="0 0 320 320" role="img" aria-label="Circle of fifths. Click a key to select it.">`;
+function circleSVG(mode) {
+  const camelot = mode === 'camelot';
+  const cx = 160, cy = 160; let s = `<svg viewBox="0 0 320 320" role="img" aria-label="${camelot ? 'Camelot wheel. Click a code to select that key.' : 'Circle of fifths. Click a key to select it.'}">`;
   s += `<circle cx="${cx}" cy="${cy}" r="152" class="c-ring"/><circle cx="${cx}" cy="${cy}" r="100" class="c-ring"/><circle cx="${cx}" cy="${cy}" r="52" class="c-ring"/>`;
   const ci = KEYS.findIndex(k => k.pc === state.key.pc);
   KEYS.forEach((k, i) => {
@@ -612,12 +613,16 @@ function circleSVG() {
     const xm = cx + Math.cos(a) * 76, ym = cy + Math.sin(a) * 76;
     const cur = i === ci, nb = i === (ci + 1) % 12 || i === (ci + 11) % 12;
     const cls = cur ? 'cur' : nb ? 'nb' : '';
-    const maj = k.name.replace(' / ', '/');
-    const rel = k.pc === 6 ? 'D♯m' : relMinor(k);
-    s += `<g class="ck ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="Select key of ${k.name}"><circle cx="${x}" cy="${y}" r="21"/><text x="${x}" y="${y + 4.5}" font-size="${maj.length > 3 ? 10 : 13}">${maj}</text></g>`;
-    s += `<g class="ck minor ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="Select key of ${rel}"><circle cx="${xm}" cy="${ym}" r="16"/><text x="${xm}" y="${ym + 3.5}">${rel}</text></g>`;
+    const majName = k.name.replace(' / ', '/');
+    const relName = k.pc === 6 ? 'D♯m' : relMinor(k);
+    const maj = camelot ? k.cam : majName;
+    const rel = camelot ? k.cam.replace('B', 'A') : relName;
+    const majLabel = camelot ? `Camelot ${maj} (${majName} major)` : `Select key of ${k.name}`;
+    const relLabel = camelot ? `Camelot ${rel} (${relName})` : `Select key of ${relName}`;
+    s += `<g class="ck ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="${majLabel}"><circle cx="${x}" cy="${y}" r="21"/><text x="${x}" y="${y + 4.5}" font-size="${maj.length > 3 ? 10 : 13}">${maj}</text></g>`;
+    s += `<g class="ck minor ${cls}" data-k="${i}" role="button" tabindex="0" aria-label="${relLabel}"><circle cx="${xm}" cy="${ym}" r="16"/><text x="${xm}" y="${ym + 3.5}">${rel}</text></g>`;
   });
-  s += `<text x="${cx}" y="${cy - 2}" class="c-label">circle of</text><text x="${cx}" y="${cy + 12}" class="c-label">fifths</text></svg>`;
+  s += `<text x="${cx}" y="${cy - 2}" class="c-label">${camelot ? 'Camelot' : 'circle of'}</text><text x="${cx}" y="${cy + 12}" class="c-label">${camelot ? 'wheel' : 'fifths'}</text></svg>`;
   return s;
 }
 
@@ -1017,9 +1022,27 @@ const INTERVALS = [
   [10, 'Minor 7th', '"Somewhere" (West Side Story)'], [11, 'Major 7th', 'A bright, straining leap just shy of the octave. Practice it against the octave below'], [12, 'Octave', '"Somewhere Over the Rainbow" opening'],
 ];
 const QCH = [['Major', [0,4,7]], ['Minor', [0,3,7]], ['Diminished', [0,3,6]], ['Augmented', [0,4,8]], ['Sus4', [0,5,7]], ['Dominant 7', [0,4,7,10]], ['Major 7', [0,4,7,11]], ['Minor 7', [0,3,7,10]]];
+// Accent patterns for rhythm dictation. true = accented (higher click), false = unaccented. Played on Synth.meter, the same
+// metronome engine the progression builder's tap-tempo uses — no new scheduling code.
+const RHYTHMS = [
+  ['Straight quarters', [true, false, false, false]],
+  ['Backbeat (2 and 4)', [false, true, false, true]],
+  ['Front-loaded', [true, true, false, false]],
+  ['Syncopated push', [false, true, false, false, true, false, false, false]],
+  ['Waltz feel (in 3)', [true, false, false]],
+  ['Accent on 1 only', [true, false, false, false, false, false, false, false]],
+  ['Clave-style', [true, false, false, true, false, true, false, false]],
+  ['Off-beat accents', [false, true, false, true, false, true, false, true]],
+];
 const quiz = {mode: 'interval', ans: null, opts: [], asked: 0, right: 0, done: false, root: 60};
+function qPool() {
+  if (quiz.mode === 'interval') return INTERVALS.map(i => ({label: i[1], n: i[0]}));
+  if (quiz.mode === 'chord') return QCH.map(c => ({label: c[0], iv: c[1]}));
+  if (quiz.mode === 'prog') return PROGS.map(p => ({label: p[0], chords: p[2], each: p[0] === '12-bar blues' ? 0.62 : 0.95}));
+  return RHYTHMS.map(r => ({label: r[0], accents: r[1]}));
+}
 function qNew() {
-  const pool = quiz.mode === 'interval' ? INTERVALS.map(i => ({label: i[1], n: i[0]})) : QCH.map(c => ({label: c[0], iv: c[1]}));
+  const pool = qPool();
   const i = Math.floor(Math.random() * pool.length); quiz.ans = pool[i];
   const others = pool.filter((_, k) => k !== i).sort(() => Math.random() - 0.5).slice(0, 3);
   quiz.opts = [quiz.ans, ...others].sort(() => Math.random() - 0.5);
@@ -1031,16 +1054,28 @@ function qPlay() {
   Synth.ensure(); Synth.stop();
   const b = $('#qplay'); if (b) b.classList.add('playing');
   Synth.mute = true;
-  const d = quiz.mode === 'interval' ? Synth.interval(quiz.ans.n, quiz.root) : Synth.seq([{iv: quiz.ans.iv, root: quiz.root}], 1.8);
+  let d;
+  if (quiz.mode === 'interval') d = Synth.interval(quiz.ans.n, quiz.root);
+  else if (quiz.mode === 'chord') d = Synth.seq([{iv: quiz.ans.iv, root: quiz.root}], 1.8);
+  else if (quiz.mode === 'prog') d = playProg(quiz.ans.chords, quiz.ans.each)();
+  else d = Synth.meter(quiz.ans.accents, 0.28);
   Synth.mute = false;
   Synth._t = setTimeout(() => b && b.classList.remove('playing'), d * 1000);
+}
+function qFeedback(ok) {
+  const a = quiz.ans;
+  let what;
+  if (quiz.mode === 'interval') what = `a ${a.label} (${a.n} semitone${a.n === 1 ? "" : "s"})`;
+  else if (quiz.mode === 'chord') what = `a ${a.label} (${a.iv.join(', ')})`;
+  else if (quiz.mode === 'prog') what = `the ${a.label} progression`;
+  else what = `the "${a.label}" pattern`;
+  return ok ? `<strong>Yes.</strong> That was ${what}.` : `<strong>Not quite.</strong> It was ${what}. Play it again and listen closely, then try a new question.`;
 }
 function qAnswer(label) {
   if (!quiz.ans || quiz.done) return;
   quiz.done = true; quiz.asked++;
   const ok = label === quiz.ans.label; if (ok) quiz.right++;
-  const desc = quiz.mode === 'interval' ? `${quiz.ans.label} (${quiz.ans.n} semitone${quiz.ans.n === 1 ? "" : "s"})` : `${quiz.ans.label} (${quiz.ans.iv.join(', ')})`;
-  $('#qfeed').innerHTML = ok ? `<strong>Yes.</strong> That was a ${desc}.` : `<strong>Not quite.</strong> It was a ${desc}. Play it again and listen for the quality, then try a new question.`;
+  $('#qfeed').innerHTML = qFeedback(ok);
   document.querySelectorAll('.qo').forEach(b => { if (b.dataset.q === quiz.ans.label) b.classList.add('right'); else if (b.dataset.q === label) b.classList.add('wrong'); });
   qRender(true);
 }
@@ -1052,9 +1087,13 @@ function qRender(keepOpts) {
     $('#qfeed').innerHTML = '';
   }
   $('#qscore').textContent = quiz.asked ? `Score: ${quiz.right} of ${quiz.asked}` : 'Score: no questions yet';
-  $('#qprompt').textContent = quiz.mode === 'interval'
-    ? 'Two notes play one after the other, then together. Which interval is it?'
-    : 'One chord plays. What quality is it?';
+  const prompts = {
+    interval: 'Two notes play one after the other, then together. Which interval is it?',
+    chord: 'One chord plays. What quality is it?',
+    prog: 'A progression plays in the current key. Which one is it?',
+    rhythm: 'A repeating click pattern plays. Which accent pattern is it?',
+  };
+  $('#qprompt').textContent = prompts[quiz.mode];
 }
 
 sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and progressions by ear, anchored to songs you already know, plus a quiz and a step-by-step method that pulls the whole page together.',
@@ -1064,7 +1103,7 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
 
   <h3>Quiz yourself</h3>
   <div class="quiz">
-    <div class="qtabs"><button class="qtab on" data-qm="interval">Intervals</button><button class="qtab" data-qm="chord">Chord quality</button></div>
+    <div class="qtabs"><button class="qtab on" data-qm="interval">Intervals</button><button class="qtab" data-qm="chord">Chord quality</button><button class="qtab" data-qm="prog">Progressions</button><button class="qtab" data-qm="rhythm">Rhythm</button></div>
     <p id="qprompt"></p>
     <div class="inline"><button class="btn" id="qplay">▶ Play</button><button class="btn ghost" id="qnext">New question</button></div>
     <div class="qopts" id="qopts"></div>
@@ -1090,6 +1129,27 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <li><strong>Convert to Nashville numbers.</strong> Work out each chord's number in the key (Part 1) so you can transpose or compare.</li>
     <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
   </ol>`);
+
+/* ===================== DJing — Camelot wheel ===================== */
+sec('djing', 'DJing', 'DJing: harmonic mixing', 'The same circle you just used for keys, relabelled the way DJs use it. Two tracks mix cleanly when their Camelot codes are compatible, so you can chain songs without a clashing key change.',
+  () => `
+  <div class="circle">
+    ${circleSVG('camelot')}
+    <div>
+      ${table(['Key', 'Camelot code'], KEYS.map((x, i) => [
+        N(`<button class="lnk" data-k="${i}">${x.name}</button>`), N(x.cam)]))}
+    </div>
+  </div>
+  <p><strong>Reading the wheel:</strong> this is the exact same wheel as the circle of fifths (Part 1) — same shape, same neighbours — just labelled the way DJ software and controllers show it. B = major, A = minor. Click any code to set the whole page to that key and hear it.</p>
+
+  <h3>What actually mixes well</h3>
+  <p>A track's Camelot code tells you which other codes will mix in without a jarring key clash. Three moves, from safest to boldest:</p>
+  <ul class="plain">
+    <li><strong>Same code (e.g. 8B into 8B).</strong> Identical key. Always safe, no harmonic change at all.</li>
+    <li><strong>Same number, other letter (e.g. 8B into 8A).</strong> Relative major/minor — the mood shifts (brighter or darker) but the notes in the key barely change.</li>
+    <li><strong>Adjacent number, same letter (e.g. 8B into 9B or 7B).</strong> One step around the wheel — a smooth, mild key change, the same neighbouring-key relationship from Part 1.</li>
+  </ul>
+  <p>Jumping more than one step around the wheel, or crossing from a B to an unrelated A, is where a key clash starts to be audible — the same reason two chords from unrelated keys sound wrong together in Part 1.</p>`);
 
 /* ===================== Progression builder ===================== */
 const build = {seq: [], bpm: 100, loop: true, playing: false, timers: []};
