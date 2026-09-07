@@ -36,6 +36,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 .nav{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:0 16px 10px;max-width:920px;margin:0 auto}
 .nav a{white-space:nowrap;font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;padding:2px 0}
 .nav a:hover,.nav a:focus-visible{color:var(--acc);border-color:var(--acc)}
+.nav a.cur{color:var(--acc);border-color:var(--acc)}
 .navdd{position:relative}
 .navdd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:14px;color:var(--ink2);border-bottom:2px solid transparent;padding:2px 0;white-space:nowrap}
 .navdd summary::-webkit-details-marker{display:none}
@@ -45,6 +46,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 .navdd-menu{position:absolute;top:100%;left:0;margin-top:10px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px;display:flex;flex-direction:column;min-width:200px;z-index:20;box-shadow:0 14px 30px rgba(0,0,0,.4)}
 .navdd-menu a{padding:7px 10px;border-radius:7px;font-size:14px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:0}
 .navdd-menu a:hover,.navdd-menu a:focus-visible{background:var(--surf);color:var(--acc)}
+.navdd-menu a.cur{background:var(--surf);color:var(--acc)}
 
 /* hero */
 .hero{max-width:920px;margin:0 auto;padding:44px 16px 8px}
@@ -62,8 +64,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 
 /* sections */
 main{max-width:920px;margin:0 auto;padding:8px 16px 60px}
-section.part{padding:40px 0 4px;border-top:1px solid var(--line);margin-top:36px}
-section.part:first-child{border-top:0;margin-top:0;padding-top:24px}
+section.part{padding:24px 0 60px}
 section.part h2{font-size:clamp(26px,4vw,34px);font-weight:500;margin:0 0 8px;letter-spacing:-.01em}
 section.part .lead{color:var(--ink2);max-width:62ch;margin:0 0 20px}
 h3{font-size:19px;font-weight:600;margin:30px 0 10px}
@@ -1257,14 +1258,16 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
   </ol>`);
 
-/* ===================== Piano — part 1 of the branch: hand position and fingering =====================
-   The rest of the Piano branch (comping patterns adapted to two hands, pedalling, more scale and
-   arpeggio fingerings) is planned as further pieces, built and tested the same staged way as
-   everything else on this page — this is the first one, not the whole branch. */
-const RH_MAJOR_FINGERING = [1, 2, 3, 1, 2, 3, 4, 5]; // ascending major scale, right hand, standard fingering
-sec('piano', 'Piano', 'Piano, part 1: hand position and fingering', 'The start of the Piano branch. This covers the two things everything else in it builds on: how your hand sits, and how fingers are numbered. More technique, comping, and pedalling content follows in later updates.',
-  () => { const iv = SCALES[0][1], root = state.key.pc, rm = rootMidi(root, iv);
-    const notes = [...iv, 12].map(x => rm + x);
+/* ===================== Piano: technique, comping, and pedalling =====================
+   Still not the entire branch — real repertoire, two-hands-together audio, and per-key fingering
+   exceptions (see the caveat below) are natural next additions, built and tested the same staged
+   way as everything else on this page. */
+const RH_MAJOR_FINGERING = [1, 2, 3, 1, 2, 3, 4, 5]; // ascending, one octave, thumb-under after the 3rd degree
+const LH_MAJOR_FINGERING = [5, 4, 3, 2, 1, 3, 2, 1]; // mirrored: thumb-under after the 5th degree, descending in reverse
+sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'How your hand sits, how fingers are numbered, how each hand fingers a scale, how the left hand accompanies, and what the sustain pedal actually does.',
+  () => { const iv = SCALES[0][1], root = state.key.pc, rmR = rootMidi(root, iv), rmL = rmR - 12;
+    const notesR = [...iv, 12].map(x => rmR + x);
+    const notesL = [...iv, 12].map(x => rmL + x);
     return `
   <h3>Hand position</h3>
   <p>Curved fingers, like gently holding a small ball. Wrist roughly level with the keys, not drooping below or propped up above. Relaxed shoulders. None of this needs to be perfect before you start playing — it's something to keep returning to, not a checkpoint to pass first.</p>
@@ -1274,10 +1277,29 @@ sec('piano', 'Piano', 'Piano, part 1: hand position and fingering', 'The start o
   ${table(['Finger', 'Name'], [['1', 'Thumb'], ['2', 'Index'], ['3', 'Middle'], ['4', 'Ring'], ['5', 'Pinky']].map(([n, l]) => [N(n), l]))}
 
   <h3>Worked example: right-hand major scale</h3>
-  <p>The standard right-hand fingering for a major scale starting on the root: 1 2 3, then the thumb tucks under for 1 2 3 4 5. The same shape works in every key — this transposes with the key selector above, and reuses the staff from Reading.</p>
-  ${staffSVG(notes)}
+  <p>The standard right-hand fingering for a major scale starting on the root: 1 2 3, then the thumb tucks under for 1 2 3 4 5. This transposes with the key selector above, and reuses the staff from Reading.</p>
+  ${staffSVG(notesR)}
   <p class="hint">Fingering, left to right: ${RH_MAJOR_FINGERING.join(' – ')}, ending on the octave above the root.</p>
-  <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rm))}">▶ Play the scale</button></div>`; });
+  <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rmR))}">▶ Play the right-hand scale</button></div>
+
+  <h3>Worked example: left-hand major scale</h3>
+  <p>The left hand mirrors the right: start on the pinky, cross the thumb under after finger 1, land back on the thumb three notes from the top. Shown an octave lower, where a left hand actually sits.</p>
+  ${staffSVG(notesL)}
+  <p class="hint">Fingering, left to right: ${LH_MAJOR_FINGERING.join(' – ')}, ending on the octave above the root.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rmL))}">▶ Play the left-hand scale</button></div>
+
+  <div class="note"><p><strong>A real caveat, not a formality.</strong> The 1-2-3 / thumb-under pattern above is the standard teaching simplification, and it's correct for most keys — but not all of them. Keys with more black keys involved (F♯, D♭, B among others) commonly use adjusted fingering in real method books, specifically to avoid landing the thumb on a black key. Per-key exception fingerings are a genuine gap here, not yet built.</p></div>
+
+  <h3>Comping: the left hand as accompaniment</h3>
+  <p>Left-hand comping patterns — block chords, broken chords, Alberti bass, boom-chuck, bossa nova, four-on-the-floor — are covered in Rhythm (Part 8) rather than repeated here, since the same patterns apply whether you're accompanying yourself on piano or building a bassline elsewhere. Everything there transposes and plays exactly the way the examples above do.</p>
+
+  <h3>Pedalling</h3>
+  <p>The right (sustain) pedal lifts every damper off the strings at once, so notes keep ringing after your fingers release the keys and can blend into each other. Two habits matter more than anything else early on:</p>
+  <ul class="plain">
+    <li><strong>Syncopated pedalling.</strong> Instead of pressing the pedal down with the chord, release it right as the new chord lands and press back down a fraction after — this clears the old harmony without a gap in the sound. The default technique for almost all pedal use.</li>
+    <li><strong>Change pedal with the harmony, not the melody.</strong> Hold through notes that belong to the current chord; release and re-press when the chord itself changes, or the sound blurs into a wash.</li>
+  </ul>
+  <p>Two other pedals exist on most pianos: the soft pedal (una corda, left) quietens and slightly darkens the tone rather than sustaining anything, and the middle pedal (sostenuto, on grand pianos) sustains only the notes already held when it's pressed. Neither is simulated here yet — this section is explanatory only for now, no pedal audio behind it.</p>`; });
 
 /* ===================== DJing — Camelot wheel ===================== */
 const GENRE_BPM = [
@@ -1450,8 +1472,29 @@ function renderAll() {
   renderTiles();
   $('#app').innerHTML = SECTIONS.map(s => `<section class="part" id="${s.id}"><h2>${s.title}</h2>${s.lead ? `<p class="lead">${s.lead}</p>` : ''}${s.body()}</section>`).join('');
   qRender();
+  applySectionVisibility();
 }
 function setKey(i) { state.key = KEYS[i]; $('#keysel').value = i; renderAll(); }
+
+// Which section the hash points to. 'builder' isn't a top-level section of its own — it's an
+// anchor inside Progressions — so it maps back to that section rather than showing nothing.
+function activeSection() {
+  const h = location.hash.replace('#', '');
+  if (h === 'builder') return 'progressions';
+  return SECTIONS.some(s => s.id === h) ? h : SECTIONS[0].id;
+}
+// Shows only the active section and hides the rest, instead of one continuous scroll through
+// everything — so DJing, Piano, and every Theory page are each their own view, reachable directly
+// by URL too (e.g. #djing loads straight into DJing on a fresh page load).
+function applySectionVisibility() {
+  const active = activeSection();
+  document.querySelectorAll('section.part').forEach(el => { el.hidden = el.id !== active; });
+  document.querySelectorAll('.nav a, .navdd-menu a').forEach(a => {
+    const href = a.getAttribute('href');
+    a.classList.toggle('cur', href === '#' + active || (active === 'progressions' && href === '#builder'));
+  });
+}
+window.addEventListener('hashchange', () => { applySectionVisibility(); window.scrollTo(0, 0); });
 
 // Groups the top nav bar into a dropdown for the twelve core theory reference pages, so the bar
 // isn't one long scrolling list. Nothing is removed — every section id below is still linked to.
