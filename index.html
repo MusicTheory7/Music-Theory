@@ -33,10 +33,18 @@ button{font:inherit;color:inherit}
 select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)}
 .stop{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink2);font-size:12px}
 .stop:hover{border-color:var(--acc);color:var(--acc)}
-.nav{display:flex;gap:18px;overflow-x:auto;padding:0 16px 10px;max-width:920px;margin:0 auto;scrollbar-width:none}
-.nav::-webkit-scrollbar{display:none}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:0 16px 10px;max-width:920px;margin:0 auto}
 .nav a{white-space:nowrap;font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;padding:2px 0}
 .nav a:hover,.nav a:focus-visible{color:var(--acc);border-color:var(--acc)}
+.navdd{position:relative}
+.navdd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:14px;color:var(--ink2);border-bottom:2px solid transparent;padding:2px 0;white-space:nowrap}
+.navdd summary::-webkit-details-marker{display:none}
+.navdd summary .car{font-size:10px;transition:transform .15s}
+.navdd:hover summary,.navdd[open] summary{color:var(--acc);border-color:var(--acc)}
+.navdd[open] summary .car{transform:rotate(180deg)}
+.navdd-menu{position:absolute;top:100%;left:0;margin-top:10px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px;display:flex;flex-direction:column;min-width:200px;z-index:20;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.navdd-menu a{padding:7px 10px;border-radius:7px;font-size:14px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:0}
+.navdd-menu a:hover,.navdd-menu a:focus-visible{background:var(--surf);color:var(--acc)}
 
 /* hero */
 .hero{max-width:920px;margin:0 auto;padding:44px 16px 8px}
@@ -984,6 +992,97 @@ sec('notation', 'Notation', 'Part 10: Notation glossary', 'How chord symbols and
     [N('Syncopation'), 'Accenting a normally weak beat or off-beat, pushing against the expected pulse'],
   ])}`);
 
+/* ===================== Reading & writing music ===================== */
+// Treble-clef vertical position. Step 0 = bottom line (E4), one step per natural letter name
+// (not per semitone — an accidental changes the symbol beside the note, not its height).
+// Verified against the standard mnemonics: lines E G B D F = steps 0,2,4,6,8; spaces F A C E = 1,3,5,7;
+// middle C (C4) lands at step -2, one ledger line below the staff, matching the universal reference point.
+const NAT = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+function staffStep(midi) {
+  const name = nn(midi);
+  const letter = name[0];
+  const acc = name.includes('♯') ? 1 : name.includes('♭') ? -1 : 0;
+  const naturalMidi = midi - acc;
+  const octave = Math.floor(naturalMidi / 12) - 1;
+  const position = octave * 7 + NAT.indexOf(letter);
+  return position - 30; // 30 = E4's position, fixed as step 0
+}
+// Renders one or more notes on a treble staff. Note: the clef glyph is the Unicode musical symbol
+// character; it displays correctly on most current systems but is not guaranteed on every font/OS.
+function staffSVG(midis) {
+  const LS = 12, top = 30, bottom = top + 4 * LS;
+  const stepY = s => bottom - s * (LS / 2);
+  const w = Math.max(160, 70 + midis.length * 60);
+  let s = `<svg viewBox="0 0 ${w} 140" role="img" aria-label="Music staff showing ${midis.length ? midis.map(nn).join(', ') : 'no notes yet'}">`;
+  for (let i = 0; i < 5; i++) { const y = top + i * LS; s += `<line x1="20" y1="${y}" x2="${w - 20}" y2="${y}" stroke="var(--line2)" stroke-width="1.5"/>`; }
+  s += `<text x="24" y="${bottom - 4}" font-size="34" fill="var(--ink)" font-family="serif">𝄞</text>`;
+  midis.forEach((m, k) => {
+    const x = 72 + k * 60, step = staffStep(m), y = stepY(step);
+    if (step < 0) for (let st = -2; st >= step; st -= 2) s += `<line x1="${x - 12}" y1="${stepY(st)}" x2="${x + 12}" y2="${stepY(st)}" stroke="var(--line2)" stroke-width="1.5"/>`;
+    if (step > 8) for (let st = 10; st <= step; st += 2) s += `<line x1="${x - 12}" y1="${stepY(st)}" x2="${x + 12}" y2="${stepY(st)}" stroke="var(--line2)" stroke-width="1.5"/>`;
+    const name = nn(m), acc = name.includes('♯') ? '♯' : name.includes('♭') ? '♭' : '';
+    if (acc) s += `<text x="${x - 20}" y="${y + 5}" font-size="16" fill="var(--acc)">${acc}</text>`;
+    s += `<ellipse cx="${x}" cy="${y}" rx="7" ry="5.5" fill="var(--ink)"/>`;
+  });
+  return s + `</svg>`;
+}
+// Key-signature note names, reusing the circle of fifths order already in KEYS rather than new data:
+// index 0-6 on the sharp side of the circle gives the sharp count directly; 7-11 gives (12 - index) flats.
+function keySigNotes(i) {
+  const SH = ['F', 'C', 'G', 'D', 'A', 'E', 'B'], FL = ['B', 'E', 'A', 'D', 'G', 'C', 'F'];
+  if (i === 0) return {type: 'none'};
+  if (i === 6) return {type: 'both', sharps: SH.slice(0, 6), flats: FL.slice(0, 6)};
+  if (i <= 5) return {type: 'sharps', notes: SH.slice(0, i)};
+  return {type: 'flats', notes: FL.slice(0, 12 - i)};
+}
+function keySigHTML() {
+  const i = KEYS.findIndex(k => k.pc === state.key.pc), s = keySigNotes(i);
+  if (s.type === 'none') return `<p><strong>${state.key.name} major</strong> has no sharps or flats — every note is a natural (white key).</p>`;
+  if (s.type === 'both') return `<p><strong>${state.key.name}</strong> is written either way: 6 sharps (${s.sharps.map(n => n + '♯').join(' ')}) or 6 flats (${s.flats.map(n => n + '♭').join(' ')}), depending on the piece.</p>`;
+  const sym = s.type === 'sharps' ? '♯' : '♭';
+  return `<p><strong>${state.key.name} major</strong> has ${s.notes.length} ${s.type}: ${s.notes.map(n => n + sym).join(' ')}.</p>`;
+}
+// Sight-reading drill state. Reuses the page's live keyboard (KB/kbTap) rather than a second keyboard.
+const read = {active: false, midi: null, asked: 0, right: 0, done: false};
+function rdNew() {
+  read.midi = 60 + Math.floor(Math.random() * 22); // roughly C4 to A5
+  read.done = false;
+  const el = $('#rdstaff'); if (el) el.innerHTML = staffSVG([read.midi]);
+  const fb = $('#rdfeed'); if (fb) fb.innerHTML = '';
+}
+function rdCheck(m) {
+  if (read.midi === null || read.done) return;
+  read.done = true; read.asked++;
+  const ok = m === read.midi; if (ok) read.right++;
+  const fb = $('#rdfeed'); if (fb) fb.innerHTML = ok ? `<strong>Yes.</strong> That was ${nn(read.midi)}.` : `<strong>Not quite.</strong> The staff showed ${nn(read.midi)}. Tap "New note" to try another.`;
+  const sc = $('#rdscore'); if (sc) sc.textContent = `Score: ${read.right} of ${read.asked}`;
+}
+
+sec('reading', 'Reading', 'Reading and writing music', 'How chords are written is Part 10. This is about the staff itself: where a note sits, what a key signature means, and matching what you see to what you play, on the same keyboard as the rest of this page.',
+  () => `
+  <h3>The staff and treble clef</h3>
+  <p>Five lines, four spaces, each one step higher than the last. From the bottom line up, the lines spell <strong>E G B D F</strong> ("Every Good Boy Deserves Fudge") and the spaces spell <strong>F A C E</strong>. Middle C sits just below the staff, on its own short ledger line.</p>
+  ${staffSVG([64, 65, 67, 69, 71, 72, 60])}
+  <p class="hint">Left to right: E4 (bottom line), F4, G4, A4, B4, C5, then middle C (C4) on a ledger line below, for reference. Bass clef isn't built yet — this page is treble clef only for now.</p>
+
+  <h3>Key signatures</h3>
+  <p>The circle of fifths (Part 1) already gives the count. Sharps stack in the order F C G D A E B; flats stack in reverse, B E A D G C F. This updates with the key selector at the top.</p>
+  <div id="rdkeysig">${keySigHTML()}</div>
+
+  <h3>Rhythm notation</h3>
+  <p>Note-value names and symbols are covered in the notation glossary (Part 10) rather than repeated here, so there is one place to look them up.</p>
+
+  <h3>Sight-reading drill</h3>
+  <p>A note appears on the staff. Tap the matching key on the keyboard docked at the bottom of the screen — while the drill is running, tapping answers the note instead of naming a chord.</p>
+  <div class="inline">
+    <button class="btn" id="rdstart" ${read.active ? 'hidden' : ''}>Start drill</button>
+    <button class="btn ghost" id="rdnext" ${read.active ? '' : 'hidden'}>New note</button>
+    <button class="btn ghost" id="rdstop" ${read.active ? '' : 'hidden'}>Stop</button>
+  </div>
+  <div id="rdstaff">${read.active && read.midi !== null ? staffSVG([read.midi]) : ''}</div>
+  <p class="qfeed" id="rdfeed"></p>
+  <p class="qscore" id="rdscore">${read.asked ? `Score: ${read.right} of ${read.asked}` : ''}</p>`);
+
 /* ===================== Key terms ===================== */
 const TERMS = [
   ['Semitone (half-step)', 'The smallest distance between two keys on the instrument, and the unit every formula on this page counts in. Two semitones make a whole step.'],
@@ -1215,6 +1314,12 @@ function kbFold(m) { while (m < KB.lo) m += 12; while (m > KB.hi) m -= 12; retur
 function kbLight(m, on) { const k = document.querySelector(`.k[data-m="${kbFold(m)}"]`); if (k) k.classList.toggle('on', on); }
 function kbClearLit() { document.querySelectorAll('.k.on').forEach(k => k.classList.remove('on')); }
 function kbTap(m) {
+  if (read.active) {
+    const c = Synth.ensure(); Synth.stop(); Synth.mute = false;
+    Synth.note(m, c.currentTime + 0.01, 0.9, 0.2);
+    rdCheck(m);
+    return;
+  }
   if (KB.sel.has(m)) KB.sel.delete(m); else KB.sel.add(m);
   renderKB(); kbIdentify();
   const c = Synth.ensure(); Synth.stop(); Synth.mute = true;
@@ -1268,7 +1373,26 @@ function renderAll() {
 }
 function setKey(i) { state.key = KEYS[i]; $('#keysel').value = i; renderAll(); }
 
-$('#nav').innerHTML = SECTIONS.map(s => `<a href="#${s.id}">${s.nav}</a>` + (s.id === 'progressions' ? '<a href="#builder">Builder</a>' : '')).join('');
+// Groups the top nav bar into a dropdown for the twelve core theory reference pages, so the bar
+// isn't one long scrolling list. Nothing is removed — every section id below is still linked to.
+const NAV_GROUPS = [
+  {id: 'how'},
+  {label: 'Theory', ids: ['chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'terms']},
+  {id: 'ear'},
+  {id: 'djing'},
+];
+function navLink(id) {
+  const s = SECTIONS.find(x => x.id === id);
+  return `<a href="#${s.id}">${s.nav}</a>` + (id === 'progressions' ? '<a href="#builder">Builder</a>' : '');
+}
+$('#nav').innerHTML = NAV_GROUPS.map(g => g.id
+  ? navLink(g.id)
+  : `<details class="navdd"><summary>${g.label} <span class="car">▾</span></summary><div class="navdd-menu">${g.ids.map(navLink).join('')}</div></details>`
+).join('');
+document.addEventListener('click', e => {
+  if (e.target.closest('.navdd-menu a')) { const d = e.target.closest('.navdd'); if (d) d.open = false; return; }
+  if (!e.target.closest('.navdd')) document.querySelectorAll('.navdd[open]').forEach(d => d.open = false);
+});
 $('#keysel').innerHTML = KEYS.map((k, i) => `<option value="${i}">${k.name}</option>`).join('');
 $('#keysel').addEventListener('change', e => setKey(+e.target.value));
 $('#stop').addEventListener('click', () => Synth.stop());
@@ -1302,6 +1426,9 @@ document.addEventListener('click', e => {
   if (e.target.closest('#qplay')) { qPlay(); return; }
   if (e.target.closest('#qnext')) { qNew(); return; }
   const qo = e.target.closest('.qo'); if (qo) { qAnswer(qo.dataset.q); return; }
+  const rs = e.target.closest('#rdstart'); if (rs) { read.active = true; rs.hidden = true; const sb = $('#rdstop'); if (sb) sb.hidden = false; const nb = $('#rdnext'); if (nb) nb.hidden = false; rdNew(); return; }
+  const rn = e.target.closest('#rdnext'); if (rn) { rdNew(); return; }
+  const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; return; }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
