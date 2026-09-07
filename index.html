@@ -229,6 +229,57 @@ body.has-dock{padding-bottom:126px}
 <button class="dockshow" id="dockshow" hidden>Keyboard</button>
 
 <script>
+/* ===================== Progress storage (Phase 4: no accounts, browser-local only) =====================
+   Wrapped in try/catch throughout: private browsing and storage-quota limits can make localStorage
+   throw, and a progress-tracking feature failing should never break the actual page. If storage isn't
+   available, everything below just quietly runs in-memory for the session instead. */
+const Store = {
+  key: 'byear_progress_v1',
+  data: null,
+  ok: true,
+  load() {
+    if (this.data) return this.data;
+    let d = null;
+    try { d = JSON.parse(localStorage.getItem(this.key) || 'null'); } catch (e) { this.ok = false; }
+    this.data = (d && typeof d === 'object') ? d : {events: [], mastery: {}, piano: null, sections: {}};
+    if (!this.data.events) this.data.events = [];
+    if (!this.data.mastery) this.data.mastery = {};
+    if (!this.data.sections) this.data.sections = {};
+    return this.data;
+  },
+  save() {
+    try { localStorage.setItem(this.key, JSON.stringify(this.data)); }
+    catch (e) { this.ok = false; }
+  },
+  // Logs one quiz/drill attempt and folds it into a running per-concept mastery tally.
+  logEvent(module, item, correct) {
+    const d = this.load();
+    d.events.push({t: Date.now(), m: module, i: item, c: !!correct});
+    if (d.events.length > 500) d.events = d.events.slice(-500); // cap growth, oldest first
+    const key = module + ':' + item;
+    const ms = d.mastery[key] || (d.mastery[key] = {seen: 0, correct: 0});
+    ms.seen++; if (correct) ms.correct++;
+    this.save();
+  },
+  // All-time seen/correct for a given quiz mode, across every item asked in it.
+  allTime(module) {
+    const d = this.load();
+    let seen = 0, correct = 0;
+    Object.keys(d.mastery).forEach(k => { if (k.startsWith(module + ':')) { seen += d.mastery[k].seen; correct += d.mastery[k].correct; } });
+    return {seen, correct};
+  },
+  touchSection(id) {
+    const d = this.load();
+    d.sections[id] = (d.sections[id] || 0) + 1;
+    this.save();
+  },
+  getPiano(n) {
+    const d = this.load();
+    return (Array.isArray(d.piano) && d.piano.length === n) ? d.piano.slice() : new Array(n).fill(false);
+  },
+  setPiano(arr) { const d = this.load(); d.piano = arr; this.save(); },
+};
+
 /* ===================== Core music data ===================== */
 const $ = (s, r = document) => r.querySelector(s);
 const SHARP = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
@@ -1056,8 +1107,11 @@ function rdCheck(m) {
   if (read.midi === null || read.done) return;
   read.done = true; read.asked++;
   const ok = m === read.midi; if (ok) read.right++;
+  Store.logEvent('reading', nn(read.midi), ok);
   const fb = $('#rdfeed'); if (fb) fb.innerHTML = ok ? `<strong>Yes.</strong> That was ${nn(read.midi)}.` : `<strong>Not quite.</strong> The staff showed ${nn(read.midi)}. Tap "New note" to try another.`;
   const sc = $('#rdscore'); if (sc) sc.textContent = `Score: ${read.right} of ${read.asked}`;
+  const at = Store.allTime('reading');
+  const atEl = $('#rdalltime'); if (atEl) atEl.textContent = at.seen ? `All-time: ${at.correct} of ${at.seen}` : '';
 }
 // Reveals the answer without scoring it as a miss, and flashes the correct key on the live
 // keyboard using the same kbLight on/off pattern Synth already uses when a note plays.
@@ -1109,7 +1163,8 @@ sec('reading', 'Reading', 'Reading and writing music', 'How chords are written i
   </div>
   <div id="rdstaff">${read.active && read.midi !== null ? staffSVG([read.midi]) : ''}</div>
   <p class="qfeed" id="rdfeed"></p>
-  <p class="qscore" id="rdscore">${read.asked ? `Score: ${read.right} of ${read.asked}` : ''}</p>`);
+  <p class="qscore" id="rdscore">${read.asked ? `Score: ${read.right} of ${read.asked}` : ''}</p>
+  <p class="hint" id="rdalltime">${(() => { const at = Store.allTime('reading'); return at.seen ? `All-time: ${at.correct} of ${at.seen}` : ''; })()}</p>`);
 
 /* ===================== Key terms ===================== */
 const TERMS = [
@@ -1204,6 +1259,7 @@ function qAnswer(label) {
   if (!quiz.ans || quiz.done) return;
   quiz.done = true; quiz.asked++;
   const ok = label === quiz.ans.label; if (ok) quiz.right++;
+  Store.logEvent('ear-' + quiz.mode, quiz.ans.label, ok);
   $('#qfeed').innerHTML = qFeedback(ok);
   document.querySelectorAll('.qo').forEach(b => { if (b.dataset.q === quiz.ans.label) b.classList.add('right'); else if (b.dataset.q === label) b.classList.add('wrong'); });
   qRender(true);
@@ -1215,7 +1271,10 @@ function qRender(keepOpts) {
     el.innerHTML = quiz.opts.map(o => `<button class="qo" data-q="${o.label}">${o.label}</button>`).join('');
     $('#qfeed').innerHTML = '';
   }
+  const at = Store.allTime('ear-' + quiz.mode);
   $('#qscore').textContent = quiz.asked ? `Score: ${quiz.right} of ${quiz.asked}` : 'Score: no questions yet';
+  const atEl = $('#qalltime');
+  if (atEl) atEl.textContent = at.seen ? `All-time on this mode: ${at.correct} of ${at.seen}` : '';
   const prompts = {
     interval: 'Two notes play one after the other, then together. Which interval is it?',
     chord: 'One chord plays. What quality is it?',
@@ -1238,6 +1297,7 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <div class="qopts" id="qopts"></div>
     <p class="qfeed" id="qfeed"></p>
     <p class="qscore" id="qscore"></p>
+    <p class="hint" id="qalltime"></p>
   </div>
 
   <h3>Progressions you already know, in the wild</h3>
@@ -1276,11 +1336,11 @@ const FINGERING_EXCEPTIONS = {
   11: {hand: 'left', finger: 4, label: 'F major'},
 };
 const PIANO_TOPICS = ['Hand position', 'Finger numbers', 'Right-hand scale', 'Left-hand scale', 'Both hands together', 'Hand independence', 'Arpeggio', 'Comping (Part 8)', 'Pedalling'];
-const pianoProgress = new Array(PIANO_TOPICS.length).fill(false);
+let pianoProgress = Store.getPiano(PIANO_TOPICS.length);
 function pianoChecklistHTML() {
   const done = pianoProgress.filter(Boolean).length;
   return `${table(['', 'Topic'], PIANO_TOPICS.map((t, i) => [N(`<input type="checkbox" data-pgc="${i}" ${pianoProgress[i] ? 'checked' : ''}>`), t]))}
-  <p class="hint">${done} of ${PIANO_TOPICS.length} marked complete. This resets on reload for now — saved progress across visits is planned but not built yet.</p>`;
+  <p class="hint">${done} of ${PIANO_TOPICS.length} marked complete. ${Store.ok ? 'Saved in this browser — it\'ll still be here next time you visit.' : 'Not saving right now (private browsing?) — it\'ll reset if you reload.'}</p>`;
 }
 sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'Hand position, finger numbers, scale and arpeggio fingering in both hands, hand independence, comping, and pedalling — with an honest note on where per-key fingering still needs care.',
   () => { const iv = SCALES[0][1], root = state.key.pc, rmR = rootMidi(root, iv), rmL = rmR - 12;
@@ -1545,7 +1605,7 @@ function applySectionVisibility() {
     a.classList.toggle('cur', href === '#' + active || (active === 'progressions' && href === '#builder'));
   });
 }
-window.addEventListener('hashchange', () => { applySectionVisibility(); window.scrollTo(0, 0); });
+window.addEventListener('hashchange', () => { applySectionVisibility(); Store.touchSection(activeSection()); window.scrollTo(0, 0); });
 
 // Groups the top nav bar into a dropdown for the twelve core theory reference pages, so the bar
 // isn't one long scrolling list. Nothing is removed — every section id below is still linked to.
@@ -1576,7 +1636,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'voicesel') state.voice = e.target.value;
   if (e.target.id === 'bloop') build.loop = e.target.checked;
   if (e.target.id === 'kbchord') KB.chord = e.target.checked;
-  if (e.target.dataset.pgc !== undefined) { pianoProgress[+e.target.dataset.pgc] = e.target.checked; const el = $('#pianochecklist'); if (el) el.innerHTML = pianoChecklistHTML(); }
+  if (e.target.dataset.pgc !== undefined) { pianoProgress[+e.target.dataset.pgc] = e.target.checked; Store.setPiano(pianoProgress); const el = $('#pianochecklist'); if (el) el.innerHTML = pianoChecklistHTML(); }
 });
 document.body.classList.add('has-dock'); renderKB();
 window.addEventListener('resize', () => { clearTimeout(KB._r); KB._r = setTimeout(renderKB, 150); });
@@ -1616,6 +1676,7 @@ document.addEventListener('input', e => {
 });
 
 renderAll();
+Store.touchSection(activeSection());
 </script>
 </body>
 </html>
