@@ -1057,6 +1057,15 @@ function rdCheck(m) {
   const fb = $('#rdfeed'); if (fb) fb.innerHTML = ok ? `<strong>Yes.</strong> That was ${nn(read.midi)}.` : `<strong>Not quite.</strong> The staff showed ${nn(read.midi)}. Tap "New note" to try another.`;
   const sc = $('#rdscore'); if (sc) sc.textContent = `Score: ${read.right} of ${read.asked}`;
 }
+// Reveals the answer without scoring it as a miss, and flashes the correct key on the live
+// keyboard using the same kbLight on/off pattern Synth already uses when a note plays.
+function rdShow() {
+  if (read.midi === null || read.done) return;
+  read.done = true;
+  const fb = $('#rdfeed'); if (fb) fb.innerHTML = `<strong>Answer:</strong> ${nn(read.midi)}. Watch the keyboard below.`;
+  kbLight(read.midi, true);
+  setTimeout(() => kbLight(read.midi, false), 900);
+}
 
 sec('reading', 'Reading', 'Reading and writing music', 'How chords are written is Part 10. This is about the staff itself: where a note sits, what a key signature means, and matching what you see to what you play, on the same keyboard as the rest of this page.',
   () => `
@@ -1064,6 +1073,22 @@ sec('reading', 'Reading', 'Reading and writing music', 'How chords are written i
   <p>Five lines, four spaces, each one step higher than the last. From the bottom line up, the lines spell <strong>E G B D F</strong> ("Every Good Boy Deserves Fudge") and the spaces spell <strong>F A C E</strong>. Middle C sits just below the staff, on its own short ledger line.</p>
   ${staffSVG([64, 65, 67, 69, 71, 72, 60])}
   <p class="hint">Left to right: E4 (bottom line), F4, G4, A4, B4, C5, then middle C (C4) on a ledger line below, for reference. Bass clef isn't built yet — this page is treble clef only for now.</p>
+
+  <h3>How to read a note quickly</h3>
+  <ol class="steps">
+    <li><strong>Find a landmark first.</strong> Don't count from the bottom every time. Middle C (one ledger line below the staff) and the top line F5 are the two fastest anchors to spot at a glance.</li>
+    <li><strong>Count in letter steps, not semitones.</strong> Every line-to-space or space-to-line move is one letter name up or down (E to F, not E to E♯). This is why the note's height on the page never changes for a sharp or flat version of the same letter.</li>
+    <li><strong>Use the mnemonics as a checksum.</strong> Lines from the bottom are E G B D F; spaces are F A C E. If your count lands somewhere that breaks that pattern, recount.</li>
+    <li><strong>Name it, then check the key signature.</strong> The staff position gives you the letter (say, F). The key signature (below) tells you whether that F is natural, sharp, or flat in this key.</li>
+  </ol>
+
+  <h3>Ledger lines beyond middle C</h3>
+  <p>The staff only covers two octaves' worth of lines and spaces on its own. Anything higher or lower keeps using the same one-step-per-letter logic, with short ledger lines added only where needed.</p>
+  ${staffSVG([48, 60, 81, 84])}
+  <p class="hint">Left to right: C3 (two ledger lines below), middle C (one ledger line below), A5 (one ledger line above), C6 (two ledger lines above). The spacing between ledger lines matches the spacing on the staff itself.</p>
+
+  <h3>Accidentals</h3>
+  <p>A ♯ or ♭ written directly beside a notehead (as opposed to one baked into the key signature) is called an accidental. By standard convention it applies to every occurrence of that same note, in that same octave, for the rest of the bar it appears in — the next bar line cancels it automatically, whether or not a natural sign (♮) is written. A natural sign cancels a key-signature or accidental sharp/flat early, before the bar ends.</p>
 
   <h3>Key signatures</h3>
   <p>The circle of fifths (Part 1) already gives the count. Sharps stack in the order F C G D A E B; flats stack in reverse, B E A D G C F. This updates with the key selector at the top.</p>
@@ -1073,10 +1098,11 @@ sec('reading', 'Reading', 'Reading and writing music', 'How chords are written i
   <p>Note-value names and symbols are covered in the notation glossary (Part 10) rather than repeated here, so there is one place to look them up.</p>
 
   <h3>Sight-reading drill</h3>
-  <p>A note appears on the staff. Tap the matching key on the keyboard docked at the bottom of the screen — while the drill is running, tapping answers the note instead of naming a chord.</p>
+  <p>A note appears on the staff. Tap the matching key on the keyboard docked at the bottom of the screen — while the drill is running, tapping answers the note instead of naming a chord. Stuck? Show the answer instead of guessing blind.</p>
   <div class="inline">
     <button class="btn" id="rdstart" ${read.active ? 'hidden' : ''}>Start drill</button>
     <button class="btn ghost" id="rdnext" ${read.active ? '' : 'hidden'}>New note</button>
+    <button class="btn ghost" id="rdshow" ${read.active ? '' : 'hidden'}>Show answer</button>
     <button class="btn ghost" id="rdstop" ${read.active ? '' : 'hidden'}>Stop</button>
   </div>
   <div id="rdstaff">${read.active && read.midi !== null ? staffSVG([read.midi]) : ''}</div>
@@ -1104,6 +1130,8 @@ const TERMS = [
   ['Relative and parallel keys', 'Relative keys share the same notes but have different homes (C major and A minor). Parallel keys share the same root but different quality (C major and C minor).'],
   ['Modulation', 'Changing key partway through a piece. Part 7 covers how.'],
   ['Pedal tone', 'A bass note held while the chords above it change. The core of the atmospheric sound in Part 6.'],
+  ['Energy level', 'How intense or driving a track feels. In DJing, moving +1 or −1 around the Camelot wheel (see DJing) is a common way to raise or lower it smoothly.'],
+  ['Phrasing', 'The larger 8- or 16-bar groupings a track is built from. Lining up phrase boundaries, not just beats, is what makes a DJ transition feel intentional rather than accidental.'],
   ['Harmonic rhythm', 'How often the chords change. Fast harmonic rhythm feels busy; slow harmonic rhythm feels spacious.'],
   ['Comping', 'Playing chords in rhythm behind a melody or a soloist. Part 8 lists common patterns.'],
   ['Vamp', 'A short progression (often just one or two chords) repeated as a bed for a solo or melody.'],
@@ -1229,26 +1257,78 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
   </ol>`);
 
+/* ===================== Piano — part 1 of the branch: hand position and fingering =====================
+   The rest of the Piano branch (comping patterns adapted to two hands, pedalling, more scale and
+   arpeggio fingerings) is planned as further pieces, built and tested the same staged way as
+   everything else on this page — this is the first one, not the whole branch. */
+const RH_MAJOR_FINGERING = [1, 2, 3, 1, 2, 3, 4, 5]; // ascending major scale, right hand, standard fingering
+sec('piano', 'Piano', 'Piano, part 1: hand position and fingering', 'The start of the Piano branch. This covers the two things everything else in it builds on: how your hand sits, and how fingers are numbered. More technique, comping, and pedalling content follows in later updates.',
+  () => { const iv = SCALES[0][1], root = state.key.pc, rm = rootMidi(root, iv);
+    const notes = [...iv, 12].map(x => rm + x);
+    return `
+  <h3>Hand position</h3>
+  <p>Curved fingers, like gently holding a small ball. Wrist roughly level with the keys, not drooping below or propped up above. Relaxed shoulders. None of this needs to be perfect before you start playing — it's something to keep returning to, not a checkpoint to pass first.</p>
+
+  <h3>Finger numbers</h3>
+  <p>Both hands use the same numbering, thumb outward.</p>
+  ${table(['Finger', 'Name'], [['1', 'Thumb'], ['2', 'Index'], ['3', 'Middle'], ['4', 'Ring'], ['5', 'Pinky']].map(([n, l]) => [N(n), l]))}
+
+  <h3>Worked example: right-hand major scale</h3>
+  <p>The standard right-hand fingering for a major scale starting on the root: 1 2 3, then the thumb tucks under for 1 2 3 4 5. The same shape works in every key — this transposes with the key selector above, and reuses the staff from Reading.</p>
+  ${staffSVG(notes)}
+  <p class="hint">Fingering, left to right: ${RH_MAJOR_FINGERING.join(' – ')}, ending on the octave above the root.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rm))}">▶ Play the scale</button></div>`; });
+
 /* ===================== DJing — Camelot wheel ===================== */
+const GENRE_BPM = [
+  ['Hip-hop / R&B', '80–100'],
+  ['House', '120–128'],
+  ['Techno', '125–150'],
+  ['Trance', '128–140'],
+  ['Dubstep', '138–142 (often felt as 70 half-time)'],
+  ['Drum & bass', '160–180'],
+];
+function camelotMove(i, delta, letterFlip) {
+  // i: index into KEYS. delta: steps around the wheel (same letter). letterFlip: true = relative major/minor.
+  const wrap = n => ((n % 12) + 12) % 12; // KEYS is already in camelot-adjacent circle order
+  const target = KEYS[wrap(i + delta)];
+  return letterFlip ? target.cam.replace(/[AB]/, x => x === 'B' ? 'A' : 'B') : target.cam;
+}
 sec('djing', 'DJing', 'DJing: harmonic mixing', 'The same circle you just used for keys, relabelled the way DJs use it. Two tracks mix cleanly when their Camelot codes are compatible, so you can chain songs without a clashing key change.',
-  () => `
+  () => { const i = KEYS.findIndex(k => k.pc === state.key.pc), cur = KEYS[i];
+    return `
   <div class="circle">
     ${circleSVG('camelot')}
     <div>
-      ${table(['Key', 'Camelot code'], KEYS.map((x, i) => [
-        N(`<button class="lnk" data-k="${i}">${x.name}</button>`), N(x.cam)]))}
+      ${table(['Key', 'Camelot code'], KEYS.map((x, k) => [
+        N(`<button class="lnk" data-k="${k}">${x.name}</button>`), N(x.cam)]))}
     </div>
   </div>
   <p><strong>Reading the wheel:</strong> this is the exact same wheel as the circle of fifths (Part 1) — same shape, same neighbours — just labelled the way DJ software and controllers show it. B = major, A = minor. Click any code to set the whole page to that key and hear it.</p>
 
   <h3>What actually mixes well</h3>
-  <p>A track's Camelot code tells you which other codes will mix in without a jarring key clash. Three moves, from safest to boldest:</p>
+  <p>A track's Camelot code tells you which other codes will mix in without a jarring key clash, from safest to boldest:</p>
   <ul class="plain">
     <li><strong>Same code (e.g. 8B into 8B).</strong> Identical key. Always safe, no harmonic change at all.</li>
     <li><strong>Same number, other letter (e.g. 8B into 8A).</strong> Relative major/minor — the mood shifts (brighter or darker) but the notes in the key barely change.</li>
-    <li><strong>Adjacent number, same letter (e.g. 8B into 9B or 7B).</strong> One step around the wheel — a smooth, mild key change, the same neighbouring-key relationship from Part 1.</li>
+    <li><strong>+1, same letter (e.g. 8B into 9B).</strong> Often called an <strong>energy boost</strong> — one step clockwise, a smooth lift in intensity.</li>
+    <li><strong>−1, same letter (e.g. 8B into 7B).</strong> The reverse — an <strong>energy drop</strong>, one step counter-clockwise, useful for cooling a set down.</li>
   </ul>
-  <p>Jumping more than one step around the wheel, or crossing from a B to an unrelated A, is where a key clash starts to be audible — the same reason two chords from unrelated keys sound wrong together in Part 1.</p>`);
+  <p>Jumping more than one step around the wheel, or crossing from a B to an unrelated A, is where a key clash starts to be audible — the same reason two chords from unrelated keys sound wrong together in Part 1.</p>
+
+  <h3>Worked example, in the current key</h3>
+  <p>${cur.name} major is <strong>${cur.cam}</strong>. Here's what each move above actually gives you to mix into next:</p>
+  ${table(['Move', 'Code', 'Key'], [
+    [N('Same'), N(cur.cam), cur.name],
+    [N('Relative'), N(camelotMove(i, 0, true)), cur.pc === 6 ? 'D♯m / E♭m' : relMinor(cur)],
+    [N('Energy boost (+1)'), N(camelotMove(i, 1, false)), KEYS[(i + 1) % 12].name],
+    [N('Energy drop (−1)'), N(camelotMove(i, -1, false)), KEYS[(i + 11) % 12].name],
+  ])}
+
+  <h3>Beatmatching: the other half of a clean mix</h3>
+  <p>Camelot compatibility handles the key. The other half is tempo — two tracks at wildly different BPMs clash rhythmically even in a perfectly compatible key. Typical ranges by genre:</p>
+  ${table(['Genre', 'Typical BPM'], GENRE_BPM.map(([g, b]) => [N(g), b]))}
+  <p>A track at exactly double or half another's BPM (say 80 and 160) can still mix cleanly — this is a half-time/double-time relationship, common between hip-hop and drum & bass. Outside of that relationship, keep the gap small: a few BPM apart blends easily; more than that needs a tempo adjustment on the way in.</p>`; });
 
 /* ===================== Progression builder ===================== */
 const build = {seq: [], bpm: 100, loop: true, playing: false, timers: []};
@@ -1379,6 +1459,7 @@ const NAV_GROUPS = [
   {id: 'how'},
   {label: 'Theory', ids: ['chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'terms']},
   {id: 'ear'},
+  {id: 'piano'},
   {id: 'djing'},
 ];
 function navLink(id) {
@@ -1426,9 +1507,10 @@ document.addEventListener('click', e => {
   if (e.target.closest('#qplay')) { qPlay(); return; }
   if (e.target.closest('#qnext')) { qNew(); return; }
   const qo = e.target.closest('.qo'); if (qo) { qAnswer(qo.dataset.q); return; }
-  const rs = e.target.closest('#rdstart'); if (rs) { read.active = true; rs.hidden = true; const sb = $('#rdstop'); if (sb) sb.hidden = false; const nb = $('#rdnext'); if (nb) nb.hidden = false; rdNew(); return; }
+  const rs = e.target.closest('#rdstart'); if (rs) { read.active = true; rs.hidden = true; const sb = $('#rdstop'); if (sb) sb.hidden = false; const nb = $('#rdnext'); if (nb) nb.hidden = false; const shb = $('#rdshow'); if (shb) shb.hidden = false; rdNew(); return; }
   const rn = e.target.closest('#rdnext'); if (rn) { rdNew(); return; }
-  const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; return; }
+  const rsh = e.target.closest('#rdshow'); if (rsh) { rdShow(); return; }
+  const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const shb = $('#rdshow'); if (shb) shb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; return; }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
