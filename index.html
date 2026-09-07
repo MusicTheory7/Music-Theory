@@ -449,6 +449,7 @@ sec('how', 'Start here', 'How to use this page', '',
   <p><strong>New to theory?</strong> Read the chord formulas first, then Parts 1 to 4 in order. Each part builds on the last: which chords exist, which ones live together in a key, how to put them in order, why they pull the way they do, and which scale fits over which chord.</p>
   <p><strong>Already know the basics?</strong> Use the search box in the chord section, the key selector at the top, and the section links to jump straight to what you need. Parts 5 to 11 are reference material you dip into, not a course.</p>
   <p><strong>Either way, use your ears.</strong> Every ▶ plays the real sound. Words like "bright" or "unstable" only make sense once you have heard the chord next to its neighbours, so play the major triad, then the minor, then the diminished, and listen for the difference.</p>
+  <p><strong>Finding your way around.</strong> The bar up top shows one section at a time rather than one long scroll — Theory groups all twelve reference parts under one dropdown, while Ear training, Piano, and DJing sit alongside it as their own separate branches, not a continuation of the numbered parts. The current section is always highlighted in the nav, and every section has its own link you can bookmark or share directly.</p>
   <div class="note"><p><strong>How the formulas work.</strong> Root note = 0. Count half-steps upward (every key, black and white, counts as one step). A formula is the same for every chord of that type no matter which note you start on, which is why this page can transpose everything when you change the key. Numbers 12 and higher are more than an octave above the root: the same note as (number − 12), just voiced higher up.</p></div>`);
 
 /* ===================== Chord formulas ===================== */
@@ -1259,15 +1260,34 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
   </ol>`);
 
 /* ===================== Piano: technique, comping, and pedalling =====================
-   Still not the entire branch — real repertoire, two-hands-together audio, and per-key fingering
-   exceptions (see the caveat below) are natural next additions, built and tested the same staged
-   way as everything else on this page. */
+   Real repertoire and true polyphonic sight-reading are still natural next additions beyond this —
+   everything below is built and verified, not a stub, but a branch this size keeps growing. */
 const RH_MAJOR_FINGERING = [1, 2, 3, 1, 2, 3, 4, 5]; // ascending, one octave, thumb-under after the 3rd degree
 const LH_MAJOR_FINGERING = [5, 4, 3, 2, 1, 3, 2, 1]; // mirrored: thumb-under after the 5th degree, descending in reverse
-sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'How your hand sits, how fingers are numbered, how each hand fingers a scale, how the left hand accompanies, and what the sustain pedal actually does.',
+const ARP_IV = [0, 4, 7, 12]; // major triad arpeggio, root position, one octave
+// The most widely-taught starting-finger exceptions to the standard pattern above, keyed by index
+// into KEYS. These are the cases cited almost universally (thumb would otherwise land on a black
+// key) — not necessarily every exception every method book teaches, and only the starting finger
+// is claimed here, not a full note-by-note sequence, since that varies more by source.
+const FINGERING_EXCEPTIONS = {
+  5: {hand: 'right', finger: 3, label: 'B major'},
+  6: {hand: 'right', finger: 2, label: 'F♯ / G♭ major'},
+  7: {hand: 'right', finger: 2, label: 'D♭ major'},
+  11: {hand: 'left', finger: 4, label: 'F major'},
+};
+const PIANO_TOPICS = ['Hand position', 'Finger numbers', 'Right-hand scale', 'Left-hand scale', 'Both hands together', 'Hand independence', 'Arpeggio', 'Comping (Part 8)', 'Pedalling'];
+const pianoProgress = new Array(PIANO_TOPICS.length).fill(false);
+function pianoChecklistHTML() {
+  const done = pianoProgress.filter(Boolean).length;
+  return `${table(['', 'Topic'], PIANO_TOPICS.map((t, i) => [N(`<input type="checkbox" data-pgc="${i}" ${pianoProgress[i] ? 'checked' : ''}>`), t]))}
+  <p class="hint">${done} of ${PIANO_TOPICS.length} marked complete. This resets on reload for now — saved progress across visits is planned but not built yet.</p>`;
+}
+sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'Hand position, finger numbers, scale and arpeggio fingering in both hands, hand independence, comping, and pedalling — with an honest note on where per-key fingering still needs care.',
   () => { const iv = SCALES[0][1], root = state.key.pc, rmR = rootMidi(root, iv), rmL = rmR - 12;
     const notesR = [...iv, 12].map(x => rmR + x);
     const notesL = [...iv, 12].map(x => rmL + x);
+    const ki = KEYS.findIndex(k => k.pc === root), exc = FINGERING_EXCEPTIONS[ki];
+    const step = 0.23, totalDur = (2 * iv.length + 1) * step + 0.5; // matches Synth.scale's own up+down formula
     return `
   <h3>Hand position</h3>
   <p>Curved fingers, like gently holding a small ball. Wrist roughly level with the keys, not drooping below or propped up above. Relaxed shoulders. None of this needs to be perfect before you start playing — it's something to keep returning to, not a checkpoint to pass first.</p>
@@ -1283,12 +1303,27 @@ sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'How your hand
   <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rmR))}">▶ Play the right-hand scale</button></div>
 
   <h3>Worked example: left-hand major scale</h3>
-  <p>The left hand mirrors the right: start on the pinky, cross the thumb under after finger 1, land back on the thumb three notes from the top. Shown an octave lower, where a left hand actually sits.</p>
+  <p>The left hand mirrors the right: start on the pinky, cross the thumb under after finger 1, land back on the thumb three notes from the top. Shown an octave lower, where a left hand actually sits — though drawn on the treble staff from Reading, since bass clef isn't built yet.</p>
   ${staffSVG(notesL)}
   <p class="hint">Fingering, left to right: ${LH_MAJOR_FINGERING.join(' – ')}, ending on the octave above the root.</p>
   <div class="inline"><button class="btn" data-a="${act(() => Synth.scale(iv, rmL))}">▶ Play the left-hand scale</button></div>
 
-  <div class="note"><p><strong>A real caveat, not a formality.</strong> The 1-2-3 / thumb-under pattern above is the standard teaching simplification, and it's correct for most keys — but not all of them. Keys with more black keys involved (F♯, D♭, B among others) commonly use adjusted fingering in real method books, specifically to avoid landing the thumb on a black key. Per-key exception fingerings are a genuine gap here, not yet built.</p></div>
+  <div class="note"><p><strong>Per-key fingering: what's covered, honestly.</strong> The 1-2-3 / thumb-under pattern above is correct for most keys. ${exc
+    ? `<strong>${state.key.name} major is one of the exceptions</strong> — the standard teaching here starts the ${exc.hand} hand on finger ${exc.finger} instead of the usual ${exc.hand === 'right' ? '1 (thumb)' : '5 (pinky)'}, specifically to avoid landing the thumb on a black key. The full note-by-note fingering for this key isn't built here yet — worth checking a method book for the exact sequence.`
+    : `${state.key.name} major is not one of the commonly-cited exceptions, so the standard pattern above applies as shown.`} The keys most often taught with an adjusted start are B, F♯/G♭, and D♭ (right hand) and F (left hand) — this covers those, not necessarily every variant every method book uses.</p></div>
+
+  <h3>Both hands together</h3>
+  <p>Same scale, same fingering in each hand, played at the same time.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => { Synth.scale(iv, rmR); return Synth.scale(iv, rmL); })}">▶ Play both hands together</button></div>
+
+  <h3>Hand independence</h3>
+  <p>The real skill two hands together doesn't test: doing two <em>different</em> things at once. Left hand holds the tonic chord; right hand runs the scale over it.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => { const c = Synth.ensure(); const t = c.currentTime + 0.03; Synth.chord(TRI, rmL, t, totalDur - 0.2); return Synth.scale(iv, rmR, step); })}">▶ Play left-hand chord under right-hand scale</button></div>
+
+  <h3>Arpeggios</h3>
+  <p>A broken triad instead of a stacked one: root, 3rd, 5th, octave, one note at a time. Standard right-hand fingering skips straight from finger 3 to finger 5 for the octave, rather than using finger 4.</p>
+  <p class="hint">Fingering: 1 – 2 – 3 – 5.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => Synth.seq(ARP_IV.map(i => ({iv: [0], root: rmR + i})), 0.4))}">▶ Play the arpeggio</button></div>
 
   <h3>Comping: the left hand as accompaniment</h3>
   <p>Left-hand comping patterns — block chords, broken chords, Alberti bass, boom-chuck, bossa nova, four-on-the-floor — are covered in Rhythm (Part 8) rather than repeated here, since the same patterns apply whether you're accompanying yourself on piano or building a bassline elsewhere. Everything there transposes and plays exactly the way the examples above do.</p>
@@ -1299,7 +1334,23 @@ sec('piano', 'Piano', 'Piano: technique, comping, and pedalling', 'How your hand
     <li><strong>Syncopated pedalling.</strong> Instead of pressing the pedal down with the chord, release it right as the new chord lands and press back down a fraction after — this clears the old harmony without a gap in the sound. The default technique for almost all pedal use.</li>
     <li><strong>Change pedal with the harmony, not the melody.</strong> Hold through notes that belong to the current chord; release and re-press when the chord itself changes, or the sound blurs into a wash.</li>
   </ul>
-  <p>Two other pedals exist on most pianos: the soft pedal (una corda, left) quietens and slightly darkens the tone rather than sustaining anything, and the middle pedal (sostenuto, on grand pianos) sustains only the notes already held when it's pressed. Neither is simulated here yet — this section is explanatory only for now, no pedal audio behind it.</p>`; });
+  <p>Two other pedals exist on most pianos: the soft pedal (una corda, left) quietens and slightly darkens the tone rather than sustaining anything, and the middle pedal (sostenuto, on grand pianos) sustains only the notes already held when it's pressed. Neither is simulated here yet — this section is explanatory only for now, no pedal audio behind it.</p>
+
+  <h3>Register: where each hand actually sits</h3>
+  <p>The right hand is conventionally written in treble clef, roughly middle C and above; the left in bass clef, roughly middle C and below — though either hand can go anywhere the music calls for. Every staff diagram on this page, including the left-hand examples above, is treble clef only for now (see Reading), so left-hand notes are shown transposed up into treble range rather than in their natural, lower, bass-clef position.</p>
+
+  <h3>Common early mistakes</h3>
+  <ul class="plain">
+    <li><strong>Collapsing the wrist</strong> below the level of the keys, which restricts finger movement and tires the forearm quickly.</li>
+    <li><strong>Tensing the outer edge of the hand</strong> (the pinky side) rather than keeping it soft and rounded.</li>
+    <li><strong>Watching your hands the whole time</strong> instead of building the muscle memory to find keys without looking — worth weaning off early rather than later.</li>
+    <li><strong>Rushing the tempo</strong> on a new passage instead of playing it evenly slower first. A clean slow run beats a fast messy one every time you're learning something new.</li>
+    <li><strong>Holding your breath</strong> or tensing the shoulders through a tricky bar — an easy habit to pick up under pressure and a hard one to unlearn later.</li>
+  </ul>
+
+  <h3>Track your progress through this branch</h3>
+  <p>A simple checklist, nothing more sophisticated yet — see the note below on what's still missing.</p>
+  <div id="pianochecklist">${pianoChecklistHTML()}</div>`; });
 
 /* ===================== DJing — Camelot wheel ===================== */
 const GENRE_BPM = [
@@ -1525,6 +1576,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'voicesel') state.voice = e.target.value;
   if (e.target.id === 'bloop') build.loop = e.target.checked;
   if (e.target.id === 'kbchord') KB.chord = e.target.checked;
+  if (e.target.dataset.pgc !== undefined) { pianoProgress[+e.target.dataset.pgc] = e.target.checked; const el = $('#pianochecklist'); if (el) el.innerHTML = pianoChecklistHTML(); }
 });
 document.body.classList.add('has-dock'); renderKB();
 window.addEventListener('resize', () => { clearTimeout(KB._r); KB._r = setTimeout(renderKB, 150); });
@@ -1550,10 +1602,10 @@ document.addEventListener('click', e => {
   if (e.target.closest('#qplay')) { qPlay(); return; }
   if (e.target.closest('#qnext')) { qNew(); return; }
   const qo = e.target.closest('.qo'); if (qo) { qAnswer(qo.dataset.q); return; }
-  const rs = e.target.closest('#rdstart'); if (rs) { read.active = true; rs.hidden = true; const sb = $('#rdstop'); if (sb) sb.hidden = false; const nb = $('#rdnext'); if (nb) nb.hidden = false; const shb = $('#rdshow'); if (shb) shb.hidden = false; rdNew(); return; }
+  const rs = e.target.closest('#rdstart'); if (rs) { read.active = true; rs.hidden = true; const sb = $('#rdstop'); if (sb) sb.hidden = false; const nb = $('#rdnext'); if (nb) nb.hidden = false; const shb = $('#rdshow'); if (shb) shb.hidden = false; const dk = $('#dock'); if (dk) dk.hidden = false; const ds = $('#dockshow'); if (ds) ds.hidden = true; document.body.classList.add('has-dock'); renderKB(); const ki = $('#kbinfo'); if (ki) ki.textContent = 'Sight-reading drill active — tap the note shown on the staff'; rdNew(); return; }
   const rn = e.target.closest('#rdnext'); if (rn) { rdNew(); return; }
   const rsh = e.target.closest('#rdshow'); if (rsh) { rdShow(); return; }
-  const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const shb = $('#rdshow'); if (shb) shb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; return; }
+  const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const shb = $('#rdshow'); if (shb) shb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; kbIdentify(); return; }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
