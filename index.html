@@ -1212,16 +1212,35 @@ function playOvertones(n) { // n = number of extra harmonics above the fundament
 sec('physics', 'Physics of sound', 'Physics of sound', 'What sound actually is, why the harmonic series underlies scales and intervals you already know, and why the same note sounds different on every voice on this page.',
   () => `
   <h3>What sound is</h3>
-  <p>A vibrating source pushes the air into a repeating pressure wave. How fast it repeats is frequency, heard as pitch; how big the wave is is amplitude, heard as loudness. Every sound on this page is built from that one idea — an oscillator is code generating a repeating wave at a chosen frequency.</p>
+  <p>A vibrating source pushes the air into a repeating pressure wave. How fast it repeats is frequency, heard as pitch; how big the wave is is amplitude, heard as loudness. Frequency is measured in Hertz (Hz) — cycles per second. Concert A, the tuning reference most instruments use, is 440Hz; doubling that to 880Hz is exactly one octave higher, and halving it to 220Hz is exactly one octave lower. That 2:1 ratio is what an octave *is*, physically — not a human preference, a doubling of vibration speed. Every sound on this page is built from that one idea: an oscillator is code generating a repeating wave at a chosen frequency.</p>
 
   <h3>The harmonic series</h3>
-  <p>A real vibrating string or column of air doesn't just produce one frequency — it produces a fundamental plus a stack of overtones at whole-number multiples of it (2×, 3×, 4×...), all at once, decaying at different rates. This isn't incidental to music theory: the 2nd overtone is an octave above the fundamental, the 3rd is an octave and a fifth up. The intervals from Ear training aren't an arbitrary human preference — they're the same ratios already present inside a single note.</p>
+  <p>A real vibrating string or column of air doesn't just produce one frequency — it produces a fundamental plus a stack of overtones at whole-number multiples of it, all at once, decaying at different rates. This isn't incidental to music theory: the intervals from Ear training already exist inside a single note, before two notes are ever played together.</p>
+  ${table(['Harmonic', 'Frequency (if fundamental = 100Hz)', 'Interval above the fundamental'], [
+    ['1st (the fundamental itself)', '100Hz', 'Unison — this is the note'],
+    ['2nd', '200Hz', 'An octave'],
+    ['3rd', '300Hz', 'An octave and a perfect 5th'],
+    ['4th', '400Hz', 'Two octaves'],
+    ['5th', '500Hz', 'Two octaves and a major 3rd'],
+    ['6th', '600Hz', 'Two octaves and a perfect 5th'],
+    ['7th', '700Hz', 'Roughly two octaves and a minor 7th — noticeably flatter than the equal-tempered version, sometimes called the "harmonic 7th"'],
+  ])}
+  <p>Notice which intervals show up first and most strongly: the octave, then the 5th, then the major 3rd — precisely the intervals a major triad is built from (Part 1). A major chord isn't an arbitrary pleasant combination; it's a close copy of what a single note already contains.</p>
   <div class="inline"><input type="range" min="0" max="6" value="0" id="overtoneSlider" style="flex:1"><span class="hint" id="overtoneLabel" style="min-width:120px">Fundamental only</span></div>
   <div class="inline"><button class="btn" data-a="${act(() => playOvertones(+($('#overtoneSlider') ? $('#overtoneSlider').value : 0)))}">▶ Play it</button></div>
+  <p class="hint">At 0 it's a plain sine tone — the sound of a fundamental with nothing added. Each step up layers on the next harmonic from the table above, quieter than the last. By 6 it should sound noticeably richer and buzzier, closer to a small organ than a pure tone — that shift in color, with the pitch never moving, is the harmonic series made audible.</p>
 
   <h3>Timbre: why instruments sound different</h3>
-  <p>Two notes at the exact same pitch and loudness can still sound completely different, because timbre is which overtones are present and how loud each one is relative to the others — not the fundamental frequency, which is identical either way. Every voice in the picker at the top of this page (Soft keys, Piano, Guitar, Organ, Pad, Pluck) plays the exact same fundamental frequency for a given note; what changes between them is the overtone recipe layered on top.</p>
-  <div class="note"><p><strong>Try it yourself.</strong> Pick any chord in the Chords section, and flip through each voice in the picker at the top without changing the note. The pitch stays put; only the color moves.</p></div>`);
+  <p>Two notes at the exact same pitch and loudness can still sound completely different, because timbre is which overtones are present and how loud each one is relative to the others — not the fundamental frequency, which is identical either way. Every voice in the picker at the top of this page plays the exact same fundamental for a given note; only the overtone recipe changes:</p>
+  ${table(['Voice', 'What actually makes it sound that way'], [
+    ['Soft keys', 'Mostly a triangle wave (naturally mellow, weak upper harmonics) with a quiet octave layered on top — deliberately plain.'],
+    ['Piano', 'The same triangle-plus-octave base as Soft keys, but louder in the octave layer and with a touch of square wave mixed in, which adds the odd harmonics that give it more bite.'],
+    ['Guitar', 'Not layered oscillators at all — a physically modeled plucked string (Karplus-Strong), so its overtone mix genuinely evolves and decays over time the way a real string does, rather than staying fixed.'],
+    ['Organ', 'Pure sine waves stacked at the unison, octave, octave-plus-fifth, and two octaves — literally the harmonic series from the table above, built by hand. This is exactly how a real drawbar organ works.'],
+    ['Pad', 'Two detuned sawtooth waves (a sawtooth contains every harmonic, not just some) plus a soft octave layer — the detuning is what gives it that wide, chorus-like spread.'],
+    ['Pluck', 'Similar recipe to Piano, but with a fast-decaying envelope — the pitch content barely differs from Piano; what makes it sound plucked is purely how quickly it fades.'],
+  ])}
+  <div class="note"><p><strong>Try it yourself.</strong> Pick any chord in the Chords section, and flip through each voice in the picker at the top without changing the note. The pitch stays put; only the color moves — and now you know why, voice by voice.</p></div>`);
 
 /* ===================== Songwriting ===================== */
 // One progression (Pop / four-chord, reused from PROGS), three different melodic approaches over
@@ -1247,20 +1266,29 @@ sec('songwriting', 'Songwriting', 'Songwriting: one progression, three melodies'
   () => `
   <h3>The same progression, three ways</h3>
   <p>All three play the Pop / four-chord progression (I – V – vi – IV, see Part 2) in the current key. Only the top line changes.</p>
-  ${table(['Approach', 'What it does', ''], [
-    ['Chord-tone melody', 'Targets the 3rd of whatever chord is sounding — always lands inside the harmony, the safest starting point.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('chordtone'))}">▶ Play</button>`)],
-    ['Stepwise melody', 'Walks down the scale independent of the chord underneath, using the non-chord tones covered in Melody (Part 9) rather than only chord tones.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('stepwise'))}">▶ Play</button>`)],
-    ['Syncopated placement', 'The exact same notes as the chord-tone version, just placed slightly after the beat instead of on it — see Rhythm (Part 8) for the underlying idea.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('syncopated'))}">▶ Play</button>`)],
+  ${table(['Approach', 'What it does', 'Why it works', ''], [
+    ['Chord-tone melody', 'Targets the 3rd of whatever chord is sounding.', 'The 3rd is what makes a chord major or minor in the first place, so a melody built from it can never clash with the harmony underneath — the safest, most reliable starting point.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('chordtone'))}">▶ Play</button>`)],
+    ['Stepwise melody', 'Walks down the scale by a single step at a time, independent of whichever chord is sounding underneath.', 'A "step" just means the next note up or down in the scale (C to D, not C to E). Moving by step instead of jumping between chord tones is what makes a line sound sung rather than arpeggiated — most melodies people actually remember are mostly stepwise.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('stepwise'))}">▶ Play</button>`)],
+    ['Syncopated placement', 'The exact same notes as the chord-tone version, just placed slightly after the beat instead of on it.', '"Syncopated" means accenting a moment other than where the beat falls — here, landing each note a fraction late. Same pitches, same chords, but it immediately feels less square and more like a real vocal phrase.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('syncopated'))}">▶ Play</button>`)],
   ])}
   <p class="hint">Same chords, same key, same tempo, every time — the only variable is the melody-writing decision itself.</p>
+
+  <h3>What each one actually plays</h3>
+  <p>Using scale degrees (the Nashville numbers from Part 1), so this reads the same in every key:</p>
+  ${table(['Chord', 'I', 'V', 'vi', 'IV'], [
+    ['Chord-tone melody plays', '3', '7', '1', '6'],
+    ['Stepwise melody plays', '5', '4', '3', '2'],
+    ['Syncopated melody plays', '3', '7', '1', '6'],
+  ])}
+  <p class="hint">The stepwise line is a clean descending walk (5-4-3-2) that ignores the chords entirely — that's the point of calling it independent. The chord-tone and syncopated rows are identical in pitch; only their timing differs.</p>
 
   <h3>A simple process</h3>
   <ol class="steps">
     <li><strong>Pick a progression first.</strong> Borrow one from Part 2 rather than inventing one from scratch — the harmonic backbone is the least original part of most songs anyway.</li>
-    <li><strong>Decide the target feeling.</strong> Resolved and simple, or unresolved and searching — that decision should come before any notes, since it shapes every choice after it.</li>
-    <li><strong>Write the strong beats first.</strong> Put a note on the first beat of each chord before filling in anything between — that skeleton is what a listener actually tracks.</li>
-    <li><strong>Fill in connecting notes.</strong> Step-wise motion between the strong-beat notes, using the non-chord tones from Part 9.</li>
-    <li><strong>Add rhythmic interest last.</strong> Once the pitches feel right, shift a few of them off the beat — the syncopated example above is that exact move.</li>
+    <li><strong>Decide the target feeling.</strong> Resolved and simple, or unresolved and searching — that decision should come before any notes, since it shapes every choice after it. A chord-tone melody leans resolved; heavy use of non-chord tones (Part 9) leans searching.</li>
+    <li><strong>Write the strong beats first.</strong> Put one note on the first beat of each chord before filling in anything between — that skeleton, on its own, is what a listener actually tracks even before it's finished.</li>
+    <li><strong>Fill in connecting notes.</strong> Step-wise motion between the strong-beat notes, borrowing from the non-chord-tone vocabulary in Part 9 (passing tones, neighbor tones) rather than only chord tones.</li>
+    <li><strong>Add rhythmic interest last.</strong> Once the pitches feel right, shift a few of them off the beat — the syncopated example above, applied to your own melody instead of this one.</li>
   </ol>`);
 
 sec('terms', 'Key terms', 'Key terms', 'The vocabulary the rest of this page uses. If a word in another section is unfamiliar, it is probably here.',
@@ -1703,7 +1731,8 @@ function playFxDemo(fx, wet) {
 sec('producing', 'Producing', 'Producing: sequencing, a simple synth, and effects', 'A DAW in miniature: a step sequencer for drums, an oscillator-and-filter synth on the same keyboard as the rest of this page, an effects rack you can A/B, and the sidechain "pumping" sound explained honestly.',
   () => `
   <h3>Step sequencer</h3>
-  <p>Sixteen steps, three voices, all synthesized live — the same noise-burst technique behind the plucked guitar sound elsewhere on this page, reused for the snare and hi-hat.</p>
+  <p>Sixteen steps is one bar of music divided into sixteenth notes — four groups of four, one group per beat. All three sounds are synthesized live, not samples: the snare and hi-hat reuse the same noise-burst technique behind the plucked guitar sound elsewhere on this page.</p>
+  <p>The pattern loaded by default is a genuinely common one, not arbitrary: kick on every beat (steps 1, 5, 9, 13) for a steady pulse, snare on beats 2 and 4 (steps 5 and 13) — the "backbeat," the single most common accent placement in pop, rock, and hip-hop — and hi-hats on every eighth note (twice as often as the beat) to keep the subdivision audible between kicks.</p>
   <div id="seqgrid">${seqGridHTML()}</div>
   <div class="inline">
     <button class="btn" id="seqplay" ${seq.playing ? 'hidden' : ''}>▶ Play loop</button>
@@ -1711,6 +1740,7 @@ sec('producing', 'Producing', 'Producing: sequencing, a simple synth, and effect
     <input type="range" min="70" max="180" value="${seq.bpm}" id="seqtempo" style="flex:1">
     <span class="hint" id="seqtempov" style="min-width:70px">${seq.bpm} BPM</span>
   </div>
+  <p class="hint">Try muting the snare and moving the remaining kick to every other step — that's most four-on-the-floor house and techno in one move (see DJing for the tempo ranges those genres typically sit in).</p>
 
   <h3>A simple synth</h3>
   <p>One oscillator, one filter, one envelope — turn it on, then play the keyboard docked at the bottom of the screen. While it's active, tapping a key plays this synth instead of naming a chord.</p>
@@ -1726,24 +1756,33 @@ sec('producing', 'Producing', 'Producing: sequencing, a simple synth, and effect
     </label>
     <label class="hint" style="flex:1">Filter cutoff <input type="range" min="200" max="8000" value="${synthDemo.cutoff}" id="synthcutoff" style="width:100%"></label>
   </div>
+  <p class="hint">The waveform sets the raw overtone content (see Physics of sound — a sawtooth carries every harmonic, a sine carries none at all beyond the fundamental). The filter then cuts from the top down: a low cutoff removes most of that harmonic content for a dark, muffled tone; a high cutoff lets nearly all of it through for something brighter and more present.</p>
   <div class="inline">
     <label class="hint">Attack <input type="range" min="0" max="1" step="0.01" value="${synthDemo.a}" id="synthA"></label>
     <label class="hint">Decay <input type="range" min="0" max="1" step="0.01" value="${synthDemo.d}" id="synthD"></label>
     <label class="hint">Sustain <input type="range" min="0" max="1" step="0.01" value="${synthDemo.s}" id="synthS"></label>
     <label class="hint">Release <input type="range" min="0" max="1.5" step="0.01" value="${synthDemo.r}" id="synthR"></label>
   </div>
+  ${table(['Stage', 'What it controls'], [
+    ['Attack', 'How long the note takes to reach full volume after you press the key. Near-zero feels percussive and plucky; a long attack feels like a slow swell, the way a pad or a swelling string section comes in.'],
+    ['Decay', 'How long it then takes to fall from that peak down to the sustain level, while the key is still held.'],
+    ['Sustain', 'Unlike the other three, this one is a level, not a time — the volume the note settles at and holds for as long as you keep the key down.'],
+    ['Release', 'How long the note takes to fade to silence after you lift the key.'],
+  ])}
+  <p class="hint">Try attack near zero with a short decay and low sustain for something percussive, or a slow attack with a high sustain for something pad-like — same oscillator and filter, completely different feel.</p>
 
   <h3>Effects rack</h3>
   <p>Each plays the same plain tone, dry then through one real effect — not simulated descriptions, actual Web Audio nodes. Reverb isn't here yet: a convincing one needs a real impulse response, and a bad-sounding placeholder isn't worth shipping.</p>
-  ${table(['Effect', 'What it does', ''], [
-    ['EQ (resonant lowpass)', 'Cuts everything above the cutoff and emphasizes the frequencies right at it.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('eq', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('eq', true))}">Wet</button>`)],
-    ['Compression', 'Narrows the gap between a loud note and a quiet one — listen for the second, quieter note sitting closer in volume to the first.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('comp', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('comp', true))}">Wet</button>`)],
-    ['Delay', 'Repeats of the same sound, each quieter, spaced out in time.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('delay', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('delay', true))}">Wet</button>`)],
-    ['Saturation', 'Soft-clips the peaks of the wave, adding harmonics and a mild edge rather than a clean tone.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('sat', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('sat', true))}">Wet</button>`)],
+  ${table(['Effect', 'What it does', 'Why it gets used', ''], [
+    ['EQ (resonant lowpass)', 'Cuts everything above the cutoff, and boosts the frequencies right at that cutoff point rather than just rolling them off flatly.', 'Shaping which frequencies are even present is the most basic mixing move there is — carving space for other instruments, or making one element sound darker or brighter on purpose.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('eq', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('eq', true))}">Wet</button>`)],
+    ['Compression', 'Turns down anything louder than a set threshold, by a set ratio — narrowing the gap between a loud note and a quiet one. Listen for the second, quieter note here sitting closer in volume to the first.', 'Keeps a performance from swinging too wildly in volume, and is a big part of why produced recordings sound steady and "glued together" compared to a raw, unprocessed take.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('comp', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('comp', true))}">Wet</button>`)],
+    ['Delay', 'Repeats of the same sound, each one quieter than the last, spaced out in time — each repeat feeding back into the next at reduced volume until it fades out.', 'Adds a sense of space and depth without needing actual reverb, and can add rhythmic interest when the repeat time is set to line up with the tempo.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('delay', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('delay', true))}">Wet</button>`)],
+    ['Saturation', 'Soft-clips the peaks of the wave, which adds new harmonics on top of the original ones rather than a clean, untouched tone.', 'The extra harmonic content is usually described as "warmth" or "grit" — a way to make something feel louder and more present without literally turning the volume up.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('sat', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('sat', true))}">Wet</button>`)],
   ])}
 
   <h3>Sidechain: the "pumping" sound</h3>
   <p>The classic move behind the rhythmic volume-dip under a kick drum in a lot of dance music. Properly, it's a compressor on the pad triggered by the kick's own signal; this demo emulates the result with a volume envelope timed to the kick instead — the sound is the same, the mechanism behind it isn't the real thing.</p>
+  <p>Producers reach for it for two reasons at once: practically, ducking everything else out of the way the instant the kick hits makes the kick easier to hear in a busy mix; stylistically, that same rhythmic dip became such a recognizable signature of house and EDM that it's now used for the pumping feel alone, well beyond its original mixing purpose.</p>
   <div class="inline"><button class="btn" data-a="${act(() => playSidechainDemo())}">▶ Play the pumping effect</button></div>`);
 
 /* ===================== Progression builder ===================== */
