@@ -1195,6 +1195,74 @@ const TERMS = [
   ['Turnaround', 'The last bar or two of a form that lead back to the start, usually landing on V so the top of the form feels like arriving home.'],
   ['Chord tone and non-chord tone', 'Notes that belong to the chord currently sounding, versus decorative notes (passing, neighbor, suspension) that move around them. Part 9 covers the second kind.'],
 ];
+/* ===================== Physics of sound ===================== */
+function playOvertones(n) { // n = number of extra harmonics above the fundamental (0-6)
+  const c = Synth.ensure(); Synth.stop();
+  const f0 = 220, dur = 1.8;
+  const master = c.createGain(); master.gain.value = 0.22; master.connect(Synth.master);
+  for (let h = 1; h <= n + 1; h++) {
+    const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f0 * h;
+    const g = c.createGain(); g.gain.value = 1 / h;
+    o.connect(g); g.connect(master);
+    o.start(c.currentTime); o.stop(c.currentTime + dur);
+    Synth.live.push(o);
+  }
+  return dur;
+}
+sec('physics', 'Physics of sound', 'Physics of sound', 'What sound actually is, why the harmonic series underlies scales and intervals you already know, and why the same note sounds different on every voice on this page.',
+  () => `
+  <h3>What sound is</h3>
+  <p>A vibrating source pushes the air into a repeating pressure wave. How fast it repeats is frequency, heard as pitch; how big the wave is is amplitude, heard as loudness. Every sound on this page is built from that one idea — an oscillator is code generating a repeating wave at a chosen frequency.</p>
+
+  <h3>The harmonic series</h3>
+  <p>A real vibrating string or column of air doesn't just produce one frequency — it produces a fundamental plus a stack of overtones at whole-number multiples of it (2×, 3×, 4×...), all at once, decaying at different rates. This isn't incidental to music theory: the 2nd overtone is an octave above the fundamental, the 3rd is an octave and a fifth up. The intervals from Ear training aren't an arbitrary human preference — they're the same ratios already present inside a single note.</p>
+  <div class="inline"><input type="range" min="0" max="6" value="0" id="overtoneSlider" style="flex:1"><span class="hint" id="overtoneLabel" style="min-width:120px">Fundamental only</span></div>
+  <div class="inline"><button class="btn" data-a="${act(() => playOvertones(+($('#overtoneSlider') ? $('#overtoneSlider').value : 0)))}">▶ Play it</button></div>
+
+  <h3>Timbre: why instruments sound different</h3>
+  <p>Two notes at the exact same pitch and loudness can still sound completely different, because timbre is which overtones are present and how loud each one is relative to the others — not the fundamental frequency, which is identical either way. Every voice in the picker at the top of this page (Soft keys, Piano, Guitar, Organ, Pad, Pluck) plays the exact same fundamental frequency for a given note; what changes between them is the overtone recipe layered on top.</p>
+  <div class="note"><p><strong>Try it yourself.</strong> Pick any chord in the Chords section, and flip through each voice in the picker at the top without changing the note. The pitch stays put; only the color moves.</p></div>`);
+
+/* ===================== Songwriting ===================== */
+// One progression (Pop / four-chord, reused from PROGS), three different melodic approaches over
+// the identical chords — demonstrating techniques already covered in Melody (Part 9) and
+// Rhythm (Part 8), not new theory. Timing is scheduled manually against a shared clock (the same
+// technique used for Piano's hand-independence example) so the melody lands exactly on the chords.
+function playSongExample(variant) {
+  const c = Synth.ensure(); Synth.stop();
+  const each = 0.95, gap = 0.04, t0 = c.currentTime + 0.03;
+  const degrees = [[0, 'maj'], [7, 'maj'], [9, 'min'], [5, 'maj']]; // I - V - vi - IV
+  degrees.forEach(([deg, q], k) => {
+    const t = t0 + k * (each + gap);
+    const root = rootMidi(state.key.pc + deg, Q[q].iv);
+    Synth.chord(Q[q].iv, root, t, each * 0.9);
+    let melodyNote = root + Q[q].iv[1] + 12, melodyT = t, melodyDur = each * 0.85;
+    if (variant === 'stepwise') melodyNote = rootMidi(state.key.pc, [0, 2, 4, 5, 7, 9, 11]) + [7, 5, 4, 2][k] + 12; // a descending scale-step line, independent of the chord under it
+    else if (variant === 'syncopated') { melodyT = t + each * 0.22; melodyDur = each * 0.5; } // same notes as the chord-tone version, just placed off the beat
+    Synth.note(melodyNote, melodyT, melodyDur, 0.16);
+  });
+  return degrees.length * (each + gap) + 0.3;
+}
+sec('songwriting', 'Songwriting', 'Songwriting: one progression, three melodies', 'Song form itself is covered in Structure (Part 7). This is about the melody-writing decision underneath it: the same four chords support very different melodies depending on which notes you choose and where you place them in time.',
+  () => `
+  <h3>The same progression, three ways</h3>
+  <p>All three play the Pop / four-chord progression (I – V – vi – IV, see Part 2) in the current key. Only the top line changes.</p>
+  ${table(['Approach', 'What it does', ''], [
+    ['Chord-tone melody', 'Targets the 3rd of whatever chord is sounding — always lands inside the harmony, the safest starting point.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('chordtone'))}">▶ Play</button>`)],
+    ['Stepwise melody', 'Walks down the scale independent of the chord underneath, using the non-chord tones covered in Melody (Part 9) rather than only chord tones.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('stepwise'))}">▶ Play</button>`)],
+    ['Syncopated placement', 'The exact same notes as the chord-tone version, just placed slightly after the beat instead of on it — see Rhythm (Part 8) for the underlying idea.', N(`<button class="btn ghost" data-a="${act(() => playSongExample('syncopated'))}">▶ Play</button>`)],
+  ])}
+  <p class="hint">Same chords, same key, same tempo, every time — the only variable is the melody-writing decision itself.</p>
+
+  <h3>A simple process</h3>
+  <ol class="steps">
+    <li><strong>Pick a progression first.</strong> Borrow one from Part 2 rather than inventing one from scratch — the harmonic backbone is the least original part of most songs anyway.</li>
+    <li><strong>Decide the target feeling.</strong> Resolved and simple, or unresolved and searching — that decision should come before any notes, since it shapes every choice after it.</li>
+    <li><strong>Write the strong beats first.</strong> Put a note on the first beat of each chord before filling in anything between — that skeleton is what a listener actually tracks.</li>
+    <li><strong>Fill in connecting notes.</strong> Step-wise motion between the strong-beat notes, using the non-chord tones from Part 9.</li>
+    <li><strong>Add rhythmic interest last.</strong> Once the pitches feel right, shift a few of them off the beat — the syncopated example above is that exact move.</li>
+  </ol>`);
+
 sec('terms', 'Key terms', 'Key terms', 'The vocabulary the rest of this page uses. If a word in another section is unfamiliar, it is probably here.',
   () => `<dl class="gl">${TERMS.map(([t, d]) => `<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`);
 
@@ -1463,6 +1531,221 @@ sec('djing', 'DJing', 'DJing: harmonic mixing', 'The same circle you just used f
   ${table(['Genre', 'Typical BPM'], GENRE_BPM.map(([g, b]) => [N(g), b]))}
   <p>A track at exactly double or half another's BPM (say 80 and 160) can still mix cleanly — this is a half-time/double-time relationship, common between hip-hop and drum & bass. Outside of that relationship, keep the gap small: a few BPM apart blends easily; more than that needs a tempo adjustment on the way in.</p>`; });
 
+/* ===================== Producing =====================
+   Mixing and a genre-groove Rhythm deep dive are planned as subsections here once this core engine
+   is settled — deliberately not built yet, since both depend on the sequencer below existing first.
+   Reverb is left out of the effects rack for the same reason honesty was applied elsewhere on this
+   page: a convincing reverb needs a real impulse response, and getting one wrong is worse than
+   waiting rather than shipping a bad-sounding version of it. */
+
+// Reuses the exact noise-buffer technique already used for the Karplus-Strong guitar model, rather
+// than inventing a second way to generate noise.
+function noiseBuffer(c, dur) {
+  const fs = c.sampleRate, len = Math.floor(fs * dur);
+  const buf = c.createBuffer(1, len, fs), y = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) y[i] = Math.random() * 2 - 1;
+  return buf;
+}
+function playKick(t) {
+  const c = Synth.ensure(), o = c.createOscillator(), g = c.createGain();
+  o.type = 'sine';
+  o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.12);
+  g.gain.setValueAtTime(0.9, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+  o.connect(g).connect(Synth.master); o.start(t); o.stop(t + 0.2);
+  Synth.live.push(o);
+}
+function playSnare(t) {
+  const c = Synth.ensure();
+  const src = c.createBufferSource(); src.buffer = noiseBuffer(c, 0.2);
+  const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800;
+  const ng = c.createGain();
+  ng.gain.setValueAtTime(0.5, t); ng.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+  src.connect(bp).connect(ng).connect(Synth.master); src.start(t); src.stop(t + 0.2);
+  const o = c.createOscillator(), og = c.createGain();
+  o.type = 'triangle'; o.frequency.value = 180;
+  og.gain.setValueAtTime(0.3, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+  o.connect(og).connect(Synth.master); o.start(t); o.stop(t + 0.1);
+  Synth.live.push(src, o);
+}
+function playHihat(t) {
+  const c = Synth.ensure();
+  const src = c.createBufferSource(); src.buffer = noiseBuffer(c, 0.06);
+  const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 7000;
+  const g = c.createGain();
+  g.gain.setValueAtTime(0.25, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  src.connect(hp).connect(g).connect(Synth.master); src.start(t); src.stop(t + 0.06);
+  Synth.live.push(src);
+}
+
+const seq = {steps: {kick: new Array(16).fill(false), snare: new Array(16).fill(false), hihat: new Array(16).fill(false)}, bpm: 120, playing: false, cur: 0, timer: null};
+seq.steps.kick[0] = seq.steps.kick[4] = seq.steps.kick[8] = seq.steps.kick[12] = true;
+seq.steps.snare[4] = seq.steps.snare[12] = true;
+[0,2,4,6,8,10,12,14].forEach(i => seq.steps.hihat[i] = true);
+function seqStepTime() { return 60 / seq.bpm / 4; } // 16th notes
+function seqTick() {
+  const c = Synth.ensure(), t = c.currentTime + 0.02;
+  if (seq.steps.kick[seq.cur]) playKick(t);
+  if (seq.steps.snare[seq.cur]) playSnare(t);
+  if (seq.steps.hihat[seq.cur]) playHihat(t);
+  seqRenderPlayhead();
+  seq.cur = (seq.cur + 1) % 16;
+}
+function seqRenderPlayhead() {
+  document.querySelectorAll('[data-seq]').forEach(b => {
+    const i = +b.dataset.seq.split(':')[1];
+    b.classList.toggle('cur', seq.playing && i === seq.cur);
+  });
+}
+function seqStart() {
+  if (seq.playing) return;
+  Synth.ensure(); seq.playing = true; seq.cur = 0; seqTick();
+  seq.timer = setInterval(seqTick, seqStepTime() * 1000);
+}
+function seqStop() {
+  seq.playing = false; clearInterval(seq.timer); seq.timer = null;
+  document.querySelectorAll('[data-seq]').forEach(b => b.classList.remove('cur'));
+}
+function seqGridHTML() {
+  const voices = [['kick', 'Kick'], ['snare', 'Snare'], ['hihat', 'Hi-hat']];
+  return voices.map(([key, label]) => `
+    <div class="seqrow"><span class="seqlabel">${label}</span>${seq.steps[key].map((on, i) =>
+      `<button class="seqstep${on ? ' on' : ''}" data-seq="${key}:${i}" aria-label="${label} step ${i + 1}"></button>`).join('')}</div>`).join('');
+}
+
+// Simple synth, wired into the same keyboard dock used everywhere else on this page, the same
+// way the sight-reading drill temporarily takes over kbTap.
+const synthDemo = {active: false, wave: 'sawtooth', cutoff: 2000, a: 0.02, d: 0.15, s: 0.6, r: 0.3};
+function playSynthNote(m) {
+  const c = Synth.ensure(), t = c.currentTime + 0.01;
+  const o = c.createOscillator(), filt = c.createBiquadFilter(), g = c.createGain();
+  o.type = synthDemo.wave; o.frequency.value = Synth.f(m);
+  filt.type = 'lowpass'; filt.frequency.value = synthDemo.cutoff;
+  const peak = 0.5, sus = peak * synthDemo.s, relStart = t + synthDemo.a + synthDemo.d + 0.35;
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(peak, t + synthDemo.a);
+  g.gain.linearRampToValueAtTime(sus, t + synthDemo.a + synthDemo.d);
+  g.gain.setValueAtTime(sus, relStart);
+  g.gain.linearRampToValueAtTime(0.0001, relStart + synthDemo.r);
+  o.connect(filt).connect(g).connect(Synth.master);
+  o.start(t); o.stop(relStart + synthDemo.r + 0.05);
+  Synth.live.push(o);
+}
+
+// The classic "pumping" effect. Emulated with a timed volume dip synced to the kick, rather than
+// true dynamic compression reacting to the kick's actual signal level — said so plainly below,
+// not left implied.
+function playSidechainDemo() {
+  const c = Synth.ensure(); Synth.stop();
+  const t0 = c.currentTime + 0.03, beat = 0.5, beats = 4;
+  const o = c.createOscillator(), filt = c.createBiquadFilter(), g = c.createGain();
+  o.type = 'sawtooth'; o.frequency.value = Synth.f(rootMidi(state.key.pc, [0, 4, 7]));
+  filt.type = 'lowpass'; filt.frequency.value = 1200;
+  g.gain.setValueAtTime(0.0001, t0); g.gain.linearRampToValueAtTime(0.35, t0 + 0.05);
+  for (let i = 0; i < beats; i++) {
+    const kt = t0 + i * beat;
+    playKick(kt);
+    g.gain.setValueAtTime(0.35, kt);
+    g.gain.linearRampToValueAtTime(0.03, kt + 0.06);
+    g.gain.linearRampToValueAtTime(0.35, kt + beat * 0.85);
+  }
+  const totalDur = beats * beat + 0.5;
+  g.gain.linearRampToValueAtTime(0.0001, t0 + totalDur - 0.1);
+  o.connect(filt).connect(g).connect(Synth.master);
+  o.start(t0); o.stop(t0 + totalDur);
+  Synth.live.push(o);
+  return totalDur;
+}
+
+// Effects rack: each plays the same simple tone dry or through one real Web Audio effect node,
+// back to back rather than live-toggled mid-playback, to avoid clicks from rerouting a live graph.
+function playFxDemo(fx, wet) {
+  const c = Synth.ensure(); Synth.stop();
+  const t = c.currentTime + 0.03;
+  if (fx === 'comp') {
+    const comp = wet ? c.createDynamicsCompressor() : null;
+    if (comp) { comp.threshold.value = -30; comp.ratio.value = 8; comp.connect(Synth.master); }
+    [[0.7, 0], [0.15, 0.6]].forEach(([vol, off]) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = 'triangle'; o.frequency.value = Synth.f(rootMidi(state.key.pc, [0]));
+      g.gain.setValueAtTime(vol, t + off); g.gain.exponentialRampToValueAtTime(0.001, t + off + 0.5);
+      o.connect(g).connect(comp || Synth.master); o.start(t + off); o.stop(t + off + 0.55);
+      Synth.live.push(o);
+    });
+    return 1.3;
+  }
+  const o = c.createOscillator(), g = c.createGain(), dur = fx === 'delay' ? 0.3 : 1.4;
+  o.type = fx === 'eq' || fx === 'sat' ? 'sawtooth' : 'triangle';
+  o.frequency.value = Synth.f(rootMidi(state.key.pc, [0]));
+  g.gain.setValueAtTime(fx === 'delay' ? 0.4 : 0.28, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  if (!wet) { o.connect(g).connect(Synth.master); o.start(t); o.stop(t + dur); Synth.live.push(o); return dur + 0.3; }
+  if (fx === 'eq') {
+    const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 500; f.Q.value = 8;
+    o.connect(f).connect(g).connect(Synth.master);
+  } else if (fx === 'sat') {
+    const ws = c.createWaveShaper();
+    const n = 256, curve = new Float32Array(n);
+    for (let i = 0; i < n; i++) { const x = i / (n - 1) * 2 - 1; curve[i] = Math.tanh(x * 6); }
+    ws.curve = curve;
+    o.connect(ws).connect(g).connect(Synth.master);
+  } else { // delay
+    const dl = c.createDelay(1.0); dl.delayTime.value = 0.28;
+    const fb = c.createGain(); fb.gain.value = 0.45;
+    const wetG = c.createGain(); wetG.gain.value = 0.6;
+    o.connect(g); g.connect(Synth.master);
+    g.connect(dl); dl.connect(fb); fb.connect(dl); dl.connect(wetG); wetG.connect(Synth.master);
+  }
+  o.start(t); o.stop(t + dur);
+  Synth.live.push(o);
+  return dur + (fx === 'delay' ? 1.5 : 0.3);
+}
+
+sec('producing', 'Producing', 'Producing: sequencing, a simple synth, and effects', 'A DAW in miniature: a step sequencer for drums, an oscillator-and-filter synth on the same keyboard as the rest of this page, an effects rack you can A/B, and the sidechain "pumping" sound explained honestly.',
+  () => `
+  <h3>Step sequencer</h3>
+  <p>Sixteen steps, three voices, all synthesized live — the same noise-burst technique behind the plucked guitar sound elsewhere on this page, reused for the snare and hi-hat.</p>
+  <div id="seqgrid">${seqGridHTML()}</div>
+  <div class="inline">
+    <button class="btn" id="seqplay" ${seq.playing ? 'hidden' : ''}>▶ Play loop</button>
+    <button class="btn ghost" id="seqstopbtn" ${seq.playing ? '' : 'hidden'}>Stop</button>
+    <input type="range" min="70" max="180" value="${seq.bpm}" id="seqtempo" style="flex:1">
+    <span class="hint" id="seqtempov" style="min-width:70px">${seq.bpm} BPM</span>
+  </div>
+
+  <h3>A simple synth</h3>
+  <p>One oscillator, one filter, one envelope — turn it on, then play the keyboard docked at the bottom of the screen. While it's active, tapping a key plays this synth instead of naming a chord.</p>
+  <div class="inline">
+    <button class="btn" id="synthstart" ${synthDemo.active ? 'hidden' : ''}>Start synth</button>
+    <button class="btn ghost" id="synthstop" ${synthDemo.active ? '' : 'hidden'}>Stop</button>
+  </div>
+  <div class="inline">
+    <label class="hint">Wave
+      <select id="synthwave">
+        ${['sawtooth', 'square', 'sine', 'triangle'].map(w => `<option value="${w}" ${synthDemo.wave === w ? 'selected' : ''}>${w}</option>`).join('')}
+      </select>
+    </label>
+    <label class="hint" style="flex:1">Filter cutoff <input type="range" min="200" max="8000" value="${synthDemo.cutoff}" id="synthcutoff" style="width:100%"></label>
+  </div>
+  <div class="inline">
+    <label class="hint">Attack <input type="range" min="0" max="1" step="0.01" value="${synthDemo.a}" id="synthA"></label>
+    <label class="hint">Decay <input type="range" min="0" max="1" step="0.01" value="${synthDemo.d}" id="synthD"></label>
+    <label class="hint">Sustain <input type="range" min="0" max="1" step="0.01" value="${synthDemo.s}" id="synthS"></label>
+    <label class="hint">Release <input type="range" min="0" max="1.5" step="0.01" value="${synthDemo.r}" id="synthR"></label>
+  </div>
+
+  <h3>Effects rack</h3>
+  <p>Each plays the same plain tone, dry then through one real effect — not simulated descriptions, actual Web Audio nodes. Reverb isn't here yet: a convincing one needs a real impulse response, and a bad-sounding placeholder isn't worth shipping.</p>
+  ${table(['Effect', 'What it does', ''], [
+    ['EQ (resonant lowpass)', 'Cuts everything above the cutoff and emphasizes the frequencies right at it.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('eq', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('eq', true))}">Wet</button>`)],
+    ['Compression', 'Narrows the gap between a loud note and a quiet one — listen for the second, quieter note sitting closer in volume to the first.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('comp', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('comp', true))}">Wet</button>`)],
+    ['Delay', 'Repeats of the same sound, each quieter, spaced out in time.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('delay', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('delay', true))}">Wet</button>`)],
+    ['Saturation', 'Soft-clips the peaks of the wave, adding harmonics and a mild edge rather than a clean tone.', N(`<button class="btn ghost" data-a="${act(() => playFxDemo('sat', false))}">Dry</button> <button class="btn ghost" data-a="${act(() => playFxDemo('sat', true))}">Wet</button>`)],
+  ])}
+
+  <h3>Sidechain: the "pumping" sound</h3>
+  <p>The classic move behind the rhythmic volume-dip under a kick drum in a lot of dance music. Properly, it's a compressor on the pad triggered by the kick's own signal; this demo emulates the result with a volume envelope timed to the kick instead — the sound is the same, the mechanism behind it isn't the real thing.</p>
+  <div class="inline"><button class="btn" data-a="${act(() => playSidechainDemo())}">▶ Play the pumping effect</button></div>`);
+
 /* ===================== Progression builder ===================== */
 const build = {seq: [], bpm: 100, loop: true, playing: false, timers: []};
 const PALETTE = [[0,'maj'],[2,'min'],[4,'min'],[5,'maj'],[7,'maj'],[9,'min'],[11,'dim'],[7,'dom7'],[2,'m7'],[0,'maj7'],[5,'min'],[10,'maj'],[8,'maj']];
@@ -1531,6 +1814,11 @@ function kbTap(m) {
     const c = Synth.ensure(); Synth.stop(); Synth.mute = false;
     Synth.note(m, c.currentTime + 0.01, 0.9, 0.2);
     rdCheck(m);
+    return;
+  }
+  if (synthDemo.active) {
+    Synth.stop();
+    playSynthNote(m);
     return;
   }
   if (KB.sel.has(m)) KB.sel.delete(m); else KB.sel.add(m);
@@ -1611,9 +1899,10 @@ window.addEventListener('hashchange', () => { applySectionVisibility(); Store.to
 // isn't one long scrolling list. Nothing is removed — every section id below is still linked to.
 const NAV_GROUPS = [
   {id: 'how'},
-  {label: 'Theory', ids: ['chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'terms']},
+  {label: 'Theory', ids: ['chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'physics', 'songwriting', 'terms']},
   {id: 'ear'},
   {id: 'piano'},
+  {id: 'producing'},
   {id: 'djing'},
 ];
 function navLink(id) {
@@ -1637,6 +1926,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'bloop') build.loop = e.target.checked;
   if (e.target.id === 'kbchord') KB.chord = e.target.checked;
   if (e.target.dataset.pgc !== undefined) { pianoProgress[+e.target.dataset.pgc] = e.target.checked; Store.setPiano(pianoProgress); const el = $('#pianochecklist'); if (el) el.innerHTML = pianoChecklistHTML(); }
+  if (e.target.id === 'synthwave') synthDemo.wave = e.target.value;
 });
 document.body.classList.add('has-dock'); renderKB();
 window.addEventListener('resize', () => { clearTimeout(KB._r); KB._r = setTimeout(renderKB, 150); });
@@ -1666,6 +1956,11 @@ document.addEventListener('click', e => {
   const rn = e.target.closest('#rdnext'); if (rn) { rdNew(); return; }
   const rsh = e.target.closest('#rdshow'); if (rsh) { rdShow(); return; }
   const rp = e.target.closest('#rdstop'); if (rp) { read.active = false; rp.hidden = true; const nb = $('#rdnext'); if (nb) nb.hidden = true; const shb = $('#rdshow'); if (shb) shb.hidden = true; const sb = $('#rdstart'); if (sb) sb.hidden = false; kbIdentify(); return; }
+  const sq = e.target.closest('[data-seq]'); if (sq) { const [key, i] = sq.dataset.seq.split(':'); seq.steps[key][+i] = !seq.steps[key][+i]; sq.classList.toggle('on'); return; }
+  const spb = e.target.closest('#seqplay'); if (spb) { spb.hidden = true; const stb = $('#seqstopbtn'); if (stb) stb.hidden = false; seqStart(); return; }
+  const stpb = e.target.closest('#seqstopbtn'); if (stpb) { stpb.hidden = true; const spbb = $('#seqplay'); if (spbb) spbb.hidden = false; seqStop(); return; }
+  const sys = e.target.closest('#synthstart'); if (sys) { synthDemo.active = true; sys.hidden = true; const sto = $('#synthstop'); if (sto) sto.hidden = false; const dk = $('#dock'); if (dk) dk.hidden = false; const ds = $('#dockshow'); if (ds) ds.hidden = true; document.body.classList.add('has-dock'); renderKB(); const ki = $('#kbinfo'); if (ki) ki.textContent = 'Synth active — tap the keyboard to play it'; return; }
+  const syp = e.target.closest('#synthstop'); if (syp) { synthDemo.active = false; syp.hidden = true; const sta = $('#synthstart'); if (sta) sta.hidden = false; kbIdentify(); return; }
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
@@ -1673,6 +1968,13 @@ document.addEventListener('keydown', e => {
 document.addEventListener('input', e => {
   if (e.target.id === 'btempo') { build.bpm = +e.target.value; const v = $('#btempov'); if (v) v.textContent = build.bpm; }
   if (e.target.id === 'csearch') { state.q = e.target.value.trim(); $('#chordlist').innerHTML = renderChordList(); }
+  if (e.target.id === 'overtoneSlider') { const n = +e.target.value; const lbl = $('#overtoneLabel'); if (lbl) lbl.textContent = n === 0 ? 'Fundamental only' : `+${n} harmonic${n > 1 ? 's' : ''}`; }
+  if (e.target.id === 'seqtempo') { seq.bpm = +e.target.value; const v = $('#seqtempov'); if (v) v.textContent = seq.bpm + ' BPM'; if (seq.playing) { clearInterval(seq.timer); seq.timer = setInterval(seqTick, seqStepTime() * 1000); } }
+  if (e.target.id === 'synthcutoff') synthDemo.cutoff = +e.target.value;
+  if (e.target.id === 'synthA') synthDemo.a = +e.target.value;
+  if (e.target.id === 'synthD') synthDemo.d = +e.target.value;
+  if (e.target.id === 'synthS') synthDemo.s = +e.target.value;
+  if (e.target.id === 'synthR') synthDemo.r = +e.target.value;
 });
 
 renderAll();
