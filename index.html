@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#17140F">
-<title>Music Theory — chords, keys, progressions and scales you can hear</title>
-<meta name="description" content="A complete chord and music theory reference with sound. Tap any chord, scale, cadence or progression to hear it, change the key and everything transposes. Chord formulas, circle of fifths, functional harmony, reharmonization, rhythm, melody and ear training.">
+<title>By Ear: music theory you can hear</title>
+<meta name="description" content="By Ear is a free, ear-first way to learn music in your browser. Tap any chord, scale, cadence or progression to hear it, change the key and everything transposes. Chord formulas, circle of fifths, functional harmony, reharmonization, rhythm, melody, guitar, piano, producing and ear training.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,7 +16,8 @@
   --major:#E3A23C;--minor:#6C9CE8;--diminished:#D97060;--augmented:#A98BE8;--suspended:#4FBBA6;--dominant:#E58A4F;--altered:#E07AA8;--other:#8C8578;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:96px;background:var(--bg)}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:170px;background:var(--bg)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 h1,h2,h3,.sym,.tile b,.bar .t{font-family:"Fraunces","Iowan Old Style","Palatino Linotype",Georgia,serif}
@@ -27,13 +28,13 @@ button{font:inherit;color:inherit}
 
 /* sticky bar */
 .bar{position:sticky;top:0;z-index:10;background:rgba(23,20,15,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.bar .row{max-width:920px;margin:0 auto;padding:10px 16px 8px;display:flex;align-items:center;gap:12px}
+.bar .row{max-width:1000px;margin:0 auto;padding:10px 16px 8px;display:flex;align-items:center;gap:12px}
 .bar .t{font-weight:600;font-size:18px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .keylab{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink2);white-space:nowrap}
 select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)}
 .stop{width:34px;height:34px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;color:var(--ink2);font-size:12px}
 .stop:hover{border-color:var(--acc);color:var(--acc)}
-.nav{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:0 16px 10px;max-width:920px;margin:0 auto}
+.nav{display:flex;flex-wrap:wrap;align-items:center;gap:18px;padding:0 16px 10px;max-width:1000px;margin:0 auto}
 .nav a{white-space:nowrap;font-size:14px;color:var(--ink2);text-decoration:none;border-bottom:2px solid transparent;padding:2px 0}
 .nav a:hover,.nav a:focus-visible{color:var(--acc);border-color:var(--acc)}
 .nav a.cur{color:var(--acc);border-color:var(--acc)}
@@ -41,7 +42,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 .navdd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:14px;color:var(--ink2);border-bottom:2px solid transparent;padding:2px 0;white-space:nowrap}
 .navdd summary::-webkit-details-marker{display:none}
 .navdd summary .car{font-size:10px;transition:transform .15s}
-.navdd:hover summary,.navdd[open] summary{color:var(--acc);border-color:var(--acc)}
+.navdd:hover summary,.navdd[open] summary,.navdd summary.cur{color:var(--acc);border-color:var(--acc)}
 .navdd[open] summary .car{transform:rotate(180deg)}
 .navdd-menu{position:absolute;top:100%;left:0;margin-top:10px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px;display:flex;flex-direction:column;min-width:200px;z-index:20;box-shadow:0 14px 30px rgba(0,0,0,.4)}
 .navdd-menu a{padding:7px 10px;border-radius:7px;font-size:14px;color:var(--ink);text-decoration:none;white-space:nowrap;border-bottom:0}
@@ -49,7 +50,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 .navdd-menu a.cur{background:var(--surf);color:var(--acc)}
 
 /* hero */
-.hero{max-width:920px;margin:0 auto;padding:44px 16px 8px}
+.hero{max-width:1000px;margin:0 auto;padding:44px 16px 8px}
 .hero h1{font-size:clamp(36px,6.5vw,60px);line-height:1.02;font-weight:600;letter-spacing:-.015em;margin:0 0 14px;max-width:14ch}
 .hero p{color:var(--ink2);max-width:54ch;margin:0 0 22px;font-size:17px}
 .prism{display:block;width:100%;max-width:640px;height:auto;margin:6px 0 26px}
@@ -63,7 +64,7 @@ select.key{font:inherit;font-weight:600;color:var(--ink);padding:6px 10px;border
 .hint{font-size:14px;color:var(--ink2);margin:14px 0 0}
 
 /* sections */
-main{max-width:920px;margin:0 auto;padding:8px 16px 60px}
+main{max-width:1000px;margin:0 auto;padding:8px 16px 60px}
 section.part{padding:24px 0 60px}
 section.part h2{font-size:clamp(26px,4vw,34px);font-weight:500;margin:0 0 8px;letter-spacing:-.01em}
 section.part .lead{color:var(--ink2);max-width:62ch;margin:0 0 20px}
@@ -143,7 +144,7 @@ dl.gl dd{margin:2px 0 0;color:var(--ink2)}
 .qfeed{min-height:24px;margin:6px 0 0}
 .qscore{color:var(--ink2);font-size:14px;margin:8px 0 0}
 
-footer{max-width:920px;margin:0 auto;padding:30px 16px 60px;color:var(--ink2);font-size:14px;border-top:1px solid var(--line)}
+footer{max-width:1000px;margin:0 auto;padding:30px 16px 60px;color:var(--ink2);font-size:14px;border-top:1px solid var(--line)}
 footer p{margin:6px 0}
 
 /* voice picker, builder, piano dock */
@@ -164,11 +165,11 @@ footer p{margin:6px 0}
 body.has-dock{padding-bottom:126px}
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:9;background:rgba(23,20,15,.97);border-top:1px solid var(--line);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .dock[hidden]{display:none}
-.dockbar{max-width:920px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:6px 16px 5px;font-size:13px;color:var(--ink2)}
+.dockbar{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:6px 16px 5px;font-size:13px;color:var(--ink2)}
 .kbinfo{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kbinfo b{color:var(--ink);font-family:"Fraunces",Georgia,serif;font-size:15px;font-weight:600}
 .kb{padding:0 16px 8px}
-.kbin{position:relative;height:64px;max-width:920px;margin:0 auto}
+.kbin{position:relative;height:64px;max-width:1000px;margin:0 auto}
 .kbin .k{position:absolute;top:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .kbin .wk{height:100%;background:var(--ink);border:1px solid var(--bg);border-radius:0 0 4px 4px;z-index:1}
 .kbin .bk{height:60%;background:var(--bg);border:1px solid var(--line2);border-radius:0 0 3px 3px;z-index:2}
@@ -178,13 +179,103 @@ body.has-dock{padding-bottom:126px}
 .kbin .bk.on,.kbin .bk.sel{border-color:var(--acc)}
 .dockshow{position:fixed;right:14px;bottom:14px;z-index:9;padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);cursor:pointer;font-size:13px}
 .dockshow[hidden]{display:none}
+
+/* ---------- By Ear shell (redesign) ---------- */
+.bar .t a{color:var(--ink);text-decoration:none}
+.bar .t a:hover{color:var(--acc)}
+.bar .t{font-size:21px;letter-spacing:-.01em}
+input[type=range]{accent-color:var(--acc)}
+main select{font:inherit;color:var(--ink);padding:5px 8px;border:1px solid var(--line2);border-radius:8px;background:var(--panel)}
+section.part h2{font-size:clamp(30px,4.8vw,46px);line-height:1.05;letter-spacing:-.018em;margin-bottom:12px}
+section.part .lead{font-size:17px}
+.tw{border:1px solid var(--line);border-radius:12px}
+.tw tbody tr:last-child td{border-bottom:0}
+.tw tbody tr:hover td{background:rgba(240,230,210,.025)}
+.qtabs{flex-wrap:wrap}
+.nav{gap:2px 18px}
+.quiz{max-width:640px}
+
+/* home */
+section.part#home{padding-top:0}
+.home-top{display:grid;gap:28px;padding:30px 0 6px}
+@media (min-width:820px){.home-top{grid-template-columns:1.3fr 1fr;align-items:end;gap:56px;padding-top:56px}}
+.home-top h1{text-wrap:balance;font-size:clamp(50px,10vw,104px);line-height:.92;font-weight:500;letter-spacing:-.03em;margin:0 0 20px}
+.home-top .sub{color:var(--ink2);font-size:18px;max-width:42ch;margin:0}
+.earcheck{border:1px solid var(--line2);border-radius:18px;background:var(--panel);padding:20px}
+.ec-q{font-family:"Fraunces",Georgia,serif;font-size:21px;line-height:1.25;margin:0 0 16px;min-height:52px}
+.ec-row{display:flex;align-items:center;gap:14px}
+.ec-play{width:72px;height:72px;flex:none;border-radius:50%;border:0;background:var(--acc);color:var(--bg);font-size:22px;padding:0 0 0 5px;cursor:pointer}
+.ec-play:hover{background:var(--ink)}
+.ec-ans{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1}
+.ec-a{padding:14px 8px;border-radius:12px;border:1px solid var(--line2);border-bottom:4px solid var(--fam);background:var(--bg);color:var(--ink);font-weight:600;cursor:pointer}
+.ec-a:hover:not(:disabled){border-color:var(--fam)}
+.ec-a:disabled{opacity:.45;cursor:default}
+.ec-a.right{background:rgba(79,187,166,.18);border-color:var(--suspended);opacity:1}
+.ec-a.wrong{background:rgba(217,112,96,.18);border-color:var(--diminished);opacity:1}
+.earcheck .hint{margin:14px 0 0}
+.branches{list-style:none;margin:44px 0 0;padding:0;border-top:1px solid var(--line)}
+.branches a{display:grid;grid-template-columns:1fr;gap:2px 24px;padding:18px 6px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+@media (min-width:720px){.branches a{grid-template-columns:230px 1fr auto;align-items:baseline}}
+.branches b{font-family:"Fraunces",Georgia,serif;font-size:27px;font-weight:500;letter-spacing:-.01em}
+.branches span{color:var(--ink2)}
+.branches em{font-style:normal;color:var(--ink2);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.branches a:hover,.branches a:focus-visible{background:var(--panel)}
+.branches a:hover b{color:var(--acc)}
+.resume{margin:26px 0 0;color:var(--ink2)}
+
+/* previous / next inside Theory */
+.pn{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:18px;border-top:1px solid var(--line)}
+.pn a{text-decoration:none;color:var(--ink2);font-size:14px}
+.pn a b{display:block;color:var(--ink);font-family:"Fraunces",Georgia,serif;font-size:20px;font-weight:500}
+.pn a:hover b{color:var(--acc)}
+.pn a:last-child{text-align:right;margin-left:auto}
+
+/* step sequencer (was unstyled) */
+#seqgrid{max-width:680px;margin:14px 0}
+.seqrow{display:flex;align-items:center;gap:4px;margin:6px 0}
+.seqlabel{width:54px;flex:none;font-size:13px;color:var(--ink2)}
+.seqstep{flex:1;min-width:0;height:36px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);cursor:pointer;padding:0}
+.seqstep:nth-of-type(4n+1){margin-left:7px}
+.seqstep:hover{border-color:var(--acc)}
+.seqstep.on{background:var(--acc);border-color:var(--acc)}
+.seqstep.cur{box-shadow:0 0 0 2px var(--ink)}
+
+/* guitar */
+.fbwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:12px 0 6px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:8px 4px 2px}
+.fb{display:block;width:100%;min-width:720px;height:auto}
+.fd{cursor:pointer}
+.fd circle{fill:var(--bg);stroke:var(--line2);stroke-width:1.5}
+.fd text{font:600 10px "Archivo",system-ui,sans-serif;fill:var(--ink);text-anchor:middle;pointer-events:none}
+.fd.root circle{fill:var(--acc);stroke:var(--acc)}
+.fd.root text{fill:var(--bg)}
+.fd:hover circle,.fd:focus-visible circle{stroke:var(--ink)}
+.cds{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px;margin:12px 0}
+.cd{border:1px solid var(--line);border-top:4px solid var(--fam);border-radius:12px;background:var(--panel);padding:10px 6px 8px;cursor:pointer;text-align:center}
+.cd b{display:block;font-family:"Fraunces",Georgia,serif;font-size:21px;font-weight:600;line-height:1.1}
+.cd svg{width:100%;max-width:112px;height:auto;display:block;margin:4px auto 0}
+.cd small{display:block;color:var(--ink2);font-size:12px;line-height:1.3}
+.cd:hover{border-color:var(--line2);border-top-color:var(--fam)}
+.cd.playing{background:var(--acc2);border-color:var(--acc);border-top-color:var(--fam)}
+pre.tab{font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surf);border-radius:10px;padding:12px 14px;overflow-x:auto;color:var(--ink);max-width:max-content;margin:10px 0}
+.strum{display:inline-grid;grid-template-columns:repeat(8,24px);text-align:center;row-gap:2px}
+.strum small{color:var(--ink2);font-size:12px}
+.strum i{font-style:normal;font-weight:600;font-size:17px;line-height:1.1}
+.strum i.rest{color:var(--line2)}
+
+/* progress */
+.stats{display:flex;flex-wrap:wrap;gap:22px 52px;margin:10px 0 26px}
+.stats b{display:block;font-family:"Fraunces",Georgia,serif;font-size:44px;font-weight:500;line-height:1}
+.stats span{color:var(--ink2);font-size:14px}
+.meter{display:inline-block;width:110px;height:8px;border-radius:99px;background:var(--line);vertical-align:middle;overflow:hidden;margin-right:10px}
+.meter i{display:block;height:100%;background:var(--acc)}
+.btn.danger{background:var(--panel);color:var(--diminished);border-color:var(--diminished)}
 </style>
 </head>
 <body>
 
 <header class="bar">
   <div class="row">
-    <div class="t">Music Theory</div>
+    <div class="t"><a href="#home" aria-label="By Ear, home">By Ear</a></div>
     <label class="keylab"><span class="lt">Key</span><select class="key" id="keysel" aria-label="Choose a key"></select></label>
     <label class="keylab"><span class="lt">Voice</span><select class="key" id="voicesel" aria-label="Choose an instrument voice"></select></label>
     <button class="stop" id="stop" aria-label="Stop sound" title="Stop sound">■</button>
@@ -192,28 +283,12 @@ body.has-dock{padding-bottom:126px}
   <nav class="nav" id="nav" aria-label="Sections"></nav>
 </header>
 
-<section class="hero">
-  <h1>The chord sheet you can hear.</h1>
-  <p>Formulas, keys, progressions, scales and ear training, with a play button on all of it. Change the key at the top and every chord and table on this page transposes with you.</p>
-  <svg class="prism" viewBox="0 0 640 190" role="img" aria-label="A beam of sound entering a prism and splitting into six coloured rays, one per chord family">
-    <line x1="30" y1="95" x2="300" y2="95" stroke="var(--ink)" stroke-width="2" opacity="0.55"/>
-    <polygon points="300,42 300,148 380,95" fill="rgba(240,230,210,0.07)" stroke="var(--ink)" stroke-width="1" opacity="0.7"/>
-    <line x1="380" y1="95" x2="600" y2="24" stroke="var(--major)" stroke-width="3"/><circle cx="600" cy="24" r="5" fill="var(--major)"/>
-    <line x1="380" y1="95" x2="605" y2="55" stroke="var(--dominant)" stroke-width="3"/><circle cx="605" cy="55" r="5" fill="var(--dominant)"/>
-    <line x1="380" y1="95" x2="610" y2="88" stroke="var(--minor)" stroke-width="3"/><circle cx="610" cy="88" r="5" fill="var(--minor)"/>
-    <line x1="380" y1="95" x2="610" y2="102" stroke="var(--suspended)" stroke-width="3"/><circle cx="610" cy="102" r="5" fill="var(--suspended)"/>
-    <line x1="380" y1="95" x2="605" y2="135" stroke="var(--augmented)" stroke-width="3"/><circle cx="605" cy="135" r="5" fill="var(--augmented)"/>
-    <line x1="380" y1="95" x2="600" y2="166" stroke="var(--diminished)" stroke-width="3"/><circle cx="600" cy="166" r="5" fill="var(--diminished)"/>
-  </svg>
-  <div class="tiles" id="tiles"></div>
-  <p class="hint">Tap a chord to hear it, and watch the keyboard at the bottom light up. Change the instrument with the voice picker at the top. Sound plays on your device, so turn the ringer on if you are on a phone.</p>
-</section>
-
 <main id="app"></main>
 
 <footer>
   <p>Free to use for learning. Every sound on this page is generated in your browser, so nothing is downloaded and it works offline once loaded.</p>
   <p>Built as a single file. View the page source to see the chord data and change anything.</p>
+  <p>Your progress is saved in this browser only. <a href="#progress">See your progress</a>.</p>
 </footer>
 
 <div class="dock" id="dock">
@@ -271,6 +346,7 @@ const Store = {
   touchSection(id) {
     const d = this.load();
     d.sections[id] = (d.sections[id] || 0) + 1;
+    if (id !== 'home' && id !== 'progress') d.last = id; // lets Home offer "pick up where you left off"
     this.save();
   },
   getPiano(n) {
@@ -278,6 +354,13 @@ const Store = {
     return (Array.isArray(d.piano) && d.piano.length === n) ? d.piano.slice() : new Array(n).fill(false);
   },
   setPiano(arr) { const d = this.load(); d.piano = arr; this.save(); },
+  // Generic per-branch checklists (Guitar uses this; Piano keeps its original key above so existing saved progress still loads).
+  getList(name, n) {
+    const d = this.load(), a = d.lists && d.lists[name];
+    return (Array.isArray(a) && a.length === n) ? a.slice() : new Array(n).fill(false);
+  },
+  setList(name, arr) { const d = this.load(); if (!d.lists) d.lists = {}; d.lists[name] = arr; this.save(); },
+  reset() { this.data = {events: [], mastery: {}, piano: null, sections: {}, lists: {}}; this.save(); },
 };
 
 /* ===================== Core music data ===================== */
@@ -494,13 +577,76 @@ const famDot = f => `<span class="fam" style="--fam:var(--${f})"></span>`;
 const SECTIONS = [];
 function sec(id, nav, title, lead, body) { SECTIONS.push({id, nav, title, lead, body}); }
 
+/* ===================== Home ===================== */
+// One-question taste of the site, right on the landing page: a single chord, major or minor.
+// Logged to the same 'ear-chord' tally as the full chord-quality quiz, so it counts toward Progress.
+const hc = {q: null, done: false, pick: null, asked: 0, right: 0};
+function earcheckHTML() {
+  let q = 'One chord plays. Is it major or minor?';
+  if (hc.q && !hc.done) q = 'Major or minor?';
+  if (hc.q && hc.done) {
+    const ok = hc.pick === hc.q.label;
+    q = (ok ? 'Yes, ' + hc.q.label.toLowerCase() + '. ' : 'Not quite. That was ' + hc.q.label.toLowerCase() + '. ')
+      + (hc.q.label === 'Major' ? 'The middle note sits 4 half-steps above the root, which is the brighter sound.' : 'The middle note sits 3 half-steps above the root, which is the darker sound.');
+  }
+  const cls = l => !hc.done ? '' : l === hc.q.label ? ' right' : l === hc.pick ? ' wrong' : '';
+  const ans = l => `<button class="ec-a${cls(l)}" data-hc="${l}" style="--fam:var(--${l.toLowerCase()})" ${!hc.q || hc.done ? 'disabled' : ''}>${l}</button>`;
+  const playLabel = !hc.q ? 'Play the chord' : hc.done ? 'Play the next chord' : 'Hear it again';
+  return `<p class="ec-q" aria-live="polite">${q}</p>
+  <div class="ec-row"><button class="ec-play" id="hcplay" aria-label="${playLabel}" title="${playLabel}">▶</button><div class="ec-ans">${ans('Major')}${ans('Minor')}</div></div>
+  <p class="hint">${hc.asked ? `${hc.right} of ${hc.asked} right so far. ` : ''}<a href="#ear">Open ear training</a> for intervals, scales, cadences and rhythm.</p>`;
+}
+function hcRender() { const el = $('#earcheck'); if (el) el.innerHTML = earcheckHTML(); }
+function hcPlay() {
+  if (!hc.q || hc.done) { hc.q = {label: Math.random() < 0.5 ? 'Major' : 'Minor', root: 55 + Math.floor(Math.random() * 10)}; hc.done = false; hc.pick = null; hcRender(); }
+  Synth.ensure(); Synth.stop(); Synth.mute = true; // muted lights: the keyboard would give the answer away
+  Synth.seq([{iv: hc.q.label === 'Major' ? [0, 4, 7] : [0, 3, 7], root: hc.q.root}], 1.8);
+  Synth.mute = false;
+}
+function hcAnswer(label) {
+  if (!hc.q || hc.done) return;
+  hc.done = true; hc.pick = label; hc.asked++;
+  const ok = label === hc.q.label; if (ok) hc.right++;
+  Store.logEvent('ear-chord', hc.q.label, ok);
+  hcRender();
+}
+const THEORY_IDS = ['how', 'chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'physics', 'songwriting', 'terms'];
+const EAR_MODS = ['ear-interval', 'ear-chord', 'ear-scale', 'ear-cadence', 'ear-prog', 'ear-rhythm'];
+function earTotals() { return EAR_MODS.reduce((a, m) => { const t = Store.allTime(m); a.seen += t.seen; a.correct += t.correct; return a; }, {seen: 0, correct: 0}); }
+function branchRows() {
+  const d = Store.load(), ear = earTotals();
+  const seenTheory = THEORY_IDS.filter(id => d.sections[id]).length;
+  const pianoDone = Store.getPiano(PIANO_TOPICS.length).filter(Boolean).length;
+  const gtrDone = Store.getList('guitar', GTR_TOPICS.length).filter(Boolean).length;
+  return [
+    ['how', 'Theory', `Chords, keys, progressions, scales and rhythm across ${THEORY_IDS.length} pages, and every example plays.`, seenTheory ? `${seenTheory} of ${THEORY_IDS.length} pages opened` : ''],
+    ['ear', 'Ear training', 'Six quizzes: intervals, chord quality, scales, cadences, progressions and rhythm.', ear.seen ? `${ear.correct} of ${ear.seen} right` : ''],
+    ['guitar', 'Guitar', 'A fretboard that follows your key, open chords, barre shapes, strumming and tab.', gtrDone ? `${gtrDone} of ${GTR_TOPICS.length} topics done` : ''],
+    ['piano', 'Piano', 'Hand position, scale fingering in both hands, arpeggios, comping and pedalling.', pianoDone ? `${pianoDone} of ${PIANO_TOPICS.length} topics done` : ''],
+    ['producing', 'Producing', 'A drum sequencer, a synth you play from the keyboard, and an effects rack to compare.', ''],
+    ['djing', 'DJing', 'The Camelot wheel, harmonic mixing and beatmatching.', ''],
+  ];
+}
+sec('home', 'Home', '', '',
+  () => { const d = Store.load(), last = d.last && SECTIONS.find(s => s.id === d.last);
+    return `
+  <div class="home-top">
+    <div>
+      <h1>Learn music by ear.</h1>
+      <p class="sub">Every chord, scale and rhythm on this site plays when you tap it. Listen first, then read why it sounds that way. Free, in your browser, nothing to install.</p>
+    </div>
+    <div class="earcheck" id="earcheck">${earcheckHTML()}</div>
+  </div>
+  <ul class="branches">${branchRows().map(([id, name, desc, stat]) => `<li><a href="#${id}"><b>${name}</b><span>${desc}</span><em>${stat}</em></a></li>`).join('')}</ul>
+  ${last ? `<p class="resume">Last time you were on <a href="#${last.id}">${last.nav}</a>. <a href="#progress">See your progress</a>.</p>` : `<p class="resume">New to theory? <a href="#how">Start here</a>.</p>`}`; });
+
 /* ===================== How to use ===================== */
 sec('how', 'Start here', 'How to use this page', '',
   () => `
   <p><strong>New to theory?</strong> Read the chord formulas first, then Parts 1 to 4 in order. Each part builds on the last: which chords exist, which ones live together in a key, how to put them in order, why they pull the way they do, and which scale fits over which chord.</p>
-  <p><strong>Already know the basics?</strong> Use the search box in the chord section, the key selector at the top, and the section links to jump straight to what you need. Parts 5 to 11 are reference material you dip into, not a course.</p>
+  <p><strong>Already know the basics?</strong> Use the search box on the chords page, the key selector at the top, and the Theory menu to jump straight to what you need. Parts 5 to 11 are reference material you dip into, not a course.</p>
   <p><strong>Either way, use your ears.</strong> Every ▶ plays the real sound. Words like "bright" or "unstable" only make sense once you have heard the chord next to its neighbours, so play the major triad, then the minor, then the diminished, and listen for the difference.</p>
-  <p><strong>Finding your way around.</strong> The bar up top shows one section at a time rather than one long scroll — Theory groups all twelve reference parts under one dropdown, while Ear training, Piano, and DJing sit alongside it as their own separate branches, not a continuation of the numbered parts. The current section is always highlighted in the nav, and every section has its own link you can bookmark or share directly.</p>
+  <p><strong>Finding your way around.</strong> The bar up top shows one page at a time. Theory groups the reference pages under one dropdown, and each of those pages links to the next at the bottom. Ear training, Guitar, Piano, Producing and DJing are their own branches alongside it. Tap By Ear in the corner to get back to the home page, and Progress to see what you have practised. Every page has its own link you can bookmark or share.</p>
   <div class="note"><p><strong>How the formulas work.</strong> Root note = 0. Count half-steps upward (every key, black and white, counts as one step). A formula is the same for every chord of that type no matter which note you start on, which is why this page can transpose everything when you change the key. Numbers 12 and higher are more than an octave above the root: the same note as (number − 12), just voiced higher up.</p></div>`);
 
 /* ===================== Chord formulas ===================== */
@@ -625,7 +771,19 @@ function renderChordList() {
 
 sec('chords', 'Chords', 'Chord formulas', 'Every chord you are likely to meet, as a formula in half-steps and as real notes in the current key. The colored dot is the chord family: amber major, blue minor, red diminished, purple augmented, teal suspended, orange dominant, pink altered dominant, gray other.',
   () => `
-  <div class="tools">
+  <svg class="prism" viewBox="0 0 640 190" role="img" aria-label="A beam of sound entering a prism and splitting into six coloured rays, one per chord family">
+    <line x1="30" y1="95" x2="300" y2="95" stroke="var(--ink)" stroke-width="2" opacity="0.55"/>
+    <polygon points="300,42 300,148 380,95" fill="rgba(240,230,210,0.07)" stroke="var(--ink)" stroke-width="1" opacity="0.7"/>
+    <line x1="380" y1="95" x2="600" y2="24" stroke="var(--major)" stroke-width="3"/><circle cx="600" cy="24" r="5" fill="var(--major)"/>
+    <line x1="380" y1="95" x2="605" y2="55" stroke="var(--dominant)" stroke-width="3"/><circle cx="605" cy="55" r="5" fill="var(--dominant)"/>
+    <line x1="380" y1="95" x2="610" y2="88" stroke="var(--minor)" stroke-width="3"/><circle cx="610" cy="88" r="5" fill="var(--minor)"/>
+    <line x1="380" y1="95" x2="610" y2="102" stroke="var(--suspended)" stroke-width="3"/><circle cx="610" cy="102" r="5" fill="var(--suspended)"/>
+    <line x1="380" y1="95" x2="605" y2="135" stroke="var(--augmented)" stroke-width="3"/><circle cx="605" cy="135" r="5" fill="var(--augmented)"/>
+    <line x1="380" y1="95" x2="600" y2="166" stroke="var(--diminished)" stroke-width="3"/><circle cx="600" cy="166" r="5" fill="var(--diminished)"/>
+  </svg>
+  <div class="tiles" id="tiles"></div>
+  <p class="hint">Tap a chord to hear it, and watch the keyboard at the bottom light up. Change the instrument with the voice picker at the top. Sound plays on your device, so turn the ringer on if you are on a phone.</p>
+  <div class="tools" style="margin-top:26px">
     <input id="csearch" type="search" placeholder="Search chords: sus4, m7, dreamy, Hendrix…" value="${state.q.replace(/"/g, '&quot;')}" aria-label="Search chords">
     <button class="fbtn ${state.fam === 'all' ? 'on' : ''}" data-fam="all">All</button>
     ${Object.keys(FAM).map(f => `<button class="fbtn ${state.fam === f ? 'on' : ''}" data-fam="${f}">${famDot(f)}${FAM[f]}</button>`).join('')}
@@ -1314,11 +1472,22 @@ const RHYTHMS = [
   ['Clave-style', [true, false, false, true, false, true, false, false]],
   ['Off-beat accents', [false, true, false, true, false, true, false, true]],
 ];
-const quiz = {mode: 'interval', ans: null, opts: [], asked: 0, right: 0, done: false, root: 60};
+// Scale and cadence quiz pools reuse the data already on the Scales and Function pages.
+const QSCALES = [...[0, 1, 2, 4, 5, 6, 7].map(i => SCALES[i]), ...PENTA];
+// All four are four chords long and start on I, so the only way to tell them apart is how they end.
+const CADENCES = [
+  ['Authentic', 'V to I, the full stop', [[0,'maj'],[5,'maj'],[7,'dom7'],[0,'maj',1.8]]],
+  ['Plagal', 'IV to I, the "Amen"', [[0,'maj'],[9,'min'],[5,'maj'],[0,'maj',1.8]]],
+  ['Half', 'on V, like a question', [[0,'maj'],[9,'min'],[5,'maj'],[7,'maj',1.8]]],
+  ['Deceptive', 'V to vi, the dodge', [[0,'maj'],[5,'maj'],[7,'dom7'],[9,'min',1.8]]],
+];
+const quiz = {mode: 'interval', dir: 'up', ans: null, opts: [], asked: 0, right: 0, streak: 0, done: false, root: 60};
 function qPool() {
   if (quiz.mode === 'interval') return INTERVALS.map(i => ({label: i[1], n: i[0]}));
   if (quiz.mode === 'chord') return QCH.map(c => ({label: c[0], iv: c[1]}));
   if (quiz.mode === 'prog') return PROGS.map(p => ({label: p[0], chords: p[2], each: p[0] === '12-bar blues' ? 0.62 : 0.95}));
+  if (quiz.mode === 'scale') return QSCALES.map(x => ({label: x[0], iv: x[1]}));
+  if (quiz.mode === 'cadence') return CADENCES.map(x => ({label: x[0], ends: x[1], chords: x[2]}));
   return RHYTHMS.map(r => ({label: r[0], accents: r[1]}));
 }
 function qNew() {
@@ -1335,7 +1504,9 @@ function qPlay() {
   const b = $('#qplay'); if (b) b.classList.add('playing');
   Synth.mute = true;
   let d;
-  if (quiz.mode === 'interval') d = Synth.interval(quiz.ans.n, quiz.root);
+  if (quiz.mode === 'interval') d = quiz.dir === 'down' ? Synth.interval(-quiz.ans.n, quiz.root + 12) : Synth.interval(quiz.ans.n, quiz.root);
+  else if (quiz.mode === 'scale') d = Synth.scale(quiz.ans.iv, quiz.root);
+  else if (quiz.mode === 'cadence') d = playProg(quiz.ans.chords, 0.95)();
   else if (quiz.mode === 'chord') d = Synth.seq([{iv: quiz.ans.iv, root: quiz.root}], 1.8);
   else if (quiz.mode === 'prog') d = playProg(quiz.ans.chords, quiz.ans.each)();
   else d = Synth.meter(quiz.ans.accents, 0.28);
@@ -1345,7 +1516,9 @@ function qPlay() {
 function qFeedback(ok) {
   const a = quiz.ans;
   let what;
-  if (quiz.mode === 'interval') what = `a ${a.label} (${a.n} semitone${a.n === 1 ? "" : "s"})`;
+  if (quiz.mode === 'interval') what = `${quiz.dir === 'down' ? 'a descending' : 'a'} ${a.label} (${a.n} semitone${a.n === 1 ? "" : "s"})`;
+  else if (quiz.mode === 'scale') what = `the ${a.label} scale (${a.iv.join(', ')})`;
+  else if (quiz.mode === 'cadence') what = `the ${a.label.toLowerCase()} cadence: ${a.ends}`;
   else if (quiz.mode === 'chord') what = `a ${a.label} (${a.iv.join(', ')})`;
   else if (quiz.mode === 'prog') what = `the ${a.label} progression`;
   else what = `the "${a.label}" pattern`;
@@ -1355,7 +1528,8 @@ function qAnswer(label) {
   if (!quiz.ans || quiz.done) return;
   quiz.done = true; quiz.asked++;
   const ok = label === quiz.ans.label; if (ok) quiz.right++;
-  Store.logEvent('ear-' + quiz.mode, quiz.ans.label, ok);
+  quiz.streak = ok ? quiz.streak + 1 : 0;
+  Store.logEvent('ear-' + quiz.mode, quiz.ans.label + (quiz.mode === 'interval' && quiz.dir === 'down' ? ' (descending)' : ''), ok);
   $('#qfeed').innerHTML = qFeedback(ok);
   document.querySelectorAll('.qo').forEach(b => { if (b.dataset.q === quiz.ans.label) b.classList.add('right'); else if (b.dataset.q === label) b.classList.add('wrong'); });
   qRender(true);
@@ -1368,11 +1542,14 @@ function qRender(keepOpts) {
     $('#qfeed').innerHTML = '';
   }
   const at = Store.allTime('ear-' + quiz.mode);
-  $('#qscore').textContent = quiz.asked ? `Score: ${quiz.right} of ${quiz.asked}` : 'Score: no questions yet';
+  $('#qscore').textContent = quiz.asked ? `Score: ${quiz.right} of ${quiz.asked}${quiz.streak > 1 ? `, ${quiz.streak} in a row` : ''}` : 'Score: no questions yet';
+  const qd = $('#qdir'); if (qd) { qd.hidden = quiz.mode !== 'interval'; qd.querySelectorAll('[data-qdir]').forEach(b => b.classList.toggle('on', b.dataset.qdir === quiz.dir)); }
   const atEl = $('#qalltime');
   if (atEl) atEl.textContent = at.seen ? `All-time on this mode: ${at.correct} of ${at.seen}` : '';
   const prompts = {
-    interval: 'Two notes play one after the other, then together. Which interval is it?',
+    interval: quiz.dir === 'down' ? 'Two notes play, the higher one first, then together. Which interval is it?' : 'Two notes play one after the other, then together. Which interval is it?',
+    scale: 'A scale plays up and back down. Which scale is it?',
+    cadence: 'Four chords play in the current key. How does the phrase end?',
     chord: 'One chord plays. What quality is it?',
     prog: 'A progression plays in the current key. Which one is it?',
     rhythm: 'A repeating click pattern plays. Which accent pattern is it?',
@@ -1380,14 +1557,15 @@ function qRender(keepOpts) {
   $('#qprompt').textContent = prompts[quiz.mode];
 }
 
-sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and progressions by ear, anchored to songs you already know, plus a quiz and a step-by-step method that pulls the whole page together.',
+sec('ear', 'Ear training', 'Ear training', 'Recognizing intervals, chords, scales, cadences and progressions by ear, anchored to songs you already know, with six quizzes and a step-by-step method for working out a song.',
   () => `
   <h3>Interval reference (ascending, from any root)</h3>
   ${table(['Interval', 'Semitones', 'Song anchor', ''], INTERVALS.map(([n, name, song]) => [N(name), `${n}`, song, P(pb(name, () => Synth.interval(n, rootMidi(state.key.pc))))]))}
 
   <h3>Quiz yourself</h3>
   <div class="quiz">
-    <div class="qtabs"><button class="qtab on" data-qm="interval">Intervals</button><button class="qtab" data-qm="chord">Chord quality</button><button class="qtab" data-qm="prog">Progressions</button><button class="qtab" data-qm="rhythm">Rhythm</button></div>
+    <div class="qtabs"><button class="qtab on" data-qm="interval">Intervals</button><button class="qtab" data-qm="chord">Chord quality</button><button class="qtab" data-qm="scale">Scales</button><button class="qtab" data-qm="cadence">Cadences</button><button class="qtab" data-qm="prog">Progressions</button><button class="qtab" data-qm="rhythm">Rhythm</button></div>
+    <div class="tools" id="qdir"><button class="fbtn on" data-qdir="up">Ascending</button><button class="fbtn" data-qdir="down">Descending</button></div>
     <p id="qprompt"></p>
     <div class="inline"><button class="btn" id="qplay">▶ Play</button><button class="btn ghost" id="qnext">New question</button></div>
     <div class="qopts" id="qopts"></div>
@@ -1395,6 +1573,16 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <p class="qscore" id="qscore"></p>
     <p class="hint" id="qalltime"></p>
   </div>
+  <p class="hint">Every answer is counted on your <a href="#progress">Progress</a> page, which also lists the ones you miss most.</p>
+
+  <h3>How to practise</h3>
+  <ul class="plain">
+    <li><strong>Sing it before you answer.</strong> Hum the notes back, even badly. Recognising a sound gets much easier once your voice can find it.</li>
+    <li><strong>Short and often beats long and rare.</strong> Ten questions a day does more than an hour once a week.</li>
+    <li><strong>Start narrow.</strong> If intervals are a blur, play the reference table above for just two of them, say a major 3rd and a perfect 5th, until you can tell that pair apart every time. Then add a third.</li>
+    <li><strong>Learn them going down as well.</strong> A descending interval sounds like a different thing at first. Switch the Intervals quiz to Descending once ascending feels easy.</li>
+    <li><strong>Cadences are about the last chord.</strong> All four examples start the same way. Listen for whether the ending sounds finished, soft, left hanging, or like a swerve.</li>
+  </ul>
 
   <h3>Progressions you already know, in the wild</h3>
   <p>Floyd's slower, atmospheric material ("Breathe", "Time", and similar) tends to drift away from these tidy progressions into slower modal shifts and pedal tones instead. See Part 6.</p>
@@ -1414,6 +1602,214 @@ sec('ear', 'Ear training', 'Part 11: Ear training', 'Recognizing intervals and p
     <li><strong>Convert to Nashville numbers.</strong> Work out each chord's number in the key (Part 1) so you can transpose or compare.</li>
     <li><strong>Cross-check against known progressions.</strong> See if it matches one from Part 2 or the table above.</li>
   </ol>`);
+
+/* ===================== Guitar =====================
+   Standard tuning only. Every pitch below is computed from the tuning plus a fret number, so the
+   fretboard, barre chords and tab all follow the key selector. The open chord shapes are the one
+   exception: they are fixed shapes by nature, and the page says so. No tuner, since that needs
+   microphone access, which this site does not use. */
+const GTR_TUNING = [40, 45, 50, 55, 59, 64]; // E2 A2 D3 G3 B3 E4, thickest string first
+const GTR_FRETS = 15;
+// [label, intervals, lowest fret of one playable position relative to the root's fret on the low E string, highest]
+const GTR_SCALES = {
+  minpent: ['Minor pentatonic', [0, 3, 5, 7, 10], 0, 3],
+  blues:   ['Blues', [0, 3, 5, 6, 7, 10], 0, 3],
+  majpent: ['Major pentatonic', [0, 2, 4, 7, 9], -3, 0],
+  major:   ['Major', [0, 2, 4, 5, 7, 9, 11], -1, 2],
+  minor:   ['Natural minor', [0, 2, 3, 5, 7, 8, 10], -1, 3],
+};
+const gtr = {scale: 'minpent', pos: false};
+const gtrRootFret = () => pc(state.key.pc - 4); // where the key's root sits on the low E string
+function gtrRange() {
+  if (!gtr.pos) return [0, GTR_FRETS];
+  const sc = GTR_SCALES[gtr.scale]; let f = gtrRootFret();
+  if (f + sc[2] < 0) f += 12; // the position would fall off the nut, so use the same shape an octave up
+  return [f + sc[2], f + sc[3]];
+}
+// Every scale note inside the current fret range, in playing order: string by string, low to high.
+function gtrDots() {
+  const iv = GTR_SCALES[gtr.scale][1], [lo, hi] = gtrRange(), out = [];
+  GTR_TUNING.forEach((open, s) => { for (let f = lo; f <= hi; f++) { const rel = pc(open + f - state.key.pc); if (iv.includes(rel)) out.push({s, f, m: open + f, root: rel === 0}); } });
+  return out;
+}
+function gtrNote(m, t, d = 1.3, g = 0.2) { Synth.ks(m, t, d, g, 4200); if (!Synth.mute) Synth.light(m, t, d); }
+function gtrStrum(midis, t, dir = 1, d = 1.8, g = 0.15) { (dir > 0 ? midis : [...midis].reverse()).forEach((m, k) => gtrNote(m, t + k * 0.024, d, g)); }
+const shapeMidis = frets => frets.map((f, i) => f < 0 ? null : GTR_TUNING[i] + f).filter(m => m !== null);
+function playGtrRun() {
+  const c = Synth.ensure(), t = c.currentTime + 0.03, step = 0.26, dots = gtrDots();
+  dots.forEach((d, k) => gtrNote(d.m, t + k * step, step * 1.7, 0.2));
+  return dots.length * step + 0.6;
+}
+function fretboardSVG() {
+  const x0 = 46, FW = 48, top = 20, SG = 26, W = x0 + GTR_FRETS * FW + 14, bottom = top + 5 * SG;
+  const sy = s => top + (5 - s) * SG, fx = f => f === 0 ? x0 - 20 : x0 + (f - 0.5) * FW;
+  const [lo, hi] = gtrRange();
+  let s = `<svg class="fb" viewBox="0 0 ${W} ${bottom + 36}" role="img" aria-label="Guitar fretboard showing the ${nn(state.key.pc)} ${GTR_SCALES[gtr.scale][0].toLowerCase()} scale${gtr.pos ? `, frets ${lo} to ${hi}` : ''}">`;
+  [3, 5, 7, 9, 15].forEach(f => { s += `<circle cx="${fx(f)}" cy="${top + 2.5 * SG}" r="5" fill="var(--line)"/>`; });
+  s += `<circle cx="${fx(12)}" cy="${top + 1.5 * SG}" r="5" fill="var(--line)"/><circle cx="${fx(12)}" cy="${top + 3.5 * SG}" r="5" fill="var(--line)"/>`;
+  for (let f = 0; f <= GTR_FRETS; f++) s += `<line x1="${x0 + f * FW}" y1="${top}" x2="${x0 + f * FW}" y2="${bottom}" stroke="${f === 0 ? 'var(--ink)' : 'var(--line2)'}" stroke-width="${f === 0 ? 4 : 1.5}"/>`;
+  GTR_TUNING.forEach((_, i) => { s += `<line x1="${x0}" y1="${sy(i)}" x2="${W - 14}" y2="${sy(i)}" stroke="var(--ink2)" stroke-width="${(2.6 - i * 0.32).toFixed(2)}" opacity="0.75"/>`; });
+  [3, 5, 7, 9, 12, 15].forEach(f => { s += `<text x="${fx(f)}" y="${bottom + 26}" class="c-label">${f}</text>`; });
+  gtrDots().forEach(d => {
+    s += `<g class="fd${d.root ? ' root' : ''}" data-gm="${d.m}" role="button" tabindex="0" aria-label="Play ${nn(d.m)}, string ${6 - d.s}, ${d.f === 0 ? 'open' : 'fret ' + d.f}"><circle cx="${fx(d.f)}" cy="${sy(d.s)}" r="10.5"/><text x="${fx(d.f)}" y="${sy(d.s) + 3.6}">${nn(d.m)}</text></g>`;
+  });
+  return s + `</svg>`;
+}
+// Plain-text tab of the current position, ascending. Each note gets its own column.
+function gtrTab() {
+  const names = ['E', 'A', 'D', 'G', 'B', 'e'], lines = names.map(() => '');
+  gtrDots().forEach(d => { const txt = String(d.f); for (let s = 0; s < 6; s++) lines[s] += (s === d.s ? txt : '-'.repeat(txt.length)) + '-'; });
+  return [5, 4, 3, 2, 1, 0].map(s => `${names[s]}|-${lines[s]}|`).join('\n');
+}
+function gtrBoardHTML() {
+  const [lo, hi] = gtrRange(), sc = GTR_SCALES[gtr.scale], R = nn(state.key.pc);
+  return `<div class="tools">
+    ${Object.keys(GTR_SCALES).map(k => `<button class="fbtn ${gtr.scale === k ? 'on' : ''}" data-gscale="${k}">${GTR_SCALES[k][0]}</button>`).join('')}
+  </div>
+  <div class="tools">
+    <button class="fbtn ${gtr.pos ? '' : 'on'}" data-gpos="0">Whole neck</button>
+    <button class="fbtn ${gtr.pos ? 'on' : ''}" data-gpos="1">One position</button>
+  </div>
+  <div class="fbwrap">${fretboardSVG()}</div>
+  <p class="hint">${R} ${sc[0].toLowerCase()}. Brass dots are the root, ${R}. Tap any dot to hear that note. ${gtr.pos
+    ? `This is one hand position, frets ${lo} to ${hi}: every note is in reach without moving your hand up or down the neck.`
+    : 'Switch to One position to see a single shape your hand can cover without shifting.'}</p>
+  ${gtr.pos ? `<pre class="tab" aria-label="Tab for this position">${gtrTab()}</pre>
+  <div class="inline"><button class="btn" data-a="${act(playGtrRun)}">▶ Play this position, low to high</button></div>` : ''}`;
+}
+function gtrRender() { const el = $('#gtrboard'); if (el) el.innerHTML = gtrBoardHTML(); }
+
+// Chord box: six strings left to right (thickest on the left), frets top to bottom.
+function chordDiagramSVG(frets, fingers) {
+  const pos = frets.filter(f => f > 0), max = Math.max(...pos, 0), min = pos.length ? Math.min(...pos) : 1;
+  const base = max > 4 ? min : 1;
+  const x0 = 16, y0 = 24, sg = 13, fg = 17;
+  const sx = i => x0 + i * sg, fy = f => y0 + (f - base + 0.5) * fg;
+  let s = `<svg viewBox="0 0 112 116" aria-hidden="true">`;
+  for (let i = 0; i < 6; i++) s += `<line x1="${sx(i)}" y1="${y0}" x2="${sx(i)}" y2="${y0 + 5 * fg}" stroke="var(--line2)" stroke-width="1.2"/>`;
+  for (let j = 0; j <= 5; j++) s += `<line x1="${x0}" y1="${y0 + j * fg}" x2="${sx(5)}" y2="${y0 + j * fg}" stroke="${j === 0 && base === 1 ? 'var(--ink)' : 'var(--line2)'}" stroke-width="${j === 0 && base === 1 ? 3 : 1.2}"/>`;
+  if (base > 1) s += `<text x="${sx(5) + 10}" y="${fy(base) + 4}" font-size="10" fill="var(--ink2)" font-family="Archivo,system-ui,sans-serif">${base}fr</text>`;
+  const played = frets.filter(f => f >= 0);
+  if (pos.length && !played.includes(0) && frets.filter(f => f === min).length >= 2) // a barre: one finger across several strings
+    s += `<line x1="${sx(frets.indexOf(min))}" y1="${fy(min)}" x2="${sx(frets.lastIndexOf(min))}" y2="${fy(min)}" stroke="var(--ink)" stroke-width="10" stroke-linecap="round"/>`;
+  frets.forEach((f, i) => {
+    if (f < 0) s += `<text x="${sx(i)}" y="${y0 - 7}" font-size="11" text-anchor="middle" fill="var(--ink2)" font-family="Archivo,system-ui,sans-serif">×</text>`;
+    else if (f === 0) s += `<circle cx="${sx(i)}" cy="${y0 - 10}" r="3.4" fill="none" stroke="var(--ink2)" stroke-width="1.2"/>`;
+    else { s += `<circle cx="${sx(i)}" cy="${fy(f)}" r="5.2" fill="var(--ink)"/>`;
+      if (fingers && fingers[i]) s += `<text x="${sx(i)}" y="${fy(f) + 3}" font-size="8" font-weight="600" text-anchor="middle" fill="var(--bg)" font-family="Archivo,system-ui,sans-serif">${fingers[i]}</text>`; }
+  });
+  return s + `</svg>`;
+}
+// [name, root pitch class, quality key into Q, family colour, frets low E to high e (-1 = not played), fretting fingers]
+const GTR_SHAPES = [
+  ['E',  4, 'maj',  'major',    [0, 2, 2, 1, 0, 0],   [0, 2, 3, 1, 0, 0]],
+  ['A',  9, 'maj',  'major',    [-1, 0, 2, 2, 2, 0],  [0, 0, 1, 2, 3, 0]],
+  ['D',  2, 'maj',  'major',    [-1, -1, 0, 2, 3, 2], [0, 0, 0, 1, 3, 2]],
+  ['G',  7, 'maj',  'major',    [3, 2, 0, 0, 0, 3],   [2, 1, 0, 0, 0, 3]],
+  ['C',  0, 'maj',  'major',    [-1, 3, 2, 0, 1, 0],  [0, 3, 2, 0, 1, 0]],
+  ['Em', 4, 'min',  'minor',    [0, 2, 2, 0, 0, 0],   [0, 2, 3, 0, 0, 0]],
+  ['Am', 9, 'min',  'minor',    [-1, 0, 2, 2, 1, 0],  [0, 0, 2, 3, 1, 0]],
+  ['Dm', 2, 'min',  'minor',    [-1, -1, 0, 2, 3, 1], [0, 0, 0, 2, 3, 1]],
+  ['E7', 4, 'dom7', 'dominant', [0, 2, 0, 1, 0, 0],   [0, 2, 0, 1, 0, 0]],
+  ['A7', 9, 'dom7', 'dominant', [-1, 0, 2, 0, 2, 0],  [0, 0, 2, 0, 3, 0]],
+  ['D7', 2, 'dom7', 'dominant', [-1, -1, 0, 2, 1, 2], [0, 0, 0, 2, 1, 3]],
+  ['G7', 7, 'dom7', 'dominant', [3, 2, 0, 0, 0, 1],   [3, 2, 0, 0, 0, 1]],
+  ['B7', 11, 'dom7', 'dominant', [-1, 2, 1, 2, 0, 2], [0, 2, 1, 3, 0, 4]],
+  ['F',  5, 'maj',  'major',    [1, 3, 3, 2, 1, 1],   [1, 3, 4, 2, 1, 1]],
+  ['Bm', 11, 'min', 'minor',    [-1, 2, 4, 4, 3, 2],  [0, 1, 3, 4, 2, 1]],
+];
+function shapeBtn(name, fam, frets, fingers, caption) {
+  const id = act(() => { const c = Synth.ensure(); gtrStrum(shapeMidis(frets), c.currentTime + 0.03); return 2; });
+  return `<button class="cd" style="--fam:var(--${fam})" data-a="${id}" aria-label="Strum ${name}${caption ? ', ' + caption : ''}"><b>${name}</b>${chordDiagramSVG(frets, fingers)}${caption ? `<small>${caption}</small>` : ''}</button>`;
+}
+// The four movable barre shapes for the current key. At fret 0 they are simply the open E, Em, A and Am chords.
+function gtrBarres() {
+  const f = gtrRootFret(), a = pc(state.key.pc - 9), R = nn(state.key.pc);
+  const cap = (shape, n) => n === 0 ? `${shape}, open` : `${shape}, fret ${n}`;
+  return [
+    [R, 'major', [f, f + 2, f + 2, f + 1, f, f], cap('E shape', f)],
+    [R + 'm', 'minor', [f, f + 2, f + 2, f, f, f], cap('Em shape', f)],
+    [R, 'major', [-1, a, a + 2, a + 2, a + 2, a], cap('A shape', a)],
+    [R + 'm', 'minor', [-1, a, a + 2, a + 2, a + 1, a], cap('Am shape', a)],
+  ];
+}
+// Eight eighth-note slots per bar: 'D' down, 'U' up, '' the hand passes without touching the strings.
+const STRUMS = [
+  ['Four downstrokes', ['D', '', 'D', '', 'D', '', 'D', ''], 'Steady and plain. Where everyone starts.', 1.7],
+  ['Down-up eighths', ['D', 'U', 'D', 'U', 'D', 'U', 'D', 'U'], 'Constant motion: down on the beat, up on the "and".', 1.5],
+  ['Folk strum', ['D', '', 'D', 'U', '', 'U', 'D', 'U'], 'The pattern under thousands of acoustic songs. Missing the downstroke on beat 3 gives it the lilt.', 1.5],
+  ['Rock push', ['D', '', 'D', 'U', 'D', '', 'D', 'U'], 'Downstrokes on every beat with an upstroke pushing into beats 3 and 1.', 1.5],
+  ['Off-beat chops', ['', 'D', '', 'D', '', 'D', '', 'D'], 'Short stabs between the beats: the ska and reggae feel.', 0.45],
+];
+function strumHTML(slots) {
+  const count = ['1', '&', '2', '&', '3', '&', '4', '&'];
+  return `<span class="strum" role="img" aria-label="${slots.map((x, i) => `${count[i] === '&' ? 'and' : count[i]} ${x === 'D' ? 'down' : x === 'U' ? 'up' : 'rest'}`).join(', ')}">${count.map(x => `<small>${x}</small>`).join('')}${slots.map(x => `<i class="${x ? '' : 'rest'}">${x === 'D' ? '↓' : x === 'U' ? '↑' : '·'}</i>`).join('')}</span>`;
+}
+function playStrum(slots, len) {
+  const c = Synth.ensure(), t0 = c.currentTime + 0.03, step = 60 / 92 / 2;
+  const f = gtrRootFret(), midis = shapeMidis([f, f + 2, f + 2, f + 1, f, f]);
+  for (let bar = 0; bar < 2; bar++) slots.forEach((x, k) => {
+    if (!x) return; const t = t0 + (bar * 8 + k) * step;
+    if (x === 'D') gtrStrum(midis, t, 1, step * len, 0.13); else gtrStrum(midis.slice(2), t, -1, step * len * 0.9, 0.1);
+  });
+  return 16 * step + 0.7;
+}
+const GTR_TOPICS = ['String names and tuning', 'Reading a chord diagram', 'Open major chords', 'Open minor chords', 'Seventh chords', 'Barre chords', 'One scale position', 'Strumming patterns', 'Reading tab'];
+let gtrProgress = Store.getList('guitar', GTR_TOPICS.length);
+function gtrChecklistHTML() {
+  const done = gtrProgress.filter(Boolean).length;
+  return `${table(['', 'Topic'], GTR_TOPICS.map((t, i) => [N(`<input type="checkbox" data-gtc="${i}" ${gtrProgress[i] ? 'checked' : ''} aria-label="${t}">`), t]))}
+  <p class="hint">${done} of ${GTR_TOPICS.length} marked complete. ${Store.ok ? 'Saved in this browser.' : 'Not saving right now (private browsing?), so it resets if you reload.'}</p>`;
+}
+sec('guitar', 'Guitar', 'Guitar: the fretboard, chords and strumming', 'The same theory as the rest of the site, laid out on six strings. The fretboard, barre chords and tab follow the key selector at the top; every diagram plays.',
+  () => { const R = nn(state.key.pc), f = gtrRootFret();
+    const strings = [['6 (thickest)', 40], ['5', 45], ['4', 50], ['3', 55], ['2', 59], ['1 (thinnest)', 64]];
+    return `
+  <h3>The six strings</h3>
+  <p>Standard tuning, from the thickest string to the thinnest: <strong>E A D G B E</strong>. One way to remember it: Eddie Ate Dynamite, Good Bye Eddie. Strings are numbered the other way round, so the thinnest is string 1 and the thickest is string 6.</p>
+  ${table(['String', 'Open note', ''], strings.map(([n, m]) => [N(n), N(`<span class="sym">${nn(m, false)}</span>`), P(pb(`open string ${n}`, () => { const c = Synth.ensure(); gtrNote(m, c.currentTime + 0.03, 1.8, 0.22); return 1.8; }))]))}
+  <div class="inline"><button class="btn ghost" data-a="${act(() => { const c = Synth.ensure(), t = c.currentTime + 0.03; GTR_TUNING.forEach((m, k) => gtrNote(m, t + k * 0.45, 1.2, 0.22)); return 6 * 0.45 + 1; })}">▶ Play all six, thickest first</button></div>
+  <p class="hint">Use these as a reference pitch to tune by ear. There is no tuner here: a real one needs your microphone, and this site does not ask for it.</p>
+
+  <h3>The fretboard in ${R}</h3>
+  <p>Each fret raises a string by one half-step, the same unit every formula on this site counts in. Fret 12 is the same note as the open string, one octave up, which is why it gets two dots. Pick a scale and the neck shows where its notes fall in the current key.</p>
+  <div id="gtrboard">${gtrBoardHTML()}</div>
+
+  <h3>Reading a chord diagram</h3>
+  <p>A chord diagram is the neck stood upright: the thickest string is on the left, the thick line at the top is the nut, and each row is a fret. A dot means press there, and the number inside is which finger (1 is your index, 4 is your pinky). A hollow circle above a string means play it open; × means do not play that string.</p>
+
+  <h3>Open chords</h3>
+  <p>Tap a chord to hear it strummed. These are fixed shapes, so unlike the rest of this page they do not move when you change the key. The top stripe is the chord family, the same colours as the chord formulas page: amber major, blue minor, orange dominant.</p>
+  <div class="cds">${GTR_SHAPES.slice(0, 13).map(([n, , , fam, fr, fi]) => shapeBtn(n, fam, fr, fi, '')).join('')}</div>
+  <p>Learn them in this order: Em and Am (two or three fingers, few strings to avoid), then E, A and D, then G and C, which need a wider stretch. With G, C, D and Em you can already play the pop progression from Part 2 in G: G – D – Em – C.</p>
+
+  <h3>Barre chords: one shape, every key</h3>
+  <p>Lay your index finger flat across a fret and it acts as a movable nut. Any open shape then slides up the neck and becomes a new chord. Two shapes cover almost everything: the E shape, with its root on string 6, and the A shape, with its root on string 5. Here they are for ${R}:</p>
+  <div class="cds">${gtrBarres().map(([n, fam, fr, cap]) => shapeBtn(n, fam, fr, null, cap)).join('')}</div>
+  <p class="hint">${f === 0 ? `${R} is the open E shape itself, so no barre is needed there.` : `The root of ${R} is at fret ${f} on string 6, so that is where the E-shape barre goes.`} Change the key at the top and these four move with it.</p>
+  <p>F and Bm are the two barre chords that turn up in beginner songs before you go looking for them:</p>
+  <div class="cds">${GTR_SHAPES.slice(13).map(([n, , , fam, fr, fi]) => shapeBtn(n, fam, fr, fi, '')).join('')}</div>
+  <div class="note"><p><strong>If the barre buzzes.</strong> Roll the index finger slightly onto its bony edge, bring it right up behind the fret wire, and keep your thumb behind the neck opposite it. It takes weeks, not days, for every string to ring. That is normal.</p></div>
+
+  <h3>Strumming</h3>
+  <p>Keep the strumming hand moving down and up in time whether or not it touches the strings. The pattern comes from which passes you let connect. Each example plays two bars on the ${R} barre shape above.</p>
+  ${table(['Pattern', 'Strokes', 'Feel', ''], STRUMS.map(([n, slots, feel, len]) => [N(n), N(strumHTML(slots)), feel, P(pb(n, () => playStrum(slots, len)))]))}
+
+  <h3>Reading tab</h3>
+  <p>Tab is six lines, one per string, with the thinnest string on top, which is upside down from how the guitar sits in your lap. A number on a line is the fret to play on that string; 0 is the open string. Read left to right. Numbers stacked in the same column are played together. Tab shows where to put your fingers but usually not how long to hold each note, so listen to the song for the rhythm. Switch the fretboard above to One position and it writes the tab for that scale shape.</p>
+
+  <h3>Common early mistakes</h3>
+  <ul class="plain">
+    <li><strong>Fretting in the middle of the fret.</strong> Press just behind the fret wire, on the side nearer the body. It takes far less force and buzzes less.</li>
+    <li><strong>Flat fingers muting the next string.</strong> Arch each finger so only its tip touches. If a chord has a dead string, play the strings one at a time to find which finger is leaning.</li>
+    <li><strong>Gripping too hard.</strong> Use only as much pressure as it takes for the note to ring. A tight hand is slow and tires in minutes.</li>
+    <li><strong>Stopping the strum to change chords.</strong> Keep the hand moving and change a fraction early, even if the first strum of the new chord is messy. Steady time matters more than a clean change.</li>
+    <li><strong>Practising only what already works.</strong> Spend the first five minutes on the one change you find hardest, slowly, then play songs.</li>
+  </ul>
+
+  <h3>Track your progress through this branch</h3>
+  <div id="gtrchecklist">${gtrChecklistHTML()}</div>
+  <p class="hint">Not built yet: a tuner, fingerpicking patterns, and full songs.</p>`; });
 
 /* ===================== Piano: technique, comping, and pedalling =====================
    Real repertoire and true polyphonic sight-reading are still natural next additions beyond this —
@@ -1785,6 +2181,50 @@ sec('producing', 'Producing', 'Producing: sequencing, a simple synth, and effect
   <p>Producers reach for it for two reasons at once: practically, ducking everything else out of the way the instant the kick hits makes the kick easier to hear in a busy mix; stylistically, that same rhythmic dip became such a recognizable signature of house and EDM that it's now used for the pumping feel alone, well beyond its original mixing purpose.</p>
   <div class="inline"><button class="btn" data-a="${act(() => playSidechainDemo())}">▶ Play the pumping effect</button></div>`);
 
+/* ===================== Progress =====================
+   Reads only what Store already records in this browser. No account, nothing sent anywhere. */
+const SKILLS = [['ear-interval', 'Intervals', 'ear'], ['ear-chord', 'Chord quality', 'ear'], ['ear-scale', 'Scales', 'ear'], ['ear-cadence', 'Cadences', 'ear'], ['ear-prog', 'Progressions', 'ear'], ['ear-rhythm', 'Rhythm patterns', 'ear'], ['reading', 'Sight-reading', 'reading']];
+// Items answered at least three times and right less than 80% of the time, weakest first.
+function weakSpots(limit = 6) {
+  const d = Store.load();
+  return Object.keys(d.mastery).map(k => { const i = k.indexOf(':'); return {mod: k.slice(0, i), item: k.slice(i + 1), seen: d.mastery[k].seen, correct: d.mastery[k].correct}; })
+    .filter(x => x.seen >= 3 && x.correct / x.seen < 0.8)
+    .sort((a, b) => a.correct / a.seen - b.correct / b.seen || b.seen - a.seen).slice(0, limit);
+}
+const pct = (c, n) => n ? Math.round(c / n * 100) : 0;
+const meter = (c, n) => `<span class="meter" aria-hidden="true"><i style="width:${pct(c, n)}%"></i></span>${pct(c, n)}%`;
+let pgArmed = false;
+function progressHTML() {
+  const d = Store.load();
+  const rows = SKILLS.map(([m, label, link]) => ({label, link, ...Store.allTime(m)})).filter(r => r.seen);
+  const seen = rows.reduce((a, r) => a + r.seen, 0), correct = rows.reduce((a, r) => a + r.correct, 0);
+  const pages = Object.keys(d.sections).filter(id => id !== 'home' && id !== 'progress').length;
+  const pianoDone = Store.getPiano(PIANO_TOPICS.length).filter(Boolean).length, gtrDone = Store.getList('guitar', GTR_TOPICS.length).filter(Boolean).length;
+  const weak = weakSpots(), skillName = m => (SKILLS.find(s => s[0] === m) || [0, m])[1], skillLink = m => (SKILLS.find(s => s[0] === m) || [0, 0, 'ear'])[2];
+  const empty = !seen && !pianoDone && !gtrDone;
+  return `
+  ${empty ? `<div class="note"><p><strong>Nothing recorded yet.</strong> Answer a question in <a href="#ear">Ear training</a>, try the <a href="#reading">sight-reading drill</a>, or tick off a topic in <a href="#guitar">Guitar</a> or <a href="#piano">Piano</a>, and it shows up here.</p></div>` : `
+  <div class="stats">
+    <div><b>${seen}</b><span>questions answered</span></div>
+    <div><b>${pct(correct, seen)}%</b><span>answered right</span></div>
+    <div><b>${pages}</b><span>pages opened</span></div>
+    <div><b>${pianoDone + gtrDone}</b><span>checklist topics done</span></div>
+  </div>`}
+  ${rows.length ? `<h3>By skill</h3>
+  ${table(['Skill', 'Answered', 'Right', 'Accuracy'], rows.map(r => [N(`<a href="#${r.link}">${r.label}</a>`), `${r.seen}`, `${r.correct}`, N(meter(r.correct, r.seen))]))}` : ''}
+  ${weak.length ? `<h3>Practise these next</h3>
+  <p>The things you have missed most often, counting only ones you have been asked at least three times.</p>
+  ${table(['What', 'Skill', 'Right', 'Accuracy'], weak.map(w => [N(w.item), N(`<a href="#${skillLink(w.mod)}">${skillName(w.mod)}</a>`), `${w.correct} of ${w.seen}`, N(meter(w.correct, w.seen))]))}` : (seen >= 10 ? `<h3>Practise these next</h3><p>No weak spots right now: nothing you have been asked three or more times is under 80%.</p>` : '')}
+  <h3>Checklists</h3>
+  ${table(['Branch', 'Done'], [[N('<a href="#guitar">Guitar</a>'), N(`${meter(gtrDone, GTR_TOPICS.length)} (${gtrDone} of ${GTR_TOPICS.length})`)], [N('<a href="#piano">Piano</a>'), N(`${meter(pianoDone, PIANO_TOPICS.length)} (${pianoDone} of ${PIANO_TOPICS.length})`)]])}
+  <h3>Where this is kept</h3>
+  <p>${Store.ok ? 'In this browser only, on this device. There are no accounts yet, so it does not follow you to another phone or computer, and clearing your browser data erases it.' : 'Nowhere right now: this browser is blocking storage (private browsing does this), so progress lasts only until you close or reload the page.'} Only the most recent 500 answers are kept individually; the totals above count everything.</p>
+  <div class="inline"><button class="btn danger" id="pgreset">${pgArmed ? 'Tap again to erase all progress' : 'Reset progress'}</button>${pgArmed ? '<button class="btn ghost" id="pgcancel">Keep it</button>' : ''}</div>`;
+}
+function pgRender() { const el = $('#pgbody'); if (el) el.innerHTML = progressHTML(); }
+sec('progress', 'Progress', 'Your progress', 'What you have practised on this site and how it is going, so you know what to work on next.',
+  () => `<div id="pgbody">${progressHTML()}</div>`);
+
 /* ===================== Progression builder ===================== */
 const build = {seq: [], bpm: 100, loop: true, playing: false, timers: []};
 const PALETTE = [[0,'maj'],[2,'min'],[4,'min'],[5,'maj'],[7,'maj'],[9,'min'],[11,'dim'],[7,'dom7'],[2,'m7'],[0,'maj7'],[5,'min'],[10,'maj'],[8,'maj']];
@@ -1905,10 +2345,16 @@ function renderTiles() {
   $('#tiles').innerHTML = TILES.map(([n, s, iv, f, d]) =>
     `<button class="tile" style="--fam:var(--${f})" data-a="${act(() => Synth.seq([{iv, root: rootMidi(r, iv)}], 1.8))}" aria-label="Play ${nn(r)} ${n}"><b>${nn(r) + s}</b><small>${n}: ${d}</small></button>`).join('');
 }
+// The Theory pages are a real sequence (Start here, then Parts 1 to 11 and the reference pages), so each links to its neighbours.
+function prevNextHTML(id) {
+  const i = THEORY_IDS.indexOf(id); if (i < 0) return '';
+  const link = (j, word) => { const t = SECTIONS.find(x => x.id === THEORY_IDS[j]); return t ? `<a href="#${t.id}">${word}<b>${t.nav}</b></a>` : ''; };
+  return `<nav class="pn" aria-label="Theory pages">${i > 0 ? link(i - 1, 'Previous') : '<span></span>'}${i < THEORY_IDS.length - 1 ? link(i + 1, 'Next') : ''}</nav>`;
+}
 function renderAll() {
   ACTS = [];
-  renderTiles();
-  $('#app').innerHTML = SECTIONS.map(s => `<section class="part" id="${s.id}"><h2>${s.title}</h2>${s.lead ? `<p class="lead">${s.lead}</p>` : ''}${s.body()}</section>`).join('');
+  $('#app').innerHTML = SECTIONS.map(s => `<section class="part" id="${s.id}">${s.title ? `<h2>${s.title}</h2>` : ''}${s.lead ? `<p class="lead">${s.lead}</p>` : ''}${s.body()}${prevNextHTML(s.id)}</section>`).join('');
+  renderTiles(); // the tiles now live inside the Chords page, so they render after it exists
   qRender();
   applySectionVisibility();
 }
@@ -1931,18 +2377,22 @@ function applySectionVisibility() {
     const href = a.getAttribute('href');
     a.classList.toggle('cur', href === '#' + active || (active === 'progressions' && href === '#builder'));
   });
+  const dd = document.querySelector('.navdd summary'); if (dd) dd.classList.toggle('cur', THEORY_IDS.includes(active));
+  const cur = SECTIONS.find(x => x.id === active);
+  document.title = cur && cur.title ? `${cur.title} | By Ear` : 'By Ear: music theory you can hear';
 }
-window.addEventListener('hashchange', () => { applySectionVisibility(); Store.touchSection(activeSection()); window.scrollTo(0, 0); });
+window.addEventListener('hashchange', () => { const a = activeSection(); Store.touchSection(a); if (a === 'home' || a === 'progress') { pgArmed = false; renderAll(); } else applySectionVisibility(); window.scrollTo(0, 0); });
 
 // Groups the top nav bar into a dropdown for the twelve core theory reference pages, so the bar
 // isn't one long scrolling list. Nothing is removed — every section id below is still linked to.
 const NAV_GROUPS = [
-  {id: 'how'},
-  {label: 'Theory', ids: ['chords', 'keys', 'progressions', 'function', 'scales', 'color', 'atmosphere', 'structure', 'rhythm', 'melody', 'notation', 'reading', 'physics', 'songwriting', 'terms']},
+  {label: 'Theory', ids: THEORY_IDS},
   {id: 'ear'},
+  {id: 'guitar'},
   {id: 'piano'},
   {id: 'producing'},
   {id: 'djing'},
+  {id: 'progress'},
 ];
 function navLink(id) {
   const s = SECTIONS.find(x => x.id === id);
@@ -1964,6 +2414,7 @@ document.addEventListener('change', e => {
   if (e.target.id === 'voicesel') state.voice = e.target.value;
   if (e.target.id === 'bloop') build.loop = e.target.checked;
   if (e.target.id === 'kbchord') KB.chord = e.target.checked;
+  if (e.target.dataset.gtc !== undefined) { gtrProgress[+e.target.dataset.gtc] = e.target.checked; Store.setList('guitar', gtrProgress); const el = $('#gtrchecklist'); if (el) el.innerHTML = gtrChecklistHTML(); }
   if (e.target.dataset.pgc !== undefined) { pianoProgress[+e.target.dataset.pgc] = e.target.checked; Store.setPiano(pianoProgress); const el = $('#pianochecklist'); if (el) el.innerHTML = pianoChecklistHTML(); }
   if (e.target.id === 'synthwave') synthDemo.wave = e.target.value;
 });
@@ -1975,6 +2426,19 @@ $('#dockshow').addEventListener('click', () => { $('#dock').hidden = false; $('#
 
 document.addEventListener('click', e => {
   if (e.target.closest('#kbplay')) { kbPlay(); return; }
+  if (e.target.closest('#hcplay')) { hcPlay(); return; }
+  const hca = e.target.closest('[data-hc]'); if (hca) { hcAnswer(hca.dataset.hc); return; }
+  const gd = e.target.closest('[data-gm]'); if (gd) { const c = Synth.ensure(); Synth.stop(); gtrNote(+gd.dataset.gm, c.currentTime + 0.01); return; }
+  const gs = e.target.closest('[data-gscale]'); if (gs) { gtr.scale = gs.dataset.gscale; gtrRender(); return; }
+  const gp = e.target.closest('[data-gpos]'); if (gp) { gtr.pos = gp.dataset.gpos === '1'; gtrRender(); return; }
+  const qdr = e.target.closest('[data-qdir]'); if (qdr) { quiz.dir = qdr.dataset.qdir; quiz.ans = null; quiz.opts = []; quiz.done = false; qRender(); return; }
+  if (e.target.closest('#pgcancel')) { pgArmed = false; pgRender(); return; }
+  if (e.target.closest('#pgreset')) {
+    if (!pgArmed) { pgArmed = true; pgRender(); return; } // two taps instead of a browser confirm box
+    Store.reset(); pgArmed = false; hc.asked = hc.right = 0; quiz.asked = quiz.right = quiz.streak = 0; read.asked = read.right = 0;
+    pianoProgress = Store.getPiano(PIANO_TOPICS.length); gtrProgress = Store.getList('guitar', GTR_TOPICS.length);
+    renderAll(); return;
+  }
   const key = e.target.closest('.k[data-m]'); if (key) { kbTap(+key.dataset.m); return; }
   const ba = e.target.closest('[data-badd]');
   if (ba) { const c = PALETTE[+ba.dataset.badd]; build.seq.push([c[0], c[1]]); Synth.ensure(); Synth.stop(); Synth.seq([{iv: Q[c[1]].iv, root: rootMidi(state.key.pc + c[0], Q[c[1]].iv)}], 1.2); buildRender(); return; }
@@ -2003,6 +2467,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.ck')) { e.preventDefault(); setKey(+e.target.closest('.ck').dataset.k); }
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.fd')) { e.preventDefault(); const c = Synth.ensure(); Synth.stop(); gtrNote(+e.target.closest('.fd').dataset.gm, c.currentTime + 0.01); }
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'btempo') { build.bpm = +e.target.value; const v = $('#btempov'); if (v) v.textContent = build.bpm; }
